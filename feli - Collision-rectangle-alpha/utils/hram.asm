@@ -1,0 +1,1 @@
+SECTION "hRAM code", ROM0
