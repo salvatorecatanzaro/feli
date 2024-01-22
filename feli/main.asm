@@ -119,7 +119,7 @@ Start:
 
     call get_buttons_state
     call update_player_position
-    ;call apply_gravity
+    call apply_gravity
     call $ff80 ; refresh oam
 
     jp .vblank_loop

@@ -19,14 +19,10 @@ player_2:
 __player_2:
 
 SECTION "Collision tiles", rom0
-
-number_of_rectangles_gravity_map:
-	db $02
-
-;x, xlen, y, ylen
+		;x, xlen, y, ylen
 collision_rectangles: 
 	db $37, $47, $65, $4
-	db $72, $33, $41, $4
+
 turn_off_sound:
 	xor a
 	; Shut sound down

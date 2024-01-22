@@ -37,6 +37,7 @@ wait_vblank:
     .notvblank
         ld a, [$ff44] ;  144 - 153 VBlank area
         cp 144 ; Check if the LCD is past VBlank
+        
         jr c, .notvblank
         ret
 
@@ -67,27 +68,29 @@ skip_12_tiles_routine:
     ret
 
 draw_map:
-    ld a, $14 
-    ld [map_counter], a ; reset map counter
-    jp .copy_bin_loop
-        .skip_12_tiles
-            call skip_12_tiles_routine
-            jp .continue
-        .copy_bin_loop 
-            ld a, [hli] 
-            ld [de], a
-            inc de
-            ld a, [map_counter]
-            sub $01
-            ld [map_counter], a
-            cp $00
-            jr z, .skip_12_tiles
-    .continue
-        dec bc ; Decrement count
-        ld a, b
-        or c
-        jr nz, .copy_bin_loop
-        ret
+ld a, $14 
+ld [map_counter], a ; reset map counter
+jp .copy_bin_loop
+
+.skip_12_tiles
+    call skip_12_tiles_routine
+    jp .continue
+.copy_bin_loop 
+    ld a, [hli] 
+    ld [de], a
+    inc de
+    ld a, [map_counter]
+    sub $01
+    ld [map_counter], a
+    cp $00
+    jr z, .skip_12_tiles
+
+.continue
+    dec bc ; Decrement count
+    ld a, b
+    or c
+    jr nz, .copy_bin_loop
+    ret
 
 
 draw_tree_map:
