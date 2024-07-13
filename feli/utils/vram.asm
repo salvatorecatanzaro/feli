@@ -1,12 +1,12 @@
 
 SECTION "vRAM code", ROM0
 
-; -- !!!Disable screen - ppu before calling this method
-; -- this subroutine loads into the vram tiles
-; -- hl: dest
-; -- de: tile address destination
+; -- !!!Disable screen - ppu before calling this method!!!
+; -- this subroutine is used to copy data from source to destination
+; -- hl: destination
+; -- de: source
 ; -- bc: map len
-copy_bin_to_vram:
+copy_data_to_destination:
 .copy_bin_loop
     ld a, [de]  ; Grab 1 byte from the source
     ld [hli], a ; Place it at the destination, incrementing hl

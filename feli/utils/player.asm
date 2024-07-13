@@ -22,15 +22,20 @@ update_player_position:
     bit 3, a
     jr nz, .no_down
     ld a, [main_player_y]
-    add $1
-    ld [main_player_y], a ;Moving delta y by one to check if there would be a collision
-    call check_player_collision
-    jr c, .no_down
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    ;No collision, update position
+    add a, 4 ; The check starts from upleft, lets add 4 pixel distance to make it more centered
+    sub a, 16-1 ; the sprite y is not aligned with tile position (0, 0), removing 16 bit removes this difference
+    ld c, a
+    ld a, [main_player_x]
+    sub a, 8
+    ld b, a
+    call get_tile_by_pixel ; Returns tile address in hl
+    ld a, [hl]
+    call is_wall_tile
+    jr nz, .no_down
+    ; No collision, update position
     ld bc, oam_buffer ; y pos
     ld a, [bc]
-    add 1
+    add a, 1
     ld [bc], a
 .no_down
     call reset_positions
@@ -40,13 +45,18 @@ update_player_position:
     bit 2, a
     jr nz, .no_up
     ld a, [main_player_y]
-    sub $1
-    ld [main_player_y], a ;Moving delta y by one to check if there would be a collision
-    call check_player_collision
-    jr c, .no_up
+    sub a, 16+1 ; the sprite y is not aligned with tile position (0, 0), removing 16 bit removes this difference
+    ld c, a
+    ld a, [main_player_x]
+    sub a, 8
+    ld b, a
+    call get_tile_by_pixel ; Returns tile address in hl
+    ld a, [hl]
+    call is_wall_tile
+    jr nz, .no_up
     ld bc, oam_buffer ; y pos
     ld a, [bc]
-    sub 1
+    sub a, 1
     ld [bc], a
 .no_up
     call reset_positions
@@ -57,35 +67,47 @@ update_player_position:
     ld a, [buttons]
     bit 1, a
     jr nz, .no_left
+    ld a, [main_player_y]
+    add a, 4  ; don t check collision from the top left of the sprite, but from a more mid position
+    sub a, 16 ; the sprite y is not aligned with tile position (0, 0), removing 16 bit removes this difference
+    ld c, a
     ld a, [main_player_x]
-    sub $1
-    ld [main_player_x], a ;Moving delta y by one to check if there would be a collision
-    call check_player_collision
-    jr c, .no_left
-        ;;;;;;;;;;;;;;;;;;;;;;;;;;;
-        ld bc, oam_buffer + 1  ; x pos
-        ld a, [bc]
-        sub 1
-        ld [bc], a
-    .no_left
+    sub a, 8+1
+    ld b, a
+    call get_tile_by_pixel ; Returns tile address in hl
+    ld a, [hl]
+    call is_wall_tile
+    jr nz, .no_left
+    ; No collision, update position
+    ld bc, oam_buffer + 1  ; x pos
+    ld a, [bc]
+    sub a, 1
+    ld [bc], a
+.no_left
     call reset_positions
 
     ;test right bit
     ld a, [buttons]
     bit 0, a
     jr nz, .no_right
+    ld a, [main_player_y]
+    add a, 4  ; don t check collision from the top left of the sprite, but from a more mid position
+    sub a, 16 ; the sprite y is not aligned with tile position (0, 0), removing 16 bit removes this difference
+    ld c, a
     ld a, [main_player_x]
-    add $1
-    ld [main_player_x], a ;Moving delta y by one to check if there would be a collision
-    call check_player_collision
-    jr c, .no_left
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    add a, 4 ; dont start checking from the top left
+    sub a, 8-1
+    ld b, a
+    call get_tile_by_pixel ; Returns tile address in hl
+    ld a, [hl]
+    call is_wall_tile
+    jr nz, .no_right
+    ; No collision, update position
     ld bc, oam_buffer + 1 ; x pos
-
     ld a, [bc]
-    add 1
+    add a, 1
     ld [bc], a
-    .no_right
+.no_right
 
     ret
 
@@ -141,4 +163,50 @@ get_player_position_in_overworld:
     ld d, $00
     ld e, a
     add hl, de
+    ret
+
+
+; Convert a pixel position to a tilemap address
+; hl = $9800 + X + Y * 32
+; @param b: X
+; @param c: Y
+; @return hl: tile address
+; 
+; Calcola il valore della tile per esempio 98EB
+get_tile_by_pixel:
+    ; First, we need to divide by 8 to convert a pixel position to a tile position.
+    ; After this we want to multiply the Y position by 32.
+    ; These operations effectively cancel out so we only need to mask the Y value.
+    ld a, c
+    srl a
+    srl a 
+    srl a ;  y / 8
+    ld l, a
+    ld h, 0
+    ; Now we have the position * 8 in hl
+    add hl, hl ; position * 2
+    add hl, hl ; 
+    add hl, hl ; 
+    add hl, hl ; 
+    add hl, hl ; position * 32
+    ; Convert the X position to an offset.
+    ld a, b
+    srl a ; a / 2
+    srl a ; a / 4
+    srl a ; a / 8
+    ; Add the two offsets together.
+    add a, l
+    ld l, a
+    ld a, 0
+    adc a, h
+    ld h, a
+    ; Add the offset to the tilemap's base address, and we are done!
+    ld bc, $9800
+    add hl, bc
+    ret
+
+; @param a: tile ID
+; @return z: set if a is a wall.
+is_wall_tile:
+    or a, $00
     ret

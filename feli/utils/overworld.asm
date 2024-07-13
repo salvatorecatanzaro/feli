@@ -10,7 +10,7 @@ apply_gravity:
     ld a, [main_player_y]
     add $1
     ld [main_player_y], a ;Moving delta y by one to check if there would be a collision
-    call check_player_collision
+    ;call check_player_collision
     jr c, .no_gravity
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;No collision, update position

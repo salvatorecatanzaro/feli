@@ -15,9 +15,3 @@ buttons: ds 1
 SECTION "Player coordinates", WRAM0
 main_player_y: ds 1
 main_player_x: ds 1
-
-SECTION "Player coordinates", WRAM0
-rectangle_x_plus_width: ds 1
-rectangle_y_plus_width: ds 1
-player_x_plus_width: ds 1
-player_y_plus_width: ds 1

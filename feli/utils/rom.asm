@@ -1,9 +1,9 @@
 SECTION "textures", ROM0
 gravity_bin:
- 	INCBIN "textures/level/gravity_map"
+ 	INCBIN "textures/level/gravity_map"          ; The tiles that will be loaded into the vram
 __gravity_bin:
 gravity_tile_map:
-	INCBIN "textures/tile_map/gravity_tilemap"
+	INCBIN "textures/tile_map/gravity_tilemap"   ; The map of all tiles with addresses that will be used to recreate the map on the screen
 __gravity_tile_map:
 gravity_attr_map:
 	INCBIN "textures/attribute_map/gravity_map_attributes"
