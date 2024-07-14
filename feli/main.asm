@@ -26,31 +26,34 @@ SECTION "Game code", ROM0[$150]
 
 Start:
 ; GAME LOOP ################################################################
-	; Enable interrupts
-    ld a, IEF_VBLANK
-    ldh [rIE], a
+	; Enable interrupts (Only vblank)
+    di
+    ld a, IEF_VBLANK ; Only vblank interrupt bit put in 'a'register
+    ldh [rIE], a     ; Only vblank interrupt selected
     ei
 	; LCD memory location, if 0 LCD is off
 	call wait_vblank
 	xor a
 	ld [rLCDC], a  ; Turn off the LCD by putting zero in the rLCDC register
 	
-; let's clear the vRAM
-    ld a,0
+; let's clear the screen
     ld hl, $9800
-    ld bc, $9BFF
-ClearVRAM:
-    ld [hli], a
-    dec b
-    jp nz, ClearVRAM
-; let's clear the OAM which at start is full of junk
-    ld a, 0
-    ld b, 160
-    ld hl, _OAMRAM
-ClearOam:
-    ld [hli], a
-    dec b
-    jp nz, ClearOam
+    ld de, $9bff
+    call clear_mem_area
+; let's clear vram 0:8800
+    ld hl, $8800
+    ld de, $8ff0
+    call clear_mem_area
+; let's clear vram 1:8800
+    ld a, %00000001
+    ld [rVBK], a
+    ld hl, $8800
+    ld de, $8ff0
+    call clear_mem_area
+
+    ;set again vram 0
+    xor a
+    ld [rVBK], a
 
     ; Copy the bin data to video ram
     ld hl, $8800
@@ -95,6 +98,8 @@ ClearOam:
     ld [rVBK], a
     ;---------------------------------------------
 
+    ; copy dma transfer routine into high ram
+    ; because only high ram can be accessed during dma transfer
     ld bc, dma_copy
     ld hl, $ff80
 	ld de, dma_copy_end - dma_copy
@@ -123,12 +128,13 @@ ClearOam:
 	
 	ld b, 0
 	ld c, 0
+
 .vblank_loop:
     ; Main loop: halt, wait for a vblank, then do stuff
 
     ; The halt instruction stops all CPU activity until the
     ; next interrupt, which saves on battery, or at least on
-    ; CPU cycles on an emulator's host system.
+    ; CPU cycles on an erIEmulator's host system.
     halt
     ; The Game Boy has some obscure hardware bug where the
     ; instruction after a halt is occasionally skipped over,

@@ -33,3 +33,19 @@ copy_bin:
     ret 
     
 
+; -- !!!Disable screen - ppu before calling this method!!!
+; -- this subroutine is used to clear area memory
+; -- hl: start
+; -- de: end
+clear_mem_area:
+    .clear_loop
+    xor a
+    ld [hli], a
+    ld a, l
+    cp a, e
+    jp nz, .clear_loop
+    ld a, h
+    cp a, d
+    jp nz, .clear_loop
+    ret
+
