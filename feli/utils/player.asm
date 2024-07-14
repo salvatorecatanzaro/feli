@@ -14,13 +14,7 @@ update_player_position:
     ld [main_player_y], a
     ld a, [oam_buffer+1]
     ld [main_player_x], a
-
-    ; Controllo i 2 vertici inferiori del rettangolo immaginario per vedere se uno dei due collide
-
-    ;test down bit
-    ld a, [buttons]
-    bit 3, a
-    jr nz, .no_down
+    ; Apply gravity on character
     ld a, [main_player_y]
     add a, 4 ; The check starts from upleft, lets add 4 pixel distance to make it more centered
     sub a, 16-1 ; the sprite y is not aligned with tile position (0, 0), removing 16 bit removes this difference
@@ -37,32 +31,8 @@ update_player_position:
     ld a, [bc]
     add a, 1
     ld [bc], a
-.no_down
-    call reset_positions
-
-    ;test up bit
-    ld a, [buttons]
-    bit 2, a
-    jr nz, .no_up
-    ld a, [main_player_y]
-    sub a, 16+1 ; the sprite y is not aligned with tile position (0, 0), removing 16 bit removes this difference
-    ld c, a
-    ld a, [main_player_x]
-    sub a, 8
-    ld b, a
-    call get_tile_by_pixel ; Returns tile address in hl
-    ld a, [hl]
-    call is_wall_tile
-    jr nz, .no_up
-    ld bc, oam_buffer ; y pos
-    ld a, [bc]
-    sub a, 1
-    ld [bc], a
-.no_up
-    call reset_positions
-
-    inc bc ; increment OAM BUFFER cursor to match X 
-
+    .no_down
+    ; Apply gravity on character
     ;test left bit
     ld a, [buttons]
     bit 1, a
@@ -78,6 +48,10 @@ update_player_position:
     ld a, [hl]
     call is_wall_tile
     jr nz, .no_left
+    ; set x flip to 0
+    ld a, %00100000
+    ld [oam_buffer + 3], a
+
     ; No collision, update position
     ld bc, oam_buffer + 1  ; x pos
     ld a, [bc]
@@ -90,6 +64,9 @@ update_player_position:
     ld a, [buttons]
     bit 0, a
     jr nz, .no_right
+    ; set x flip to 0
+    ld a, %00000000
+    ld [oam_buffer + 3], a
     ld a, [main_player_y]
     add a, 4  ; don t check collision from the top left of the sprite, but from a more mid position
     sub a, 16 ; the sprite y is not aligned with tile position (0, 0), removing 16 bit removes this difference
@@ -209,4 +186,109 @@ get_tile_by_pixel:
 ; @return z: set if a is a wall.
 is_wall_tile:
     or a, $00
+    ret
+
+player_animation:
+    ld a, [wFrameCounter]
+    inc a
+    ld [wFrameCounter], a
+    cp a, 10 ; Every 10 frames (a tenth of a second), run the following code
+    jp nz, .endstatecheck
+
+    ; Reset the frame counter back to 0
+    ld a, 0
+    ld [wFrameCounter], a
+
+
+    ; if no state is set idle animation will be executed
+    ld a, [player_state]
+    or a
+    jp z, .gotostate0
+    bit 0, a
+    jp nz, .gotostate0
+    bit 1, a
+    jp nz, .gotostate1
+    bit 2, a
+    jp nz, .gotostate2
+    bit 3, a
+    jp nz, .gotostate3
+    bit 4, a
+    jp nz, .gotostate4
+    bit 5, a
+    jp nz, .gotostate5
+    bit 6, a
+    jp nz, .gotostate6
+
+    .gotostate0 ; idle
+    ld a, 1
+    ld [player_state], a
+    ; Copy the bin data to video ram
+    ld hl, $8800
+    ld de, player ; Starting address
+    ld bc, __player - player ; Length -> it's a subtraciton
+    call copy_data_to_destination
+    jp .endstatecheck
+
+    .gotostate1 ; running
+    ld a, 0
+    ld [player_state], a
+    ; Copy the bin data to video ram
+    ld hl, $8800
+    ld de, player_state_1 ; Starting address
+    ld bc, __player_state_1 - player_state_1 ; Length -> it's a subtraciton
+    call copy_data_to_destination
+    jp .endstatecheck
+
+    .gotostate2 ; jumping
+    ld a, 0
+    ld [player_state], a
+    ; Copy the bin data to video ram
+    ld hl, $8800
+    ld de, player_state_1 ; Starting address
+    ld bc, __player_state_1 - player_state_1 ; Length -> it's a subtraciton
+    call copy_data_to_destination
+    jp .endstatecheck
+
+    .gotostate3 ; dead
+    ld a, 0
+    ld [player_state], a
+    ; Copy the bin data to video ram
+    ld hl, $8800
+    ld de, player_state_1 ; Starting address
+    ld bc, __player_state_1 - player_state_1 ; Length -> it's a subtraciton
+    call copy_data_to_destination
+    jp .endstatecheck
+
+    .gotostate4 ; hurt
+    ld a, 0 
+    ld [player_state], a
+    ; Copy the bin data to video ram
+    ld hl, $8800
+    ld de, player_state_1 ; Starting address
+    ld bc, __player_state_1 - player_state_1 ; Length -> it's a subtraciton
+    call copy_data_to_destination
+    jp .endstatecheck
+
+    .gotostate5 ; joy
+    ld a, 0
+    ld [player_state], a
+    ; Copy the bin data to video ram
+    ld hl, $8800
+    ld de, player_state_1 ; Starting address
+    ld bc, __player_state_1 - player_state_1 ; Length -> it's a subtraciton
+    call copy_data_to_destination
+    jp .endstatecheck
+
+    .gotostate6 ; powerup
+    ld a, 0
+    ld [player_state], a
+    ; Copy the bin data to video ram
+    ld hl, $8800
+    ld de, player_state_1 ; Starting address
+    ld bc, __player_state_1 - player_state_1 ; Length -> it's a subtraciton
+    call copy_data_to_destination
+    jp .endstatecheck
+
+
+    .endstatecheck
     ret

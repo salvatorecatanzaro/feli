@@ -39,7 +39,6 @@ dma_copy_end:
 ;sprite_ids each byte contains 2 sprite id
 
 copy_oam_sprites:
-    ;Updates player position based on button pressed
     ld a, [sprite_count]
     ld b, a
     ld de, sprite_ids

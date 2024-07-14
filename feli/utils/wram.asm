@@ -15,3 +15,10 @@ buttons: ds 1
 SECTION "Player coordinates", WRAM0
 main_player_y: ds 1
 main_player_x: ds 1
+
+SECTION "Player_state", WRAM0[$CFF0]
+;this area will be used to define player state variables
+player_state: ds 0
+
+SECTION "Counter", WRAM0
+wFrameCounter: ds 1

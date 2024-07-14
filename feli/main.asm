@@ -35,7 +35,7 @@ Start:
 	call wait_vblank
 	xor a
 	ld [rLCDC], a  ; Turn off the LCD by putting zero in the rLCDC register
-	
+
 ; let's clear the screen
     ld hl, $9800
     ld de, $9bff
@@ -50,11 +50,13 @@ Start:
     ld hl, $8800
     ld de, $8ff0
     call clear_mem_area
-
     ;set again vram 0
     xor a
     ld [rVBK], a
-
+; let's clear the ram 
+    ld hl, $C000
+    ld de, $DFFF
+    call clear_mem_area
     ; Copy the bin data to video ram
     ld hl, $8800
 	ld de, player ; Starting address
@@ -129,12 +131,17 @@ Start:
 	ld b, 0
 	ld c, 0
 
+    ;removeme
+    ld a, 0
+    ld [player_state], a  ; setting player state to IDLE
+    ld [wFrameCounter], a 
+    ;removeme
 .vblank_loop:
     ; Main loop: halt, wait for a vblank, then do stuff
 
     ; The halt instruction stops all CPU activity until the
     ; next interrupt, which saves on battery, or at least on
-    ; CPU cycles on an erIEmulator's host system.
+    ; CPU cycles on an emulator's host system.
     halt
     ; The Game Boy has some obscure hardware bug where the
     ; instruction after a halt is occasionally skipped over,
@@ -142,11 +149,13 @@ Start:
     ; ubiquitous that rgbasm automatically adds a nop after
     ; every halt, so I don't even really need this here!
     nop
+
     xor a
 
     call get_buttons_state
     call update_player_position
-    ;call apply_gravity
+    call player_animation
+
     call $ff80 ; refresh oam
 
     jp .vblank_loop
