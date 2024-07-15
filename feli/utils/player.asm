@@ -8,12 +8,22 @@ reset_positions:
     ret
 
 update_player_position:
+    ; if no button is pressed, the character is either jumping or idle
+    ld a, [player_state]
+    bit 2, a
+    jr z, .jumping
+    jp .idle
+
+    ; when jumping the player can still move left or right
+    ; also the gravity will be affecting his position
+    .jumping 
     ;Updates player position based on inputs and gravity
     ld bc, oam_buffer                 ; BC Contains now Y position 
     ld a, [oam_buffer]
     ld [main_player_y], a
     ld a, [oam_buffer+1]
     ld [main_player_x], a
+    
     ; Apply gravity on character
     ld a, [main_player_y]
     add a, 4 ; The check starts from upleft, lets add 4 pixel distance to make it more centered
@@ -48,6 +58,9 @@ update_player_position:
     ld a, [hl]
     call is_wall_tile
     jr nz, .no_left
+    ; set player animation to running
+    ld a, %00000010
+    ld [player_state], a
     ; set x flip to 0
     ld a, %00100000
     ld [oam_buffer + 3], a
@@ -57,13 +70,17 @@ update_player_position:
     ld a, [bc]
     sub a, 1
     ld [bc], a
-.no_left
+    jp .end_update_player_position
+    .no_left
     call reset_positions
 
     ;test right bit
     ld a, [buttons]
     bit 0, a
     jr nz, .no_right
+    ; set player animation to running
+    ld a, %00000010
+    ld [player_state], a
     ; set x flip to 0
     ld a, %00000000
     ld [oam_buffer + 3], a
@@ -84,8 +101,14 @@ update_player_position:
     ld a, [bc]
     add a, 1
     ld [bc], a
-.no_right
+    jp .end_update_player_position
+    .no_right
 
+    .idle
+    ld a, %00000000
+    ld [player_state], a ; set player state to idle
+
+    .end_update_player_position
     ret
 
 
@@ -192,7 +215,7 @@ player_animation:
     ld a, [wFrameCounter]
     inc a
     ld [wFrameCounter], a
-    cp a, 10 ; Every 10 frames (a tenth of a second), run the following code
+    cp a, 15 ; Every 10 frames (a tenth of a second), run the following code
     jp nz, .endstatecheck
 
     ; Reset the frame counter back to 0
@@ -203,21 +226,21 @@ player_animation:
     ; if no state is set idle animation will be executed
     ld a, [player_state]
     or a
-    jp z, .gotostate0
+    jr z, .gotostate0
     bit 0, a
-    jp nz, .gotostate0
+    jr nz, .gotostate0
     bit 1, a
-    jp nz, .gotostate1
+    jr nz, .gotostate1
     bit 2, a
-    jp nz, .gotostate2
+    jr nz, .gotostate2
     bit 3, a
-    jp nz, .gotostate3
+    jr nz, .gotostate3
     bit 4, a
-    jp nz, .gotostate4
+    jr nz, .gotostate4
     bit 5, a
-    jp nz, .gotostate5
+    jr nz, .gotostate5
     bit 6, a
-    jp nz, .gotostate6
+    jr nz, .gotostate6
 
     .gotostate0 ; idle
     ld a, 1
@@ -230,62 +253,66 @@ player_animation:
     jp .endstatecheck
 
     .gotostate1 ; running
-    ld a, 0
-    ld [player_state], a
     ; Copy the bin data to video ram
     ld hl, $8800
-    ld de, player_state_1 ; Starting address
-    ld bc, __player_state_1 - player_state_1 ; Length -> it's a subtraciton
+    ld a, [state_1_count]
+    ld b, $1
+    cp a, b
+    jr nz, .state_1_frame_2
+    ; draw frame 1
+    ld de, player_state_1_1 ; Starting address
+    ld bc, __player_state_1_1 - player_state_1_1 ; Length -> it's a subtraciton
     call copy_data_to_destination
+    ld a, $2
+    ld [state_1_count], a
+    jp .endstatecheck
+    ; draw frame 2
+    .state_1_frame_2
+    ld de, player_state_1_2 ; Starting address
+    ld bc, __player_state_1_2 - player_state_1_2 ; Length -> it's a subtraciton
+    call copy_data_to_destination
+    ; reset state to 1
+    ld a, $1
+    ld [state_1_count], a
     jp .endstatecheck
 
     .gotostate2 ; jumping
-    ld a, 0
-    ld [player_state], a
     ; Copy the bin data to video ram
     ld hl, $8800
-    ld de, player_state_1 ; Starting address
-    ld bc, __player_state_1 - player_state_1 ; Length -> it's a subtraciton
+    ld de, player ; Starting address
+    ld bc, __player - player ; Length -> it's a subtraciton
     call copy_data_to_destination
     jp .endstatecheck
 
     .gotostate3 ; dead
-    ld a, 0
-    ld [player_state], a
     ; Copy the bin data to video ram
     ld hl, $8800
-    ld de, player_state_1 ; Starting address
-    ld bc, __player_state_1 - player_state_1 ; Length -> it's a subtraciton
+    ld de, player ; Starting address
+    ld bc, __player - player ; Length -> it's a subtraciton
     call copy_data_to_destination
     jp .endstatecheck
 
     .gotostate4 ; hurt
-    ld a, 0 
-    ld [player_state], a
     ; Copy the bin data to video ram
     ld hl, $8800
-    ld de, player_state_1 ; Starting address
-    ld bc, __player_state_1 - player_state_1 ; Length -> it's a subtraciton
+    ld de, player ; Starting address
+    ld bc, __player - player ; Length -> it's a subtraciton
     call copy_data_to_destination
     jp .endstatecheck
 
     .gotostate5 ; joy
-    ld a, 0
-    ld [player_state], a
     ; Copy the bin data to video ram
     ld hl, $8800
-    ld de, player_state_1 ; Starting address
-    ld bc, __player_state_1 - player_state_1 ; Length -> it's a subtraciton
+    ld de, player ; Starting address
+    ld bc, __player - player ; Length -> it's a subtraciton
     call copy_data_to_destination
     jp .endstatecheck
 
     .gotostate6 ; powerup
-    ld a, 0
-    ld [player_state], a
     ; Copy the bin data to video ram
     ld hl, $8800
-    ld de, player_state_1 ; Starting address
-    ld bc, __player_state_1 - player_state_1 ; Length -> it's a subtraciton
+    ld de, player ; Starting address
+    ld bc, __player - player ; Length -> it's a subtraciton
     call copy_data_to_destination
     jp .endstatecheck
 

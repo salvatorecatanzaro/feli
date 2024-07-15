@@ -14,9 +14,13 @@ __gravity_palettes:
 player:
 	INCBIN "textures/cat.chr"
 __player:
-player_state_1:
-	INCBIN "textures/cat_dead.chr"
-__player_state_1:
+player_state_1_1:
+	INCBIN "textures/run_1.chr"
+__player_state_1_1:
+player_state_1_2:
+	INCBIN "textures/run_2.chr"
+__player_state_1_2:
+
 player_2:
 	INCBIN "textures/level/cat_front.chr"
 __player_2:

@@ -18,7 +18,16 @@ main_player_x: ds 1
 
 SECTION "Player_state", WRAM0[$CFF0]
 ;this area will be used to define player state variables
-player_state: ds 0
+player_state: ds 1
+; The state_n_count variables will be used to decide which frame of the animation should be picked
+; eg. last frame for running (state 1) was 0, the next frame animation should be 1
+state_0_count: ds 1
+state_1_count: ds 1
+state_2_count: ds 1
+state_3_count: ds 1
+state_4_count: ds 1
+state_5_count: ds 1
+state_6_count: ds 1
 
 SECTION "Counter", WRAM0
 wFrameCounter: ds 1

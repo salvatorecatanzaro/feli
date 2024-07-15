@@ -131,11 +131,19 @@ Start:
 	ld b, 0
 	ld c, 0
 
-    ;removeme
     ld a, 0
     ld [player_state], a  ; setting player state to IDLE
-    ld [wFrameCounter], a 
-    ;removeme
+    ld [wFrameCounter], a
+    ; init all states to 1
+    ld a, 1
+    ld [state_0_count], a
+    ld [state_1_count], a
+    ld [state_2_count], a 
+    ld [state_3_count], a
+    ld [state_4_count], a 
+    ld [state_5_count], a
+    ld [state_6_count], a
+
 .vblank_loop:
     ; Main loop: halt, wait for a vblank, then do stuff
 
