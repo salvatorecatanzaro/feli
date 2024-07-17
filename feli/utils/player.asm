@@ -8,41 +8,22 @@ reset_positions:
     ret
 
 update_player_position:
-    ; if no button is pressed, the character is either jumping or idle
-    ld a, [player_state]
-    bit 2, a
-    jr z, .jumping
-    jp .idle
 
-    ; when jumping the player can still move left or right
-    ; also the gravity will be affecting his position
-    .jumping 
+    ; if no button pressed, let's set the idle state. if player is falling this state will be changed later
+    ld a, [buttons]
+    and a, 0  
+    jr nz, .not_idle ; some button has been pressed, not idle
+    ld a, %00000000
+    ld [player_state], a
+    .not_idle
+
     ;Updates player position based on inputs and gravity
     ld bc, oam_buffer                 ; BC Contains now Y position 
     ld a, [oam_buffer]
     ld [main_player_y], a
     ld a, [oam_buffer+1]
     ld [main_player_x], a
-    
-    ; Apply gravity on character
-    ld a, [main_player_y]
-    add a, 4 ; The check starts from upleft, lets add 4 pixel distance to make it more centered
-    sub a, 16-1 ; the sprite y is not aligned with tile position (0, 0), removing 16 bit removes this difference
-    ld c, a
-    ld a, [main_player_x]
-    sub a, 8
-    ld b, a
-    call get_tile_by_pixel ; Returns tile address in hl
-    ld a, [hl]
-    call is_wall_tile
-    jr nz, .no_down
-    ; No collision, update position
-    ld bc, oam_buffer ; y pos
-    ld a, [bc]
-    add a, 1
-    ld [bc], a
-    .no_down
-    ; Apply gravity on character
+
     ;test left bit
     ld a, [buttons]
     bit 1, a
@@ -70,9 +51,9 @@ update_player_position:
     ld a, [bc]
     sub a, 1
     ld [bc], a
-    jp .end_update_player_position
     .no_left
     call reset_positions
+    ;test left bit
 
     ;test right bit
     ld a, [buttons]
@@ -101,12 +82,44 @@ update_player_position:
     ld a, [bc]
     add a, 1
     ld [bc], a
-    jp .end_update_player_position
     .no_right
+    ;test right bit
+    
+    ; test jump bit
+    ld a, [buttons]
+    bit 7, a
+    jr nz, .not_jumping
+    ; when jumping the player can still move left or right
+    ; also the gravity will be affecting his position
+    .jumping 
+    ld a, %00000100
+    ld [player_state], a
+    .not_jumping
+    ; test jump bit
 
-    .idle
-    ld a, %00000000
-    ld [player_state], a ; set player state to idle
+    ; Apply gravity on character
+    ld a, [main_player_y]
+    add a, 4 ; The check starts from upleft, lets add 4 pixel distance to make it more centered
+    sub a, 16-1 ; the sprite y is not aligned with tile position (0, 0), removing 16 bit removes this difference
+    ld c, a
+    ld a, [main_player_x]
+    sub a, 8
+    ld b, a
+    call get_tile_by_pixel ; Returns tile address in hl
+    ld a, [hl]
+    call is_wall_tile
+    jr nz, .no_down
+    ; No collision, update position
+    ld bc, oam_buffer ; y pos
+    ld a, [bc]
+    add a, 1
+    ld [bc], a
+    ; When the player is falling will go in the state jumping
+    ld a, %00000100
+    ld [player_state], a
+    ;jp .end_update_player_position
+    .no_down
+    ; Apply gravity on character
 
     .end_update_player_position
     ret
@@ -279,8 +292,8 @@ player_animation:
     .gotostate2 ; jumping
     ; Copy the bin data to video ram
     ld hl, $8800
-    ld de, player ; Starting address
-    ld bc, __player - player ; Length -> it's a subtraciton
+    ld de, jmp_state ; Starting address
+    ld bc, __jmp_state - jmp_state ; Length -> it's a subtraciton
     call copy_data_to_destination
     jp .endstatecheck
 
