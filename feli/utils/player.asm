@@ -10,7 +10,9 @@ reset_positions:
 update_player_position:
     ; Start by setting the state to idle, if it's not the correct state it will be
     ; overwritten by the next instructions
-    ld a, %00000000
+    ld b , %00001000 ; Mask to reset falling bit
+    ld a, [player_state]
+    and b 
     ld [player_state], a
 
     ;test left bit
@@ -29,7 +31,9 @@ update_player_position:
     call is_wall_tile
     jr nz, .no_left
     ; set player animation to running
-    ld a, %00000010
+    ld b, %00000010
+    ld a, [player_state]
+    or b
     ld [player_state], a
     ; set x flip to 0
     ld a, %00100000
@@ -48,7 +52,9 @@ update_player_position:
     bit 0, a
     jr nz, .no_right
     ; set player animation to running
-    ld a, %00000010
+    ld b, %00000010
+    ld a, [player_state]
+    or b
     ld [player_state], a
     ; set x flip to 0
     ld a, %00000000
@@ -77,10 +83,13 @@ update_player_position:
     ; test jump bit
     ld a, [buttons]           ;
     bit 4, a                  ;  If button A is pressed and 
-    jr nz, .not_jumping       ;  the state is not equal to ju
-    ;ld a, [player_state]      ;
-    ;cp a, $1                  ;
-    ;jr nz, .not_jumping       ;  
+    jr nz, .not_jumping       ;  the state is not equal to falling
+    ld a, %00001000           ;  go up
+    ld b, a                   ;
+    ld a, [player_state]      ;
+    and b                     ; 
+    jr nz, .not_jumping       ;
+
     ; when jumping the player can still move left or right
     ; also the gravity will be affecting his position
     .jumping 
@@ -105,6 +114,18 @@ update_player_position:
     .not_jumping
     ; test jump bit
 
+    
+    ld a, [player_state]                ;
+    ld b, %00000100                     ;  If player state is jumping 
+    and b                               ;  we don't want  
+    jp nz, .end_update_player_position  ;  to apply gravity
+
+    ld a, [jp_max_count]                 ;
+    ld b, a                              ;  If jump counter is less then 
+    ld [state_2_count], a                ;  jp_max_count we 
+    cp a, b                              ;  don't want to apply gravity yet 
+    jr nz, .end_update_player_position   ; 
+
     ; Apply gravity on character
     ld a, [main_player_y]
     add a, 4 ; The check starts from upleft, lets add 4 pixel distance to make it more centered
@@ -128,9 +149,10 @@ update_player_position:
     jp .end_update_player_position
     .no_down
     ; If no down condition is met, we are not falling anymore
-    ;ld b , %11110111 ; Mask to reset falling bit
-    ;ld a, [player_state]
-    ;and b 
+    ld b , %11110111 ; Mask to reset falling bit
+    ld a, [player_state]
+    and b 
+    ld [player_state], a
     .end_update_player_position
     ret
 
@@ -269,14 +291,16 @@ player_animation:
     ld a, [state_2_count]
     add a, 1
     ld [state_2_count], a
-    ld b, $50
+    ld a, [jp_max_count]
+    ld b, a
+    ld [state_2_count], a
     cp a, b
     jr z, .start_falling
     ld a, $1
     ld [state_2_count], a ; if 10 frame are passed, return the state to 1
     jp .endstatecheck
-    .start_falling
-    xor a
+    .start_falling             
+    ld a, $1
     ld [state_2_count], a
     ld a, %00001000
     ld [player_state], a

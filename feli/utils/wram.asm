@@ -28,5 +28,7 @@ state_3_count: ds 1 ; falling
 state_4_count: ds 1
 state_5_count: ds 1
 state_6_count: ds 1
+jp_max_count: ds 1
+jp_button_pressed: ds 1 ; Used to check if button is on hold or a new click
 SECTION "Counter", WRAM0
 wFrameCounter: ds 1

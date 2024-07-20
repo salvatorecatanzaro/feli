@@ -143,6 +143,8 @@ Start:
     ld [state_4_count], a 
     ld [state_5_count], a
     ld [state_6_count], a
+    ld a, $80
+    ld [jp_max_count], a
 .main_loop:
     ; Main loop: halt, wait for a vblank, then do stuff
 
