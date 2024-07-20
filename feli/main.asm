@@ -143,8 +143,7 @@ Start:
     ld [state_4_count], a 
     ld [state_5_count], a
     ld [state_6_count], a
-
-.vblank_loop:
+.main_loop:
     ; Main loop: halt, wait for a vblank, then do stuff
 
     ; The halt instruction stops all CPU activity until the
@@ -166,5 +165,5 @@ Start:
 
     call $ff80 ; refresh oam
 
-    jp .vblank_loop
+    jp .main_loop
 

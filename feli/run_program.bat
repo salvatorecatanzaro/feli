@@ -1,7 +1,5 @@
 
-rgbasm -o main.o main.asm
+rgbasm -o feli.o main.asm
 if %errorlevel% neq 0 exit 1
-rgblink -o hello-world.gbc main.o
-rgbfix -C -v -p 0 hello-world.gbc
-
-.\bgb_emulator\bgb.exe hello-world.gbc
+rgblink -o feli.gbc feli.o
+rgbfix -C -v -p 0 feli.gbc
