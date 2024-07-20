@@ -20,9 +20,12 @@ __player_state_1_1:
 player_state_1_2:
 	INCBIN "textures/run_2.chr"
 __player_state_1_2:
-jmp_state:
-	INCBIN "textures/cat_jmp.chr"
-__jmp_state:
+jmp_state_1_1:
+	INCBIN "textures/cat_jmp_1.chr"
+__jmp_state_1_1:
+jmp_state_1_2:
+	INCBIN "textures/cat_jmp_2.chr"
+__jmp_state_1_2:
 player_2:
 	INCBIN "textures/level/cat_front.chr"
 __player_2:
