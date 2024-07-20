@@ -10,10 +10,18 @@ reset_positions:
 update_player_position:
     ; Start by setting the state to idle, if it's not the correct state it will be
     ; overwritten by the next instructions
-    ld b , %00001000 ; Mask to reset falling bit
+    ld b , %00001100 ; Mask to reset every state but jmp and falling bit
     ld a, [player_state]
     and b 
     ld [player_state], a
+
+    ; if button A is not pressed, it can not be in hold state
+    ld a, [buttons]
+    bit 4, a                  ;  If button A is pressed and 
+    jr z, .holding   
+    xor a
+    ld [holding_jump], a 
+    .holding
 
     ;test left bit
     ld a, [buttons]
@@ -80,16 +88,27 @@ update_player_position:
     call reset_positions
     ;test right bit
     
+    ; If jumping state, keep on going up
+    ld a, [player_state]
+    bit 2, a
+    jp nz, .jumping
     ; test jump bit
-    ld a, [buttons]           ;
+    ld a, [buttons]           
     bit 4, a                  ;  If button A is pressed and 
-    jr nz, .not_jumping       ;  the state is not equal to falling
-    ld a, %00001000           ;  go up
+    jr nz, .not_jumping   
+    ld b, $0
+    ld a, [holding_jump]
+    or b
+    jr nz, .not_jumping       ; If A button is not the same press as last loop being hold 
+    ld a, $1
+    ld [holding_jump], a      ; new A press
+    ld a, %00001000           ;  
     ld b, a                   ;
     ld a, [player_state]      ;
-    and b                     ; 
-    jr nz, .not_jumping       ;
+    and b                     ;  If Player is not falling
+    jr nz, .not_jumping       ; 
 
+    ;JUMP!
     ; when jumping the player can still move left or right
     ; also the gravity will be affecting his position
     .jumping 
