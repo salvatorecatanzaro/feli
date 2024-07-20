@@ -123,11 +123,26 @@ update_player_position:
     call get_tile_by_pixel ; Returns tile address in hl
     ld a, [hl]
     call is_wall_tile
-    jr nz, .no_up
+    jr nz, .start_falling
     ld bc, oam_buffer ; y pos
     ld a, [bc]
     sub a, 3
     ld [bc], a
+    ; increment by 1 state counter
+    ld a, [state_2_count]
+    add a, 1
+    ld [state_2_count], a
+    ld a, [jp_max_count]
+    ld b, a
+    ld a, [state_2_count]
+    cp a, b
+    jr z, .start_falling
+    jp .no_up
+    .start_falling             
+    ld a, $1
+    ld [state_2_count], a
+    ld a, %00001000
+    ld [player_state], a
     .no_up
     call reset_positions
     .not_jumping
@@ -139,11 +154,11 @@ update_player_position:
     and b                               ;  we don't want  
     jp nz, .end_update_player_position  ;  to apply gravity
 
-    ld a, [jp_max_count]                 ;
-    ld b, a                              ;  If jump counter is less then 
-    ld [state_2_count], a                ;  jp_max_count we 
-    cp a, b                              ;  don't want to apply gravity yet 
-    jr nz, .end_update_player_position   ; 
+    ;ld a, [jp_max_count]                 ;
+    ;ld b, a                              ;  If jump counter is less then 
+    ;ld a, [state_2_count]                ;  jp_max_count we 
+    ;cp a, b                              ;  don't want to apply gravity yet 
+    ;jr nz, .end_update_player_position   ; 
 
     ; Apply gravity on character
     ld a, [main_player_y]
@@ -299,6 +314,7 @@ player_animation:
     ; increment by 1 state counter
     ld a, [state_2_count]
     add a, 1
+    ld [state_2_count], a
     jp .endstatecheck
     .state_2_frame_2
     ; Copy the bin data to video ram
@@ -306,24 +322,7 @@ player_animation:
     ld de, jmp_state_1_2 ; Starting address
     ld bc, __jmp_state_1_2 - jmp_state_1_2 ; Length -> it's a subtraciton
     call copy_data_to_destination
-    ; increment by 1 state counter
-    ld a, [state_2_count]
-    add a, 1
-    ld [state_2_count], a
-    ld a, [jp_max_count]
-    ld b, a
-    ld [state_2_count], a
-    cp a, b
-    jr z, .start_falling
-    ld a, $1
-    ld [state_2_count], a ; if 10 frame are passed, return the state to 1
-    jp .endstatecheck
-    .start_falling             
-    ld a, $1
-    ld [state_2_count], a
-    ld a, %00001000
-    ld [player_state], a
-    jp .endstatecheck
+    
 
     .gotostate3 ; falling
     ; Copy the bin data to video ram

@@ -143,7 +143,7 @@ Start:
     ld [state_4_count], a 
     ld [state_5_count], a
     ld [state_6_count], a
-    ld a, $80
+    ld a, $10
     ld [jp_max_count], a
     xor a
     ld [holding_jump], a
