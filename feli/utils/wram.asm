@@ -21,9 +21,9 @@ SECTION "Player_state", WRAM0[$CFF0]
 player_state: ds 1
 ; The state_n_count variables will be used to decide which frame of the animation should be picked
 ; eg. last frame for running (state 1) was 0, the next frame animation should be 1
-state_0_count: ds 1 ; idle
-state_1_count: ds 1 ; running
-state_2_count: ds 1 ; jumping
+state_idle_count: ds 1 ; idle
+state_running_count: ds 1 ; running
+state_jmp_count: ds 1 ; jumping
 state_3_count: ds 1 ; falling
 state_4_count: ds 1
 state_5_count: ds 1

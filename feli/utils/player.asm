@@ -124,7 +124,7 @@ update_player_position:
     ld a, [hl]
     call is_wall_tile
     jr nz, .start_falling
-    ld a, [state_2_count]
+    ld a, [state_jmp_count]
     ld b, $8
     cp b
     jr c, .up_by_three           ;
@@ -141,18 +141,18 @@ update_player_position:
     ld [bc], a                   ;
     .__up_by
     ; increment by 1 state counter
-    ld a, [state_2_count]
+    ld a, [state_jmp_count]
     add a, 1
-    ld [state_2_count], a
+    ld [state_jmp_count], a
     ld a, [jp_max_count]
     ld b, a
-    ld a, [state_2_count]
+    ld a, [state_jmp_count]
     cp a, b
     jr z, .start_falling
     jp .no_up
     .start_falling             
     ld a, $1
-    ld [state_2_count], a
+    ld [state_jmp_count], a
     ld a, %00001000
     ld [player_state], a
     .no_up
@@ -165,14 +165,7 @@ update_player_position:
     and b                               ;  we don't want  
     jp nz, .end_update_player_position  ;  to apply gravity
 
-    ;ld a, [jp_max_count]                 ;
-    ;ld b, a                              ;  If jump counter is less then 
-    ;ld a, [state_2_count]                ;  jp_max_count we 
-    ;cp a, b                              ;  don't want to apply gravity yet 
-    ;jr nz, .end_update_player_position   ; 
-
     ; Apply gravity on character
-
     ; No collision, update position
     ld a, [falling_speed]
     ld b, $12
@@ -322,55 +315,55 @@ player_animation:
     .gotostate1 ; running
     ; Copy the bin data to video ram
     ld hl, $8800
-    ld a, [state_1_count]
+    ld a, [state_running_count]
     ld b, $1
     cp a, b
-    jr nz, .state_1_frame_2
+    jr nz, .state_running_frame_2
     ; draw frame 1
-    ld de, player_state_1_1 ; Starting address
-    ld bc, __player_state_1_1 - player_state_1_1 ; Length -> it's a subtraciton
+    ld de, player_state_running_1 ; Starting address
+    ld bc, __player_state_running_1 - player_state_running_1 ; Length -> it's a subtraciton
     call copy_data_to_destination
     ld a, $2
-    ld [state_1_count], a
+    ld [state_running_count], a
     jp .endstatecheck
     ; draw frame 2
-    .state_1_frame_2
-    ld de, player_state_1_2 ; Starting address
-    ld bc, __player_state_1_2 - player_state_1_2 ; Length -> it's a subtraciton
+    .state_running_frame_2
+    ld de, player_state_running_2 ; Starting address
+    ld bc, __player_state_running_2 - player_state_running_2 ; Length -> it's a subtraciton
     call copy_data_to_destination
     ; reset state to 1
     ld a, $1
-    ld [state_1_count], a
+    ld [state_running_count], a
     jp .endstatecheck
 
     .gotostate2 ; jumping
-    ld a, [state_2_count]
+    ld a, [state_jmp_count]
     ld b, $4
     cp a, b
     jr nz, .state_2_frame_2
     ; Copy the bin data to video ram
     ld hl, $8800
-    ld de, jmp_state_1_1 ; Starting address
-    ld bc, __jmp_state_1_1 - jmp_state_1_1 ; Length -> it's a subtraciton
+    ld de, player_state_jmp_1_1 ; Starting address
+    ld bc, __player_state_jmp_1_1 - player_state_jmp_1_1 ; Length -> it's a subtraciton
     call copy_data_to_destination
     ; increment by 1 state counter
-    ld a, [state_2_count]
+    ld a, [state_jmp_count]
     add a, 1
-    ld [state_2_count], a
+    ld [state_jmp_count], a
     jp .endstatecheck
     .state_2_frame_2
     ; Copy the bin data to video ram
     ld hl, $8800
-    ld de, jmp_state_1_2 ; Starting address
-    ld bc, __jmp_state_1_2 - jmp_state_1_2 ; Length -> it's a subtraciton
+    ld de, player_state_jmp_1_2 ; Starting address
+    ld bc, __player_state_jmp_1_2 - player_state_jmp_1_2 ; Length -> it's a subtraciton
     call copy_data_to_destination
     
 
     .gotostate3 ; falling
     ; Copy the bin data to video ram
     ld hl, $8800
-    ld de, jmp_state_1_2 ; Starting address
-    ld bc, __jmp_state_1_2 - jmp_state_1_2 ; Length -> it's a subtraciton
+    ld de, player_state_jmp_1_2 ; Starting address
+    ld bc, __player_state_jmp_1_2 - player_state_jmp_1_2 ; Length -> it's a subtraciton
     call copy_data_to_destination
     ; increment by 1 state counter
     jp .endstatecheck

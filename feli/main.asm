@@ -137,9 +137,9 @@ Start:
     ld [wFrameCounter], a
     ; init all states to 1
     ld a, 1
-    ld [state_0_count], a
-    ld [state_1_count], a
-    ld [state_2_count], a 
+    ld [state_idle_count], a
+    ld [state_running_count], a
+    ld [state_jmp_count], a 
     ld [state_3_count], a
     ld [state_4_count], a 
     ld [state_5_count], a

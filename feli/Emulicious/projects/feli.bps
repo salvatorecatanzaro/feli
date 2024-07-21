@@ -16,7 +16,7 @@ type=instruction address=update_player_position.no_left%20+%2045 end=update_play
 type=watchpoint address=C8F end=C90 enabled=false suspend=true read=true write=false condition=op%20%3d%202%20&&%20&pc%20%3d%200 message= location=cpu
 type=watchpoint address=AE4 end=AE5 enabled=false suspend=true read=true write=false condition=op%20%3d%202%20&&%20&pc%20%3d%200 message= location=cpu
 type=watchpoint address=D99 end=D9A enabled=false suspend=true read=true write=false condition=op%20%3d%202%20&&%20&pc%20%3d%200 message= location=cpu
-type=instruction address=player_animation.state_1_frame_2%20+%2023 end=player_animation.state_1_frame_2%20+%2024 enabled=false suspend=true condition= message=
+suspend=true address=player_animation.state_1_frame_2%20+%2023 end=player_animation.state_1_frame_2%20+%2024 type=instruction enabled=false
 type=watchpoint address=AA7 end=AA8 enabled=false suspend=true read=true write=false condition=op%20%3d%202%20&&%20&pc%20%3d%200 message= location=cpu
 type=instruction address=player_animation.state_2_frame_2%20+%2038 end=player_animation.state_2_frame_2%20+%2038 enabled=false suspend=true condition= message=
 type=instruction address=player_animation.state_2_frame_2%20+%2028 end=player_animation.state_2_frame_2%20+%2029 enabled=false suspend=true condition= message=

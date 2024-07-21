@@ -23,18 +23,18 @@ player:
 	INCBIN "sprites/cat.chr"                         ; Idle player 1 sprite                    
 __player:
 
-player_state_1_1:
+player_state_running_1:
 	INCBIN "sprites/run_1.chr"                       ; Running state sprite 1
-__player_state_1_1:
+__player_state_running_1:
 
-player_state_1_2:
+player_state_running_2:
 	INCBIN "sprites/run_2.chr"                       ; Running state sprite 2
-__player_state_1_2:
+__player_state_running_2:
 
-jmp_state_1_1:
+player_state_jmp_1_1:
 	INCBIN "sprites/cat_jmp_1.chr"                   ; Jumping state sprite 1
-__jmp_state_1_1:
+__player_state_jmp_1_1:
 
-jmp_state_1_2:
+player_state_jmp_1_2:
 	INCBIN "sprites/cat_jmp_2.chr"                   ; Jumping state sprite 2
-__jmp_state_1_2:
+__player_state_jmp_1_2:
