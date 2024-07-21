@@ -1,3 +1,5 @@
 .gitignore
 **.DS**
 *.gbc
+main.o
+

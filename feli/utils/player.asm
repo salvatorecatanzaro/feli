@@ -124,10 +124,22 @@ update_player_position:
     ld a, [hl]
     call is_wall_tile
     jr nz, .start_falling
-    ld bc, oam_buffer ; y pos
-    ld a, [bc]
-    sub a, 3
-    ld [bc], a
+    ld a, [state_2_count]
+    ld b, $8
+    cp b
+    jr c, .up_by_three           ;
+    .up_by_ond                   ;
+    ld bc, oam_buffer            ; y pos  
+    ld a, [bc]                   ;
+    sub a, 1                     ;  The player will go up by 3 positions at start
+    ld [bc], a                   ;  at the before falling, it will slow down
+    jp .__up_by                  ;  and it will go up just by 2
+    .up_by_three                 ;
+    ld bc, oam_buffer ; y pos    ;
+    ld a, [bc]                   ;
+    sub a, 3                     ;
+    ld [bc], a                   ;
+    .__up_by
     ; increment by 1 state counter
     ld a, [state_2_count]
     add a, 1
@@ -147,7 +159,6 @@ update_player_position:
     call reset_positions
     .not_jumping
     ; test jump bit
-
     
     ld a, [player_state]                ;
     ld b, %00000100                     ;  If player state is jumping 
@@ -161,6 +172,31 @@ update_player_position:
     ;jr nz, .end_update_player_position   ; 
 
     ; Apply gravity on character
+
+    ; No collision, update position
+    ld a, [falling_speed]
+    ld b, $12
+    cp a, b
+    jr c, .fall_slow
+    .fall_fast
+    ld a, [main_player_y]
+    add a, 4 ; The check starts from upleft, lets add 4 pixel distance to make it more centered
+    sub a, 16-2 ; the sprite y is not aligned with tile position (0, 0), removing 16 bit removes this difference
+    ld c, a
+    ld a, [main_player_x]
+    sub a, 8
+    ld b, a
+    call get_tile_by_pixel ; Returns tile address in hl
+    ld a, [hl]
+    call is_wall_tile
+    jr nz, .no_down 
+    ld bc, oam_buffer ; y pos
+    ld a, [bc]
+    add a, $2
+    ld [bc], a
+    jp .__fall_by
+    .fall_slow
+    ; No collision, update position
     ld a, [main_player_y]
     add a, 4 ; The check starts from upleft, lets add 4 pixel distance to make it more centered
     sub a, 16-1 ; the sprite y is not aligned with tile position (0, 0), removing 16 bit removes this difference
@@ -172,16 +208,22 @@ update_player_position:
     ld a, [hl]
     call is_wall_tile
     jr nz, .no_down 
-    ; No collision, update position
     ld bc, oam_buffer ; y pos
     ld a, [bc]
-    add a, 1
+    add a, $1
     ld [bc], a
+    ld a, [falling_speed]
+    add 1
+    ld [falling_speed], a
+    .__fall_by
+
     ; When the player is falling will go in the state falling
     ld a, %00001000
     ld [player_state], a
     jp .end_update_player_position
     .no_down
+    ld a, $1
+    ld [falling_speed], a
     ; If no down condition is met, we are not falling anymore
     ld b , %11110111 ; Mask to reset falling bit
     ld a, [player_state]
