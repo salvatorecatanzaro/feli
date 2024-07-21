@@ -10,7 +10,6 @@ INCLUDE "utils/controls.asm"
 INCLUDE "utils/player.asm"
 INCLUDE "utils/overworld.asm"
 INCLUDE "utils/rom.asm"
-INCLUDE "utils/collision.asm"
 
 SECTION "Header", ROM0[$100]
     ; Our code here
@@ -124,12 +123,10 @@ Start:
 
     call copy_oam_sprites
 
-    ;call $ff80 ; call the method populated in hram
-	;bit 4 select from which bank of vram you want to take tiles: 0 8800 based, 1 8000 based
-	;bit 2 object sprite size 0 = 8x8; 1 = 8x16
-	;bit 1 sprite enabled
-	;ld a, %10001011 ;bg will start from 9c00
-	
+	; bit 4 select from which bank of vram you want to take tiles: 0 8800 based, 1 8000 based
+	; bit 2 object sprite size 0 = 8x8; 1 = 8x16
+	; bit 1 sprite enabled
+    ; Turn on LCD
 	ld a, %10000011 ;bg will start from 9800
 
 	ld [rLCDC], a

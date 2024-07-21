@@ -1,1 +1,0 @@
-SECTION "Overworld", rom0

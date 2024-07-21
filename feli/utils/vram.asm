@@ -16,21 +16,6 @@ copy_data_to_destination:
     or c
     jr nz, .copy_bin_loop ; if this value is 0 we finished copying the font into vram
 ret 
-
-
-copy_bin:
-    .copy_bin_loop
-        ld a, [de] ; Grab 1 byte from the source
-        inc de
-        ld [hli], a ; Place it at the destination, incrementing hl
-        inc de ; Move to next byte  
-        dec bc ; Decrement count
-        ld a, b
-        ; metà di b viene caricata nell'accumulatore e messo in or con c che contiene la seconda meta
-        ;se il risultato è 0 entrambi sono 0
-        or c
-        jr nz, .copy_bin_loop ; if this value is 0 we finished copying the font into vram
-    ret 
     
 
 ; -- !!!Disable screen - ppu before calling this method!!!
