@@ -74,12 +74,18 @@ Start:
     ld de, gravity_bin
     call copy_data_to_destination ;
     
-    ;color writing
+    ; color writing background
     ld a, %10000000
     ld hl, gravity_palettes
     ld bc, __gravity_palettes - gravity_palettes
-    call set_background_palette
-    
+    call set_palettes_bg
+
+    ; color writing obj
+    ld a, %10000000
+    ld hl, player_1_palettes
+    ld bc, __player_1_palettes - player_1_palettes
+    call set_palettes_obj
+
     ; Adding map to screen----------------------
     ; Copying the tile map to the screen starting from $9800
     ; gravity_tile_map contains a list of the ids of the tile that has to be copyied. 
