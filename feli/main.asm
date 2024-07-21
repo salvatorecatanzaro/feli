@@ -1,14 +1,12 @@
 INCLUDE "hardware.inc"
 INCLUDE "utils/graphics.asm"
 INCLUDE "utils/interrupts.asm"
-INCLUDE "utils/hram.asm"
 INCLUDE "utils/oam_dma.asm"
 INCLUDE "utils/vram.asm"
 INCLUDE "utils/wram.asm"
 INCLUDE "utils/palettes.asm"
 INCLUDE "utils/controls.asm"
 INCLUDE "utils/player.asm"
-INCLUDE "utils/overworld.asm"
 INCLUDE "utils/rom.asm"
 
 SECTION "Header", ROM0[$100]
