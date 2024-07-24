@@ -15,3 +15,61 @@ scroll_x_register:
 	ld [rSCX], a
 	ret
 
+; Creates the score labels for the player
+; no input params needed
+create_score_labels:
+    ld hl, $9800
+    ld de, S_
+    ld a, [de]
+    ld [hli], a
+    ld de, C_
+    ld a, [de]
+    ld [hli], a
+    ld de, O_
+    ld a, [de]
+    ld [hli], a
+    ld de, R_
+    ld a, [de]
+    ld [hli], a
+    ld de, E_
+    ld a, [de]
+    ld [hli], a
+    inc hl
+    ld de, _0
+    ld a, [de]
+    ld [hli], a
+    ld de, _0
+    ld a, [de]
+    ld [hli], a
+
+    inc hl
+    inc hl
+    inc hl
+    inc hl
+
+    ld de, S_
+    ld a, [de]
+    ld [hli], a
+    ld de, C_
+    ld a, [de]
+    ld [hli], a
+    ld de, O_
+    ld a, [de]
+    ld [hli], a
+    ld de, R_
+    ld a, [de]
+    ld [hli], a
+    ld de, E_
+    ld a, [de]
+    ld [hli], a
+    inc hl
+    ld de, _0
+    ld a, [de]
+    ld [hli], a
+    ld de, _0
+    ld a, [de]
+    ld [hli], a
+    ret
+
+
+spawn_food:

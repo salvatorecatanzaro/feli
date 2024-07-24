@@ -71,6 +71,12 @@ Start:
     ld de, gravity_bin
     call copy_data_to_destination ;
     
+    ; copying characters into vram 
+    ld hl, $9300
+    ld bc, __char_bin - char_bin
+    ld de, char_bin
+    call copy_data_to_destination
+
     ; color writing background
     ld a, %10000000
     ld hl, gravity_palettes
@@ -99,6 +105,10 @@ Start:
     ;ld de, $9800
     ;call draw_map
     ;restore background bank to 0
+
+    call create_score_labels
+
+    
     xor a
     ld [rVBK], a
     ;---------------------------------------------
