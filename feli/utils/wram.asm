@@ -4,7 +4,7 @@ SECTION "MAP Attributes", wram0
 map_counter: ds  1
 SECTION "OAM Buffer", WRAM0[$C100]
 oam_buffer:  ds 4 * 40 ; to move to fe04
-sprite_count: ds 1     ; the number of sprites
+sprite_count: ds 2     ; the number of sprites
 sprite_ids: ds 20      ; each byte contains 2 sprite id
 
 SECTION "Important twiddles", WRAM0[$C000]
@@ -32,4 +32,8 @@ jp_max_count: ds 1
 holding_jump: ds 1 ; Used to check if button is on hold or a new click
 falling_speed: ds 1 ; This value will increment by 1 for each falling frame
 SECTION "Counter", WRAM0
-wFrameCounter: ds 1
+player_animation_frame_counter: ds 1           ; Used to slow down player animation (Without this it would go super fast)
+food_counter: ds 1
+frame_counter: ds 1            ; Count each frame
+time_frame_based: ds 1         ; Every N frames this value will be increased by one to get time
+food_xy_position_counter: ds 1      ; This value will be used to get each time a new position for the food on the screen 

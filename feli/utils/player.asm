@@ -272,15 +272,15 @@ is_wall_tile:
     ret
 
 player_animation:
-    ld a, [wFrameCounter]
+    ld a, [player_animation_frame_counter]
     inc a
-    ld [wFrameCounter], a
+    ld [player_animation_frame_counter], a
     cp a, 15 ; Every 10 frames (a tenth of a second), run the following code
     jp nz, .endstatecheck
 
     ; Reset the frame counter back to 0
     ld a, 0
-    ld [wFrameCounter], a
+    ld [player_animation_frame_counter], a
 
 
     ; if no state is set idle animation will be executed
@@ -394,4 +394,10 @@ player_animation:
 
 
     .endstatecheck
+    ret
+
+
+; This method will be used to check if player and food are on the same tile, if this is 
+; the case the player gets the food
+player_got_food:
     ret

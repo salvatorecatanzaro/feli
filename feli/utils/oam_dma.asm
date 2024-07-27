@@ -37,7 +37,14 @@ dma_copy_end:
 ;oam_buffer to move to fe04
 ;sprite_count the number of sprites
 ;sprite_ids each byte contains 2 sprite id
-
+; Each oam sprite has the following bytes
+; byte 0 - Y position
+; byte 1 - X position
+; byte 2 - Tile index (The tile id in the vram)
+; byte 3 attributes/flags:
+;              7         6       5            4       3       2   1   0
+;Attributes  Priority    Y flip  X flip  DMG palette Bank    CGB palette
+;
 copy_oam_sprites:
     ld a, [sprite_count]
     ld b, a

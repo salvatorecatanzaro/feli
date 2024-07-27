@@ -60,10 +60,10 @@ Start:
 	ld bc, __player - player ; Length -> it's a subtraciton
 	call copy_data_to_destination
 
-    ;ld hl, $8810
-	;ld de, player_2 ; Starting address
-	;ld bc, __player_2 - player_2 ; Length -> it's a subtraciton
-	;call copy_data_to_destination
+    ld hl, $8810
+    ld de, food ; Starting address
+    ld bc, __food - food ; Length -> it's a subtraciton
+    call copy_data_to_destination
 
     ; copying map into vram
     ld hl, $9000
@@ -121,7 +121,7 @@ Start:
     call copy_in_high_ram
     
     ld bc, sprite_count
-    ld a, $01
+    ld a, $02
     ld [bc], a
     ld a, $80 ; 80 tile id
     ld hl, sprite_ids
@@ -144,7 +144,7 @@ Start:
 
     ld a, 0
     ld [player_state], a  ; setting player state to IDLE
-    ld [wFrameCounter], a
+    ld [player_animation_frame_counter], a
     ; init all states to 1
     ld a, 1
     ld [state_idle_count], a
@@ -155,10 +155,14 @@ Start:
     ld [state_5_count], a
     ld [state_6_count], a
     ld [falling_speed], a 
+    ld [food_counter], a
+    ld [frame_counter], a
+    ld [time_frame_based], a
     ld a, $15
     ld [jp_max_count], a
     xor a
     ld [holding_jump], a
+
 .main_loop:
     ; Main loop: halt, wait for a vblank, then do stuff
 
@@ -178,8 +182,11 @@ Start:
     call get_buttons_state
     call update_player_position
     call player_animation
-
+    call player_got_food
+    call enemy_got_food
+    call food_position_handler
     call $ff80 ; refresh oam
 
     jp .main_loop
+
 

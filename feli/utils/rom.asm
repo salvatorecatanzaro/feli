@@ -56,6 +56,10 @@ player_state_jmp_1_2:
 	INCBIN "sprites/cat_jmp_2.chr"                   ; Jumping state sprite 2
 __player_state_jmp_1_2:
 
+food:
+	INCBIN "sprites/p2.chr"                   ; Jumping state sprite 2
+__food:
+
 
 A_: db $51
 B_: db $52
@@ -91,3 +95,7 @@ _6: db $46
 _7: db $47
 _8: db $48
 _9: db $49
+
+food_x_coords: db $3f, 131, 70        ; The possible x coordinates of the food
+food_y_coords: db $3f, 100, 120       ; The possible y coordinates of the food  
+food_array_len: db $3                 ; 
