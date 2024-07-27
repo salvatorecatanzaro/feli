@@ -57,8 +57,12 @@ player_state_jmp_1_2:
 __player_state_jmp_1_2:
 
 food:
-	INCBIN "sprites/p2.chr"                   ; Jumping state sprite 2
+	INCBIN "sprites/food.chr"                  
 __food:
+
+joy:
+	INCBIN "sprites/joy.chr"                                            
+__joy:
 
 
 A_: db $51

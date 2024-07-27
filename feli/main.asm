@@ -8,7 +8,7 @@ INCLUDE "utils/palettes.asm"
 INCLUDE "utils/controls.asm"
 INCLUDE "utils/player.asm"
 INCLUDE "utils/rom.asm"
-
+INCLUDE "utils/enemy.asm"
 SECTION "Header", ROM0[$100]
     ; Our code here
 EntryPoint: ; This is where execution begins
