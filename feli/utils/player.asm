@@ -261,7 +261,7 @@ get_tile_by_pixel:
     adc a, h
     ld h, a
     ; Add the offset to the tilemap's base address, and we are done!
-    ld bc, $9800
+    ld bc, collision_map
     add hl, bc
     ret
 
