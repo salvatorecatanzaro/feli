@@ -128,7 +128,7 @@ update_player_position:
     ld b, $8
     cp b
     jr c, .up_by_three           ;
-    .up_by_ond                   ;
+    .up_by_one                   ;
     ld bc, oam_buffer            ; y pos  
     ld a, [bc]                   ;
     sub a, 1                     ;  The player will go up by 3 positions at start
@@ -398,6 +398,7 @@ player_animation:
 
 
 ; This method will use busy wait to play the joy animation of the player
+; It is not in the state machine because it is an instant status
 joy_animation:
 
     ld hl, $8800

@@ -20,8 +20,8 @@ scroll_x_register:
 presentation_screen:
     ; color writing background
     ld a, %10000000
-    ld hl, gravity_palettes
-    ld bc, __gravity_palettes - gravity_palettes
+    ld hl, palettes
+    ld bc, __palettes - palettes
     call set_palettes_bg
     ld hl, $9984
     ld de, P_

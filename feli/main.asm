@@ -8,7 +8,7 @@ INCLUDE "utils/palettes.asm"
 INCLUDE "utils/controls.asm"
 INCLUDE "utils/player.asm"
 INCLUDE "utils/rom.asm"
-INCLUDE "utils/enemy.asm"
+INCLUDE "utils/player2.asm"
 SECTION "Header", ROM0[$100]
     ; Our code here
 EntryPoint: ; This is where execution begins
@@ -96,6 +96,11 @@ Start:
     ld bc, __food - food ; Length -> it's a subtraciton
     call copy_data_to_destination
 
+    ld hl, $8820
+    ld de, player ; Starting address
+    ld bc, __player - player ; Length -> it's a subtraciton
+    call copy_data_to_destination
+
     ; copying map into vram
     ld hl, $9000
     ld bc, __gravity_bin - gravity_bin
@@ -110,14 +115,14 @@ Start:
 
     ; color writing background
     ld a, %10000000
-    ld hl, gravity_palettes
-    ld bc, __gravity_palettes - gravity_palettes
+    ld hl, palettes
+    ld bc, __palettes - palettes
     call set_palettes_bg
 
     ; color writing obj
     ld a, %10000000
-    ld hl, player_1_palettes
-    ld bc, __player_1_palettes - player_1_palettes
+    ld hl, obj_palettes
+    ld bc, __obj_palettes - obj_palettes
     call set_palettes_obj
 
     ; Adding map to screen----------------------
@@ -152,12 +157,14 @@ Start:
     call copy_in_high_ram
     
     ld bc, sprite_count
-    ld a, $02
+    ld a, $03
     ld [bc], a
     ld a, $80 ; 80 tile id
     ld hl, sprite_ids
     ld [hl+], a
     ld a, $81 ; 81 tile id
+    ld [hl+], a
+    ld a, $82 ; 81 tile id
     ld [hl+], a
 
     call copy_oam_sprites
@@ -175,11 +182,14 @@ Start:
 
     ld a, 0
     ld [player_state], a  ; setting player state to IDLE
+    ld [player2_state], a  ; setting player2 state to IDLE
     ld [player_animation_frame_counter], a
+    ld [player2_animation_frame_counter], a
     ; init all states to 1
     ld a, 1
     ld [state_idle_count], a
     ld [state_running_count], a
+    ld [state_running_count_player2], a
     ld [state_jmp_count], a 
     ld [state_3_count], a
     ld [state_4_count], a 
@@ -212,9 +222,11 @@ Start:
 
     call get_buttons_state
     call update_player_position
+    call update_player2_position
     call player_animation
+    call player_2_animation
     call player_got_food
-    call enemy_got_food
+    call player2_got_food
     call food_position_handler
     call $ff80 ; refresh oam
 

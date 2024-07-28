@@ -55,12 +55,22 @@ copy_oam_sprites:
     ld [hl+], a ; y
     ld [hl+], a ; x
     ld a, [de]
-    inc de   ; chr
     ld [hl+], a
+
+    ld c, $82            ; $82 is the id of player 2
+    ld a, [de]             
+    cp a, c              ; if a - e is 0 this is the player 2 values
+    jr z, .player2attrs  ;
+    .player1attrs
     ld a, %00000000   ;atts
+    jp .endattrs
+    .player2attrs
+    ld a, %00000001   ; palette 1 for player 2 
+    .endattrs
     ld [hl+], a
     dec b
     ld a, b
     or b
+    inc de   ; chr
     jr nz, .oam_loop
     ret

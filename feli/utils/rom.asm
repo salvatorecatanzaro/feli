@@ -11,9 +11,9 @@ gravity_attr_map:
 	INCBIN "backgrounds/gravity_map_attributes"
 __gravity_attr_map:
 
-gravity_palettes:
-	INCBIN "backgrounds/gravity_map_palettes"  ; The color selection for the map
-__gravity_palettes:
+palettes:
+	db $bf, $66, $f7, $29, $00,$00,$00,$00   ; The color selection for the map
+__palettes: 
 
 char_bin:
 	; The syntax INCBIN <val>, startrange, endrange indicates how many bytes we are going to take from the source
@@ -32,9 +32,10 @@ char_palettes:
 	INCBIN "backgrounds/char_palettes"  ; The color selection for the map
 __char_palettes:
 
-player_1_palettes:
+obj_palettes:
 	db $bf, $66, $09, $89, $EE, $C5, $09, $89        ; The color selection for player one
-__player_1_palettes:
+	db $00, $00, $00, $00, $00, $00, $00, $00        ; The color selection for player two
+__obj_palettes:
 
 player:
 	INCBIN "sprites/cat.chr"                         ; Idle player 1 sprite                    
