@@ -17,6 +17,76 @@ scroll_x_register:
 
 ; Creates the score labels for the player
 ; no input params needed
+presentation_screen:
+    ; color writing background
+    ld a, %10000000
+    ld hl, gravity_palettes
+    ld bc, __gravity_palettes - gravity_palettes
+    call set_palettes_bg
+    ld hl, $9984
+    ld de, P_
+    ld a, [de]
+    ld [hli], a
+    ld de, R_
+    ld a, [de]
+    ld [hli], a
+    ld de, E_
+    ld a, [de]
+    ld [hli], a
+    ld de, S_
+    ld a, [de]
+    ld [hli], a
+    ld de, S_
+    ld a, [de]
+    ld [hli], a
+    inc hl
+    inc hl
+    ld de, S_
+    ld a, [de]
+    ld [hli], a
+    ld de, T_
+    ld a, [de]
+    ld [hli], a
+    ld de, A_
+    ld a, [de]
+    ld [hli], a
+    ld de, R_
+    ld a, [de]
+    ld [hli], a
+    ld de, T_
+    ld a, [de]
+    ld [hli], a
+    
+    ; Turn on the screen
+    ; bit 4 select from which bank of vram you want to take tiles: 0 8800 based, 1 8000 based
+    ; bit 2 object sprite size 0 = 8x8; 1 = 8x16
+    ; bit 1 sprite enabled
+    ; Turn on LCD
+    ld a, %10000011 ;bg will start from 9800
+    ld [rLCDC], a
+    ;se non preme nulla rimani su questa schermata
+
+    .start_loop
+    call get_buttons_state
+    ld a, [buttons]
+    bit 7, a
+    jr nz, .start_loop
+
+    ld hl, $5FFF          ;
+    .bwait                ;
+    dec HL                ;  Busy wait for some instants
+    ld a, h               ;
+    or l                  ;
+    jr nz, .bwait         ;
+
+    ; turn off the screen again and wait some seconds
+    xor a
+    ld [rLCDC], a
+    ret
+
+
+; Creates the score labels for the player
+; no input params needed
 create_score_labels:
     ld hl, $9800
     ld de, S_

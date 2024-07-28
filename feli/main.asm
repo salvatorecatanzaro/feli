@@ -54,6 +54,37 @@ Start:
     ld hl, $C000
     ld de, $DFFF
     call clear_mem_area
+    
+    ; PRESENTATION SCREEN
+    ; copying characters into vram 
+    ld hl, $9300
+    ld bc, __char_bin - char_bin
+    ld de, char_bin
+    call copy_data_to_destination
+    call presentation_screen
+    ; PRESENTATION SCREEN
+
+    ; let's clear the screen
+    ld hl, $9800
+    ld de, $9bff
+    call clear_mem_area
+; let's clear vram 0:8800
+    ld hl, $8800
+    ld de, $8ff0
+    call clear_mem_area
+; let's clear vram 1:8800
+    ld a, %00000001
+    ld [rVBK], a
+    ld hl, $8800
+    ld de, $8ff0
+    call clear_mem_area
+    ;set again vram 0
+    xor a
+    ld [rVBK], a
+; let's clear the ram 
+    ld hl, $C000
+    ld de, $DFFF
+    call clear_mem_area
     ; Copy the bin data to video ram
     ld hl, $8800
 	ld de, player ; Starting address
