@@ -105,7 +105,7 @@ update_player_position:
     ld a, %00001000           ;  
     ld b, a                   ;
     ld a, [player_state]      ;
-    and b                     ;  If Player is not falling
+    and b                     ;  If Player is falling dont go up
     jr nz, .not_jumping       ; 
 
     ;JUMP!

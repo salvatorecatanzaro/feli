@@ -191,6 +191,7 @@ Start:
     ld [state_running_count], a
     ld [state_running_count_player2], a
     ld [state_jmp_count], a 
+    ld [state_jmp_count_player2], a
     ld [state_3_count], a
     ld [state_4_count], a 
     ld [state_5_count], a

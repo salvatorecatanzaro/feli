@@ -28,6 +28,7 @@ state_idle_count: ds 1 ; idle
 state_running_count: ds 1 ; running
 state_running_count_player2: ds 1 ; running
 state_jmp_count: ds 1 ; jumping
+state_jmp_count_player2: ds 1 ; jumping
 state_3_count: ds 1 ; falling
 state_4_count: ds 1
 state_5_count: ds 1

@@ -24,9 +24,10 @@ update_player2_position:
     ld h, a
     ld a, [player_2_x]
     cp a, h
-    jr z, .jump
+    jr z, .jump             ; if Player2 position is the same as the food, jump
     cp a, h
-    jr c, .move_right
+    jr c, .move_right       ; if the Player2 position is on the left of the food, go right
+
     .move_left
     ; set player animation to running
     ld b, %00000010
@@ -39,7 +40,8 @@ update_player2_position:
     ld a, [oam_buffer + 9] ; x pos
     sub a, 1
     ld [oam_buffer + 9], a
-    jp .gravity_check_player2   
+    jp .gravity_check_player2 
+
     .move_right
     ; set player animation to running
     ld b, %00000010
@@ -53,7 +55,13 @@ update_player2_position:
     add a, 1
     ld [oam_buffer + 9], a
     jp .gravity_check_player2
+
     .jump
+    ld a, %00001000           ;  
+    ld b, a                   ;
+    ld a, [player2_state]     ;
+    and b                     ;  If Player is falling dont go up
+    jr nz, .p2_not_jumping    ;
     ld a, %00000100
     ld [player2_state], a
     ld a, [player_2_y]
@@ -65,41 +73,54 @@ update_player2_position:
     call get_tile_by_pixel ; Returns tile address in hl
     ld a, [hl]
     call is_wall_tile
-    jr z, .go_up_normally
+    jr z, .go_up_normally_player2
     ; Update state with climbing animation
-    ld a, %00100000
+    ld a, %00100000         
     ld [player2_state], a
     jp .end_p2_position_update
-    .go_up_normally
-    ld a, [state_jmp_count]
+    .go_up_normally_player2
+    ld a, [state_jmp_count_player2]
     ld b, $8
     cp b
-    jr c, .up_by_three           ;
-    .up_by_one                   ;
-    ld bc, oam_buffer            ; y pos  
+    jr c, .up_by_three_player2          ;
+    .up_by_one_player2                   ;
+    ld bc, oam_buffer +8            ; y pos  
     ld a, [bc]                   ;
     sub a, 1                     ;  The player will go up by 3 positions at start
     ld [bc], a                   ;  at the before falling, it will slow down
     jp .__up_by                  ;  and it will go up just by 2
-    .up_by_three                 ;
-    ld bc, oam_buffer ; y pos    ;
+    .up_by_three_player2                 ;
+    ld bc, oam_buffer + 8 ; y pos    ;
     ld a, [bc]                   ;
     sub a, 3                     ;
     ld [bc], a                   ;
     .__up_by
     ; increment by 1 state counter
-    ld a, [state_jmp_count]
+    ld a, [state_jmp_count_player2]
     add a, 1
-    ld [state_jmp_count], a
+    ld [state_jmp_count_player2], a
     ld a, [jp_max_count]
     ld b, a
-    ld a, [state_jmp_count]
+    ld a, [state_jmp_count_player2]
     cp a, b
-    jr z, .start_falling
-    jp .no_up
-    .start_falling        
+    jr z, .start_falling_player2
+    jp .no_up_p2
+    .start_falling_player2        
     ; Apply gravity on character
     ; No collision, update position
+    ld a, $1
+    ld [state_jmp_count_player2], a
+    ld a, %00001000
+    ld [player2_state], a
+    .no_up_p2
+    call reset_positions_player2
+    .p2_not_jumping
+
+    ld a, [player2_state]                ;
+    ld b, %00000100                     ;  If player state is jumping 
+    and b                               ;  we don't want  
+    jp nz, .end_p2_position_update  ;  to apply gravity
+    
     .gravity_check_player2
     ld a, [player_2_y]
     add a, 4 ; The check starts from upleft, lets add 4 pixel distance to make it more centered
@@ -116,7 +137,16 @@ update_player2_position:
     ld a, [bc]
     add a, $1
     ld [bc], a
+    ; When the player is falling will go in the state falling
+    ld a, %00001000
+    ld [player2_state], a
+    jp .end_p2_position_update
     .no_down_2
+    ; If no down condition is met, we are not falling anymore
+    ld b , %11110111 ; Mask to reset falling bit
+    ld a, [player2_state]
+    and b 
+    ld [player2_state], a
     .end_p2_position_update
     ret
 
@@ -186,21 +216,21 @@ player_2_animation:
     jp .endstatecheckplayer2
 
     .gotoplayer2state2 ; jumping
-    ld a, [state_jmp_count]
+    ld a, [state_jmp_count_player2]
     ld b, $4
     cp a, b
-    jr nz, .state_2_frame_2
+    jr nz, .p2_state_2_frame_2
     ; Copy the bin data to video ram
     ld hl, $8820
     ld de, player_state_jmp_1_1 ; Starting address
     ld bc, __player_state_jmp_1_1 - player_state_jmp_1_1 ; Length -> it's a subtraciton
     call copy_data_to_destination
     ; increment by 1 state counter
-    ld a, [state_jmp_count]
+    ld a, [state_jmp_count_player2]
     add a, 1
-    ld [state_jmp_count], a
+    ld [state_jmp_count_player2], a
     jp .endstatecheckplayer2
-    .state_2_frame_2
+    .p2_state_2_frame_2
     ; Copy the bin data to video ram
     ld hl, $8820
     ld de, player_state_jmp_1_2 ; Starting address
@@ -210,7 +240,7 @@ player_2_animation:
 
     .gotoplayer2state3 ; falling
     ; Copy the bin data to video ram
-    ld hl, $8800
+    ld hl, $8820
     ld de, player_state_jmp_1_2 ; Starting address
     ld bc, __player_state_jmp_1_2 - player_state_jmp_1_2 ; Length -> it's a subtraciton
     call copy_data_to_destination
