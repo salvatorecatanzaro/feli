@@ -13,11 +13,37 @@ reset_positions_player2:
 update_player2_position:
     ; Start by setting the state to idle, if it's not the correct state it will be
     ; overwritten by the next instructions
-    ld b , %00001100 ; Mask to reset every state but jmp and falling bit
+    ld b , %00101100 ; Mask to reset every state but jmp, falling and climbing bit
     ld a, [player2_state]
     and b 
     ld [player2_state], a
 
+    ; if player is climbing update the player2_climbing_counter until it hits the player2_climb_max_count
+    bit 5, a
+    jr z, .not_climbing
+    ld a, [player2_climbing_counter]
+    ld b, a
+    ld a, [player2_climb_max_count]
+    cp a, b
+    jr z, .stop_climbing_animation
+    ld a, [player2_climbing_counter]
+    add $1
+    ld [player2_climbing_counter], a
+    jp .end_p2_position_update
+    .stop_climbing_animation
+    ld b, %11011111          ;
+    ld a, [player2_state]    ; Remove climbing from player state
+    and a, b                 ;
+    ld [player2_state], a    ;
+    xor a                             ;  Reset to 0
+    ld [player2_climbing_counter], a  ;  player2_climbing_counter
+
+    ld bc, oam_buffer +8         ; y pos  
+    ld a, [bc]                   ;
+    sub a, 4                     ;  Go on top of the obstacle
+    ld [bc], a                   ;  
+
+    .not_climbing
     call reset_positions_player2
 
     ld a, [oam_buffer + 5]  ; x position of the food
@@ -75,8 +101,12 @@ update_player2_position:
     call is_wall_tile
     jr z, .go_up_normally_player2
     ; Update state with climbing animation
-    ld a, %00100000         
-    ld [player2_state], a
+    ld a, %00100000                  
+    ld [player2_state], a          
+    ld bc, oam_buffer +8         ; y pos  
+    ld a, [bc]                   ;
+    sub a, 4                     ;  Put the sprite on the obstacle so it can play the climbing animation
+    ld [bc], a                   ;  
     jp .end_p2_position_update
     .go_up_normally_player2
     ld a, [state_jmp_count_player2]
@@ -170,6 +200,8 @@ player_2_animation:
     jp nz, .gotoplayer2state0
     bit 1, a
     jp nz, .gotoplayer2state1
+    bit 5, a
+    jp nz, .gotoplayer2state5   ; Check climbing before falling and jumping
     bit 2, a
     jp nz, .gotoplayer2state2
     bit 3, a
@@ -257,9 +289,19 @@ player_2_animation:
 
     .gotoplayer2state5 ; climbing
     ; Copy the bin data to video ram
-    ld hl, $8800
-    ld de, player ; Starting address
-    ld bc, __player - player ; Length -> it's a subtraciton
+    ld a, [player2_climbing_counter] ; 
+    and $1                           ; if odd execute climbing 2
+    jr nz, .climbing_2               ;
+    .climbing_1
+    ld hl, $8820
+    ld de, climbing_1 ; Starting address
+    ld bc, __climbing_1 - climbing_1 ; Length -> it's a subtraciton
+    call copy_data_to_destination
+    jp .endstatecheckplayer2
+    .climbing_2
+    ld hl, $8820
+    ld de, climbing_2 ; Starting address
+    ld bc, __climbing_2 - climbing_2 ; Length -> it's a subtraciton
     call copy_data_to_destination
     jp .endstatecheckplayer2
 

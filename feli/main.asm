@@ -199,9 +199,12 @@ Start:
     ld [falling_speed], a 
     ld [food_counter], a
     ld [frame_counter], a
+    ld [player2_climbing_counter], a
     ld [time_frame_based], a
     ld a, $15
     ld [jp_max_count], a
+    ld a, $80
+    ld [player2_climb_max_count], a
     xor a
     ld [holding_jump], a
 

@@ -32,6 +32,14 @@ char_palettes:
 	INCBIN "backgrounds/char_palettes"  ; The color selection for the map
 __char_palettes:
 
+climbing_1:
+	INCBIN "sprites/climbing_1.chr"
+__climbing_1:
+
+climbing_2:
+	INCBIN "sprites/climbing_2.chr"  
+__climbing_2:
+
 obj_palettes:
 	db $bf, $66, $09, $89, $EE, $C5, $09, $89        ; The color selection for player one
 	db $00, $00, $00, $00, $00, $00, $00, $00        ; The color selection for player two
