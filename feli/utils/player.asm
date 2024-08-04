@@ -307,8 +307,8 @@ player_animation:
     ld [player_state], a
     ; Copy the bin data to video ram
     ld hl, $8800
-    ld de, player ; Starting address
-    ld bc, __player - player ; Length -> it's a subtraciton
+    ld de, player_1_idle ; Starting address
+    ld bc, __player_1_idle - player_1_idle ; Length -> it's a subtraciton
     call copy_data_to_destination
     jp .endstatecheck
 
@@ -320,16 +320,16 @@ player_animation:
     cp a, b
     jr nz, .state_running_frame_2
     ; draw frame 1
-    ld de, player_state_running_1 ; Starting address
-    ld bc, __player_state_running_1 - player_state_running_1 ; Length -> it's a subtraciton
+    ld de, player1_state_running_1 ; Starting address
+    ld bc, __player1_state_running_1 - player1_state_running_1 ; Length -> it's a subtraciton
     call copy_data_to_destination
     ld a, $2
     ld [state_running_count], a
     jp .endstatecheck
     ; draw frame 2
     .state_running_frame_2
-    ld de, player_state_running_2 ; Starting address
-    ld bc, __player_state_running_2 - player_state_running_2 ; Length -> it's a subtraciton
+    ld de, player1_state_running_2 ; Starting address
+    ld bc, __player1_state_running_2 - player1_state_running_2 ; Length -> it's a subtraciton
     call copy_data_to_destination
     ; reset state to 1
     ld a, $1
@@ -343,8 +343,8 @@ player_animation:
     jr nz, .state_2_frame_2
     ; Copy the bin data to video ram
     ld hl, $8800
-    ld de, player_state_jmp_1_1 ; Starting address
-    ld bc, __player_state_jmp_1_1 - player_state_jmp_1_1 ; Length -> it's a subtraciton
+    ld de, player1_state_jmp_1_1 ; Starting address
+    ld bc, __player1_state_jmp_1_1 - player1_state_jmp_1_1 ; Length -> it's a subtraciton
     call copy_data_to_destination
     ; increment by 1 state counter
     ld a, [state_jmp_count]
@@ -354,16 +354,16 @@ player_animation:
     .state_2_frame_2
     ; Copy the bin data to video ram
     ld hl, $8800
-    ld de, player_state_jmp_1_2 ; Starting address
-    ld bc, __player_state_jmp_1_2 - player_state_jmp_1_2 ; Length -> it's a subtraciton
+    ld de, player1_state_jmp_1_2 ; Starting address
+    ld bc, __player1_state_jmp_1_2 - player1_state_jmp_1_2 ; Length -> it's a subtraciton
     call copy_data_to_destination
     
 
     .gotostate3 ; falling
     ; Copy the bin data to video ram
     ld hl, $8800
-    ld de, player_state_jmp_1_2 ; Starting address
-    ld bc, __player_state_jmp_1_2 - player_state_jmp_1_2 ; Length -> it's a subtraciton
+    ld de, player1_state_jmp_1_2 ; Starting address
+    ld bc, __player1_state_jmp_1_2 - player1_state_jmp_1_2 ; Length -> it's a subtraciton
     call copy_data_to_destination
     ; increment by 1 state counter
     jp .endstatecheck

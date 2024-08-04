@@ -41,7 +41,7 @@ climbing_2:
 __climbing_2:
 
 obj_palettes:
-	db $bf, $66, $09, $89, $EE, $C5, $09, $89        ; The color selection for player one
+	db $5a, $5a, $5a, $8c, $8f, $89, $EE, $C5        ; The color selection for player one
 	db $00, $00, $00, $00, $00, $00, $00, $00        ; The color selection for player two
 	db $8f, $89, $00, $00, $19, $80, $8f, $89
 __obj_palettes:
@@ -49,6 +49,10 @@ __obj_palettes:
 player:
 	INCBIN "sprites/cat.chr"                         ; Idle player 1 sprite                    
 __player:
+
+player_1_idle:
+	INCBIN "sprites/player_1_idle.chr"
+__player_1_idle:
 
 player_state_running_1:
 	INCBIN "sprites/run_1.chr"                       ; Running state sprite 1
@@ -58,6 +62,14 @@ player_state_running_2:
 	INCBIN "sprites/run_2.chr"                       ; Running state sprite 2
 __player_state_running_2:
 
+player1_state_running_1:
+	INCBIN "sprites/player_1_running_1.chr"                       ; Running state sprite 1
+__player1_state_running_1:
+
+player1_state_running_2:
+	INCBIN "sprites/player_1_running_2.chr"                       ; Running state sprite 2
+__player1_state_running_2:
+
 player_state_jmp_1_1:
 	INCBIN "sprites/cat_jmp_1.chr"                   ; Jumping state sprite 1
 __player_state_jmp_1_1:
@@ -65,6 +77,14 @@ __player_state_jmp_1_1:
 player_state_jmp_1_2:
 	INCBIN "sprites/cat_jmp_2.chr"                   ; Jumping state sprite 2
 __player_state_jmp_1_2:
+
+player1_state_jmp_1_1:
+	INCBIN "sprites/player_1_jumping_1.chr"                   ; Jumping state sprite 1
+__player1_state_jmp_1_1:
+
+player1_state_jmp_1_2:
+	INCBIN "sprites/player_1_jumping_2.chr"                   ; Jumping state sprite 2
+__player1_state_jmp_1_2:
 
 food:
 	INCBIN "sprites/food.chr"                  

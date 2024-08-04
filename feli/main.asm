@@ -87,8 +87,8 @@ Start:
     call clear_mem_area
     ; Copy the bin data to video ram
     ld hl, $8800
-	ld de, player ; Starting address
-	ld bc, __player - player ; Length -> it's a subtraciton
+	ld de, player_1_idle ; Starting address
+	ld bc, __player_1_idle - player_1_idle ; Length -> it's a subtraciton
 	call copy_data_to_destination
 
     ld hl, $8810
