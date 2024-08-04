@@ -43,6 +43,7 @@ __climbing_2:
 obj_palettes:
 	db $bf, $66, $09, $89, $EE, $C5, $09, $89        ; The color selection for player one
 	db $00, $00, $00, $00, $00, $00, $00, $00        ; The color selection for player two
+	db $8f, $89, $00, $00, $19, $80, $8f, $89
 __obj_palettes:
 
 player:

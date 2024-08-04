@@ -179,9 +179,9 @@ spawn_food:
 
     ld a, $81
     ld [hl+], a
-    ld a, %00000000   ;atts
-    ld [hl+], a
 
+    inc hl
+    
     ld a, [food_xy_position_counter]
     add $1
     ld [food_xy_position_counter], a

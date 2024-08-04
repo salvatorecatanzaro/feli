@@ -57,15 +57,28 @@ copy_oam_sprites:
     ld a, [de]
     ld [hl+], a
 
-    ld c, $82            ; $82 is the id of player 2
-    ld a, [de]             
-    cp a, c              ; if a - e is 0 this is the player 2 values
-    jr z, .player2attrs  ;
+    ld a, [de]
+    ld c, $81            ; $81 is the food id             
+    cp a, c              ; if a - e is 0 this is the food attrs
+    jr z, .food_attrs    ;
+
+    ld c, $82            ; $82 is the player 2 id
+    cp a, c              ; if a - e is 0 this is the food attrs
+    jr z, .player2_attrs    ;
+
+    
+    
     .player1attrs
     ld a, %00000000   ;atts
     jp .endattrs
-    .player2attrs
-    ld a, %00000001   ; palette 1 for player 2 
+    
+    .player2_attrs
+    ld a, %00000001   ; palette 1 for player 2
+    jp .endattrs 
+    
+    .food_attrs
+    ld a, %00000010
+
     .endattrs
     ld [hl+], a
     dec b
