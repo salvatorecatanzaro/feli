@@ -73,7 +73,7 @@ copy_oam_sprites:
     jp .endattrs
     
     .player2_attrs
-    ld a, %00000001   ; palette 1 for player 2
+    ld a, %00000111   ; palette 1 for player 2
     jp .endattrs 
     
     .food_attrs

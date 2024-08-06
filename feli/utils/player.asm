@@ -275,7 +275,7 @@ player_animation:
     ld a, [player_animation_frame_counter]
     inc a
     ld [player_animation_frame_counter], a
-    cp a, 15 ; Every 10 frames (a tenth of a second), run the following code
+    cp a, 10 ; Every 10 frames (a tenth of a second), run the following code
     jp nz, .endstatecheck
 
     ; Reset the frame counter back to 0

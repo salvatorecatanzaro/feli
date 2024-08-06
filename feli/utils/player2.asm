@@ -61,7 +61,7 @@ update_player2_position:
     or b
     ld [player2_state], a
     ; set x flip to 1
-    ld a, %00100001
+    ld a, %00100111
     ld [oam_buffer + 11], a  ; oam buffer +11 contains player 2 attributes
     ld a, [oam_buffer + 9] ; x pos
     sub a, 1
@@ -75,7 +75,7 @@ update_player2_position:
     or b
     ld [player2_state], a
     ; set x flip to 0
-    ld a, %00000001
+    ld a, %00000111
     ld [oam_buffer + 11], a  ; oam buffer +11 contains player 2 attributes
     ld a, [oam_buffer + 9] ; x pos
     add a, 1
