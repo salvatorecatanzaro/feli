@@ -147,7 +147,6 @@ create_score_labels:
 ; @return bc contains the new position for x or y
 get_new_xy_coords:
     ld a, [food_xy_position_counter]      ;    Take food xy position counter
-    ld bc, food_y_coords                  ;    sum it to c, TODO Probebly we will have to handle carry
     add a, c                              ;    add food position counter to the less significant part 
     ld c, a                               ;    of the bit
     ret
