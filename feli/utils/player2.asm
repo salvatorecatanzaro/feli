@@ -1,7 +1,60 @@
 ; This method will be used to check if player and food are on the same tile, if this is 
 ; the case the player gets the food
 player2_got_food:
+    ld a, [oam_buffer + 8] ; y
+    ld c, a
+    ld a, [oam_buffer + 9]
+    ld b, a  ; x
+    call get_tile_by_pixel
+    ld e, l                   ;   de contains the tile position of the player
+    ld d, h                   ; 
+
+    ld a, [oam_buffer + 4] ; y
+    ld c, a
+    ld a, [oam_buffer + 5]
+    ld b, a  ; x
+    call get_tile_by_pixel   ; hl contains tile food position
+
+    ; now let's see if hl and de contains the same value
+    ld a, h
+    cp a, d
+    jr nz, .not_equal_player2
+    ld a, l
+    cp a, e
+    jr nz, .not_equal_player2
+    .equal_player_2 ; eat the food and update the score
+    ;xor a
+    ;ld [time_frame_based], a
+    ; increase score
+    ld hl, $9813       ; 9806 is the second digit of the first player
+    ld a, [hl]
+    sub $40            ; idx 0 for digits is 40, this way we are normalizing the number, eg. id 42 is 2 minus 40 we have now 2 
+    cp a, $9
+    jr nz, .modify_second_digit_player2
+    ;modify_first_digit and put second digit to 0 which corresponds to $40
+    ld a, $40
+    ld [hl], a ; second digit set to 0
+    ld hl, $9812
+    ld a, [hl]
+    add $1
+    ld [hl], a
+    jp .modified_digits_player2
+    .modify_second_digit_player2
+    ld a, [hl]
+    add $1
+    ld [hl], a
+    .modified_digits_player2
+    ; remove from screen the food
+    ld a, $D8                ;
+    ld [oam_buffer + 4], a       ; D8 And CC are just some off screen coordinates
+    ld a, $CC                ;
+    ld [oam_buffer + 5], a   ;
+    ; Play animation
+    ;call joy_animation_player2
+    ; Play sound
+    .not_equal_player2 ; do nothing
     ret
+
 
 reset_positions_player2:
     ld a, [oam_buffer + 8]

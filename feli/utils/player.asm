@@ -279,7 +279,7 @@ player_animation:
     jp nz, .endstatecheck
 
     ; Reset the frame counter back to 0
-    ld a, 0
+    xor a
     ld [player_animation_frame_counter], a
 
 

@@ -102,12 +102,31 @@ Start:
     call copy_data_to_destination
 
     ; copying map into vram
-    ld hl, $9000
-    ld bc, __gravity_bin - gravity_bin
-    ld de, gravity_bin
-    call copy_data_to_destination ;
+    ld hl, $9040
+    ld bc, __mud - mud
+    ld de, mud
+    call copy_data_to_destination ; copying characters into vram 
     
-    ; copying characters into vram 
+    ld hl, $9010
+    ld bc, __grass - grass
+    ld de, grass
+    call copy_data_to_destination ; copying characters into vram 
+    
+    ld hl, $9020
+    ld bc, __water_1 - water_1
+    ld de, water_1
+    call copy_data_to_destination ;
+
+    ld hl, $9030
+    ld bc, __water_2 - water_2
+    ld de, water_2
+    call copy_data_to_destination ;
+
+    ld hl, $9050
+    ld bc, __grass_mud - grass_mud
+    ld de, grass_mud
+    call copy_data_to_destination ;
+
     ld hl, $9300
     ld bc, __char_bin - char_bin
     ld de, char_bin
@@ -125,6 +144,7 @@ Start:
     ld bc, __obj_palettes - obj_palettes
     call set_palettes_obj
 
+
     ; Adding map to screen----------------------
     ; Copying the tile map to the screen starting from $9800
     ; gravity_tile_map contains a list of the ids of the tile that has to be copyied. 
@@ -134,13 +154,8 @@ Start:
     ld de, gravity_tile_map
     call copy_data_to_destination
     ; now adding attributes to that map
-    ;ld a, $01
-    ;ld [$FF4F], a
-    ;ld bc, __gravity_attr_map - gravity_attr_map
-    ;ld hl, gravity_attr_map
-    ;ld de, $9800
-    ;call draw_map
-    ;restore background bank to 0
+    call background_assign_attributes
+
 
     call create_score_labels
 
@@ -180,10 +195,11 @@ Start:
 	ld b, 0
 	ld c, 0
 
-    ld a, 0
+    xor a
     ld [player_state], a  ; setting player state to IDLE
     ld [player2_state], a  ; setting player2 state to IDLE
     ld [player_animation_frame_counter], a
+    ld [water_animation_frame_counter], a        ; this value is used to wait n frames before changing water frame
     ld [player2_animation_frame_counter], a
     ; init all states to 1
     ld a, 1
@@ -199,6 +215,7 @@ Start:
     ld [falling_speed], a 
     ld [food_counter], a
     ld [frame_counter], a
+    ld [water_animation_counter], a   ; This value is used to know which is the current water frame to display
     ld [player2_climbing_counter], a
     ld [time_frame_based], a
     ld a, $15
@@ -207,6 +224,7 @@ Start:
     ld [player2_climb_max_count], a
     xor a
     ld [holding_jump], a
+
 
 .main_loop:
     ; Main loop: halt, wait for a vblank, then do stuff
@@ -224,6 +242,7 @@ Start:
 
     xor a
 
+    call water_animation
     call get_buttons_state
     call update_player_position
     call update_player2_position

@@ -45,3 +45,5 @@ time_frame_based: ds 1         ; Every N frames this value will be increased by 
 food_xy_position_counter: ds 1      ; This value will be used to get each time a new position for the food on the screen 
 player2_climbing_counter: ds 1
 player2_climb_max_count: ds 1
+water_animation_counter: ds 1
+water_animation_frame_counter: ds 1
