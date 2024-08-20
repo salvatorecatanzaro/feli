@@ -11,6 +11,14 @@ try_move_left:
     ld a, [buttons]
     bit 1, a
     jr nz, .no_left
+    ; set player animation to running
+    ld b, %00000010
+    ld a, [player_state]
+    or b
+    ld [player_state], a
+    ; set x flip to 0
+    ld a, %00100000
+    ld [oam_buffer_player_attrs], a
     ld a, [main_player_y]
     add a, 4  ; don t check collision from the top left of the sprite, but from a more mid position
     sub a, 16 ; the sprite y is not aligned with tile position (0, 0), removing 16 bit removes this difference
@@ -22,14 +30,6 @@ try_move_left:
     ld a, [hl]
     call is_wall_tile
     jr nz, .no_left
-    ; set player animation to running
-    ld b, %00000010
-    ld a, [player_state]
-    or b
-    ld [player_state], a
-    ; set x flip to 0
-    ld a, %00100000
-    ld [oam_buffer_player_attrs], a
     ; No collision, update position
     ld bc, oam_buffer_player_x
     ld a, [bc]
@@ -57,7 +57,7 @@ try_move_right:
     ld c, a
     ld a, [main_player_x]
     add a, 4 ; dont start checking from the top left
-    sub a, 8-1
+    sub a, 8-4
     ld b, a
     call get_tile_by_pixel ; Returns tile address in hl
     ld a, [hl]
@@ -220,15 +220,23 @@ update_player_position:
     and b 
     ld [player_state], a
 
+
+
+    ; if underwater move left or right every swimming counter
     ; check if player is underwater
+    ld a, [player_state]
     bit 4, a
     jr z, .not_underwater
-    ; TODO Type code for underwater here
-    ld a, $8d   ; Add fixed y to let head off the water
-    ld [oam_buffer_player_y], a
+    ld a, $8d                             ;
+    ld [oam_buffer_player_y], a        ;
+    .less_then_d
+    call try_jump                      ; Always allowed to jump out of water
+    call try_move_left              ;
+    call try_move_right             ;
+
     jp .end_update_player_position
     .not_underwater
-
+    
     call try_move_left
     call try_move_right
     call try_jump
@@ -237,6 +245,8 @@ update_player_position:
     ld b, %00000100                     ;  If player state is jumping 
     and b                               ;  we don't want  
     jp nz, .end_update_player_position  ;  to apply gravity
+
+    
 
     call try_apply_gravity
 
@@ -292,10 +302,6 @@ is_wall_tile:
     ld [player_state], a
     ret
     .not_water_tile
-    ;ld b, %11101111        ;
-    ;ld a, [player_state]   ;
-    ;and a, b               ;  If not a water tile, remove underwater status
-    ;ld [player_state], a   ;
     or a, $00              ;
     ret
 
@@ -396,12 +402,28 @@ player_animation:
     ; increment by 1 state counter
     jp .endstatecheck
 
-    .gotostate4 ; hurt
+    .gotostate4 ; swimming
     ; Copy the bin data to video ram
     ld hl, $8800
-    ld de, player ; Starting address
-    ld bc, __player - player ; Length -> it's a subtraciton
+    ld a, [state_swimming_count]
+    ld b, $1
+    cp a, b
+    jr nz, .state_swimming_frame_2
+    ; draw frame 1
+    ld de, player1_state_swimming_2 ; Starting address
+    ld bc, __player1_state_swimming_2 - player1_state_swimming_2 ; Length -> it's a subtraciton
     call copy_data_to_destination
+    ld a, $2
+    ld [state_swimming_count], a
+    jp .endstatecheck
+    ; draw frame 2
+    .state_swimming_frame_2
+    ld de, player1_state_swimming_1 ; Starting address
+    ld bc, __player1_state_swimming_1 - player1_state_swimming_1 ; Length -> it's a subtraciton
+    call copy_data_to_destination
+    ; reset state to 1
+    ld a, $1
+    ld [state_swimming_count], a
     jp .endstatecheck
 
     .gotostate5 ; joy

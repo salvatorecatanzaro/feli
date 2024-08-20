@@ -255,6 +255,8 @@ background_assign_attributes:
     cp a, $5
     jr z, .grass_mud_tile
 
+    cp a, $6
+    jr z, .cloud_tile
 
     .grass_tile
     ld a, %00000001          ; set vram bank to 1
@@ -278,6 +280,12 @@ background_assign_attributes:
     ld a, %00000001          ; set vram bank to 1
     ld [rVBK], a             ;
     ld a, %10000011
+    ld [de], a
+    jp .assigned
+    .cloud_tile
+    ld a, %00000001          ; set vram bank to 1
+    ld [rVBK], a             ;
+    ld a, %00000110
     ld [de], a
     jp .assigned
     .sky_tile

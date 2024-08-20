@@ -201,11 +201,13 @@ Start:
     ld [player_animation_frame_counter], a
     ld [water_animation_frame_counter], a        ; this value is used to wait n frames before changing water frame
     ld [player2_animation_frame_counter], a
+    ld [food_xy_position_counter], a
     ; init all states to 1
     ld a, 1
     ld [state_idle_count], a
     ld [state_running_count], a
     ld [state_running_count_player2], a
+    ld [state_swimming_count], a
     ld [state_jmp_count], a 
     ld [state_jmp_count_player2], a
     ld [state_3_count], a
@@ -224,6 +226,7 @@ Start:
     ld [player2_climb_max_count], a
     xor a
     ld [holding_jump], a
+
 
 
 .main_loop:
