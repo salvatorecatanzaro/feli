@@ -49,7 +49,7 @@ copy_oam_sprites:
     ld a, [sprite_count]
     ld b, a
     ld de, sprite_ids
-    ld hl, oam_buffer
+    ld hl, oam_buffer_player_y
 .oam_loop
     ld a, 63
     ld [hl+], a ; y

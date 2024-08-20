@@ -1,9 +1,9 @@
 SECTION "Player", rom0
 
 reset_positions:
-    ld a, [oam_buffer]
+    ld a, [oam_buffer_player_y]
     ld [main_player_y], a
-    ld a, [oam_buffer+1]
+    ld a, [oam_buffer_player_x]
     ld [main_player_x], a
     ret
 
@@ -45,9 +45,9 @@ update_player_position:
     ld [player_state], a
     ; set x flip to 0
     ld a, %00100000
-    ld [oam_buffer + 3], a
+    ld [oam_buffer_player_attrs], a
     ; No collision, update position
-    ld bc, oam_buffer + 1  ; x pos
+    ld bc, oam_buffer_player_x
     ld a, [bc]
     sub a, 1
     ld [bc], a
@@ -66,7 +66,7 @@ update_player_position:
     ld [player_state], a
     ; set x flip to 0
     ld a, %00000000
-    ld [oam_buffer + 3], a
+    ld [oam_buffer_player_attrs], a
     ld a, [main_player_y]
     add a, 4  ; don t check collision from the top left of the sprite, but from a more mid position
     sub a, 16 ; the sprite y is not aligned with tile position (0, 0), removing 16 bit removes this difference
@@ -80,7 +80,7 @@ update_player_position:
     call is_wall_tile
     jr nz, .no_right
     ; No collision, update position
-    ld bc, oam_buffer + 1 ; x pos
+    ld bc, oam_buffer_player_x
     ld a, [bc]
     add a, 1
     ld [bc], a
@@ -129,13 +129,13 @@ update_player_position:
     cp b
     jr c, .up_by_three           ;
     .up_by_one                   ;
-    ld bc, oam_buffer            ; y pos  
+    ld bc, oam_buffer_player_y
     ld a, [bc]                   ;
     sub a, 1                     ;  The player will go up by 3 positions at start
     ld [bc], a                   ;  at the before falling, it will slow down
     jp .__up_by                  ;  and it will go up just by 2
     .up_by_three                 ;
-    ld bc, oam_buffer ; y pos    ;
+    ld bc, oam_buffer_player_y   ;
     ld a, [bc]                   ;
     sub a, 3                     ;
     ld [bc], a                   ;
@@ -183,7 +183,7 @@ update_player_position:
     ld a, [hl]
     call is_wall_tile
     jr nz, .no_down 
-    ld bc, oam_buffer ; y pos
+    ld bc, oam_buffer_player_y
     ld a, [bc]
     add a, $2
     ld [bc], a
@@ -201,7 +201,7 @@ update_player_position:
     ld a, [hl]
     call is_wall_tile
     jr nz, .no_down 
-    ld bc, oam_buffer ; y pos
+    ld bc, oam_buffer_player_y
     ld a, [bc]
     add a, $1
     ld [bc], a
@@ -418,17 +418,17 @@ joy_animation:
 ; This method will be used to check if player and food are on the same tile, if this is 
 ; the case the player gets the food
 player_got_food:
-ld a, [oam_buffer] ; y
+ld a, [oam_buffer_player_y] ; y
 ld c, a
-ld a, [oam_buffer + 1]
+ld a, [oam_buffer_player_x]
 ld b, a  ; x
 call get_tile_by_pixel
 ld e, l                   ;   de contains the tile position of the player
 ld d, h                   ; 
 
-ld a, [oam_buffer + 4] ; y
+ld a, [oam_buffer_food_y]
 ld c, a
-ld a, [oam_buffer + 5]
+ld a, [oam_buffer_food_x]
 ld b, a  ; x
 call get_tile_by_pixel
 
@@ -463,9 +463,9 @@ ld [hl], a
 .modified_digits
 ; remove from screen the food
 ld a, $D8                ;
-ld [oam_buffer + 4], a       ; D8 And 5B are just some off screen coordinates
+ld [oam_buffer_food_y], a       ; D8 And 5B are just some off screen coordinates
 ld a, $5B                ;
-ld [oam_buffer + 5], a   ;
+ld [oam_buffer_food_x], a   ;
 ; Play animation
 call joy_animation
 call spawn_food

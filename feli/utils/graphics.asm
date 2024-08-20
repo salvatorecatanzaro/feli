@@ -164,7 +164,7 @@ spawn_food:
     ; aggiungilo a un array composto da n posizioni x
     ; prendi la posizione corrente x e y a quell index
     ; aggiorna la posizione dell oam sprite
-    ld hl, oam_buffer  + 4
+    ld hl, oam_buffer_food_y
     ld de, $81
     ld bc, food_y_coords
     call get_new_xy_coords

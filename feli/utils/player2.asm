@@ -1,17 +1,17 @@
 ; This method will be used to check if player and food are on the same tile, if this is 
 ; the case the player gets the food
 player2_got_food:
-    ld a, [oam_buffer + 8] ; y
+    ld a, [oam_buffer_player2_y] ; y
     ld c, a
-    ld a, [oam_buffer + 9]
+    ld a, [oam_buffer_player2_x]
     ld b, a  ; x
     call get_tile_by_pixel
     ld e, l                   ;   de contains the tile position of the player
     ld d, h                   ; 
 
-    ld a, [oam_buffer + 4] ; y
+    ld a, [oam_buffer_food_y] ; y
     ld c, a
-    ld a, [oam_buffer + 5]
+    ld a, [oam_buffer_food_x]
     ld b, a  ; x
     call get_tile_by_pixel   ; hl contains tile food position
 
@@ -46,9 +46,9 @@ player2_got_food:
     .modified_digits_player2
     ; remove from screen the food
     ld a, $D8                ;
-    ld [oam_buffer + 4], a       ; D8 And 5B are just some off screen coordinates
+    ld [oam_buffer_food_y], a       ; D8 And 5B are just some off screen coordinates
     ld a, $5B                ;
-    ld [oam_buffer + 5], a   ;
+    ld [oam_buffer_food_x], a   ;
     ; Play animation
     ;call joy_animation_player2
     call spawn_food
@@ -58,9 +58,9 @@ player2_got_food:
 
 
 reset_positions_player2:
-    ld a, [oam_buffer + 8]
+    ld a, [oam_buffer_player2_y]
     ld [player_2_y], a
-    ld a, [oam_buffer + 9]
+    ld a, [oam_buffer_player2_x]
     ld [player_2_x], a
     ret
 
@@ -72,43 +72,43 @@ update_player2_position:
     and b 
     ld [player2_state], a
 
-    ; if player is climbing update the player2_climbing_counter until it hits the player2_climb_max_count
-    bit 5, a
-    jr z, .not_climbing
-    ld a, [player2_climbing_counter]
-    ld b, a
-    ld a, [player2_climb_max_count]
-    cp a, b
-    jr z, .stop_climbing_animation
-    ld a, [player2_climbing_counter]
-    add $1
-    ld [player2_climbing_counter], a
-    jp .end_p2_position_update
+    bit 5, a                           ;
+    jr z, .not_climbing                ; 
+    ld a, [player2_climbing_counter]   ; if player is climbing update the player2_climbing_counter 
+    ld b, a                            ; until it hits the player2_climb_max_count
+    ld a, [player2_climb_max_count]    ;
+    cp a, b                            ;
+    jr z, .stop_climbing_animation     ;
+    ld a, [player2_climbing_counter]   ;
+    add $1                             ;
+    ld [player2_climbing_counter], a   ;
+    jp .end_p2_position_update         ; until then, don't update player position
+
     .stop_climbing_animation
-    ld b, %11011111          ;
-    ld a, [player2_state]    ; Remove climbing from player state
-    and a, b                 ;
-    ld [player2_state], a    ;
+    ld b, %11011111                   ;
+    ld a, [player2_state]             ; Remove climbing from player state
+    and a, b                          ;
+    ld [player2_state], a             ;
     xor a                             ;  Reset to 0
     ld [player2_climbing_counter], a  ;  player2_climbing_counter
 
-    ld bc, oam_buffer +8         ; y pos  
-    ld a, [bc]                   ;
-    sub a, 6                     ;  Go on top of the obstacle
-    ld [bc], a                   ;  
+    ld bc, oam_buffer_player2_y
+    ld a, [bc]                        ;  After removing the climbing status from player2 state
+    sub a, 6                          ;  Go on top of the obstacle
+    ld [bc], a                        ;  
     .not_climbing 
     call reset_positions_player2
 
-    ld a, [player2_state]
-    bit 6, a
-    jr nz, .go_down_one_platform
+    ld a, [player2_state]             ;
+    bit 6, a                          ; If bit 6 of player state is set, we want to go down one platform
+    jr nz, .go_down_one_platform      ;
 
-    ld a, [player_2_y] ; y position of the food
+    ld a, [player_2_y]
     ld b, a
-    ld a, [oam_buffer + 4]
+    ld a, [oam_buffer_food_y]
     cp a, b                   ;  If food is up compared with player2
     jr c, .food_is_up         ;
-    ld a, [oam_buffer + 5]  ; x position of the food
+    ld a, [oam_buffer_food_x]
     ld h, a                 ;  
     ld a, [player_2_x]      ;   If food is down remove the possibility
     cp a, h                 ;   of performing jumps
@@ -129,14 +129,14 @@ update_player2_position:
     or a, b                   ; Set the state for going down one platform
     ld [player2_state], a     ;
     .go_down_one_platform 
-    ld a, [oam_buffer + 1]  ; x position of the player
+    ld a, [oam_buffer_player_x]
     ld h, a                 ;
     ld a, [player_2_x]      ;
     cp a, h                 ; 
     jr c, .move_right       ;  Compare the position of player 2 and player 1 and go in player1 
     jp .move_left           ;  direction in order to try and fall down one platform
     .food_is_up
-    ld a, [oam_buffer + 5]  ; x position of the food
+    ld a, [oam_buffer_food_x]
     ld h, a
     ld a, [player_2_x]
     cp a, h
@@ -152,10 +152,10 @@ update_player2_position:
     ld [player2_state], a
     ; set x flip to 1
     ld a, %00100111
-    ld [oam_buffer + 11], a  ; oam buffer +11 contains player 2 attributes
-    ld a, [oam_buffer + 9] ; x pos
+    ld [oam_buffer_player2_attrs], a
+    ld a, [oam_buffer_player2_x]
     sub a, 1
-    ld [oam_buffer + 9], a
+    ld [oam_buffer_player2_x], a
     jp .gravity_check_player2 
 
     .move_right
@@ -166,10 +166,10 @@ update_player2_position:
     ld [player2_state], a
     ; set x flip to 0
     ld a, %00000111
-    ld [oam_buffer + 11], a  ; oam buffer +11 contains player 2 attributes
-    ld a, [oam_buffer + 9] ; x pos
+    ld [oam_buffer_player2_attrs], a
+    ld a, [oam_buffer_player2_x]
     add a, 1
-    ld [oam_buffer + 9], a
+    ld [oam_buffer_player2_x], a
     jp .gravity_check_player2
 
     .jump
@@ -193,7 +193,7 @@ update_player2_position:
     ; Update state with climbing animation
     ld a, %00100000                  
     ld [player2_state], a          
-    ld bc, oam_buffer +8         ; y pos  
+    ld bc, oam_buffer_player2_y
     ld a, [bc]                   ;
     sub a, 4                     ;  Put the sprite on the obstacle so it can play the climbing animation
     ld [bc], a                   ;  
@@ -204,13 +204,13 @@ update_player2_position:
     cp b
     jr c, .up_by_three_player2          ;
     .up_by_one_player2                   ;
-    ld bc, oam_buffer +8            ; y pos  
+    ld bc, oam_buffer_player2_y
     ld a, [bc]                   ;
     sub a, 2                     ;  The player will go up by 3 positions at start
     ld [bc], a                   ;  at the before falling, it will slow down
     jp .__up_by                  ;  and it will go up just by 2
     .up_by_three_player2                 ;
-    ld bc, oam_buffer + 8 ; y pos    ;
+    ld bc, oam_buffer_player2_y
     ld a, [bc]                   ;
     sub a, 4                     ;
     ld [bc], a                   ;
@@ -253,7 +253,7 @@ update_player2_position:
     ld a, [hl]
     call is_wall_tile
     jr nz, .no_down_2 
-    ld bc, oam_buffer + 8 ; y pos
+    ld bc, oam_buffer_player2_y
     ld a, [bc]
     add a, $1
     ld [bc], a
