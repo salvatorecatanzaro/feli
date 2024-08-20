@@ -277,7 +277,7 @@ background_assign_attributes:
     .water_tile
     ld a, %00000001          ; set vram bank to 1
     ld [rVBK], a             ;
-    ld a, %00000011
+    ld a, %10000011
     ld [de], a
     jp .assigned
     .sky_tile

@@ -7,23 +7,7 @@ reset_positions:
     ld [main_player_x], a
     ret
 
-update_player_position:
-    ; Start by setting the state to idle, if it's not the correct state it will be
-    ; overwritten by the next instructions
-    ld b , %00001100 ; Mask to reset every state but jmp and falling bit
-    ld a, [player_state]
-    and b 
-    ld [player_state], a
-
-    ; if button A is not pressed, it can not be in hold state
-    ld a, [buttons]
-    bit 4, a                  ;  If button A is pressed and 
-    jr z, .holding   
-    xor a
-    ld [holding_jump], a 
-    .holding
-
-    ;test left bit
+try_move_left:
     ld a, [buttons]
     bit 1, a
     jr nz, .no_left
@@ -53,9 +37,9 @@ update_player_position:
     ld [bc], a
     .no_left
     call reset_positions
-    ;test left bit
+    ret
 
-    ;test right bit
+try_move_right:
     ld a, [buttons]
     bit 0, a
     jr nz, .no_right
@@ -86,8 +70,16 @@ update_player_position:
     ld [bc], a
     .no_right
     call reset_positions
-    ;test right bit
-    
+    ret
+
+
+try_jump:
+    ld a, [buttons]        ; if button A is not pressed, it can not be in hold state
+    bit 4, a               ;
+    jr z, .holding         ; 
+    xor a                  ; reset holding_jump to 0
+    ld [holding_jump], a   ;
+    .holding
     ; If jumping state, keep on going up
     ld a, [player_state]
     bit 2, a
@@ -156,17 +148,13 @@ update_player_position:
     ld a, %00001000
     ld [player_state], a
     .no_up
-    call reset_positions
     .not_jumping
-    ; test jump bit
-    
-    ld a, [player_state]                ;
-    ld b, %00000100                     ;  If player state is jumping 
-    and b                               ;  we don't want  
-    jp nz, .end_update_player_position  ;  to apply gravity
+    call reset_positions
+    ret
 
+
+try_apply_gravity:
     ; Apply gravity on character
-    ; No collision, update position
     ld a, [falling_speed]
     ld b, $12
     cp a, b
@@ -213,7 +201,7 @@ update_player_position:
     ; When the player is falling will go in the state falling
     ld a, %00001000
     ld [player_state], a
-    jp .end_update_player_position
+    ret  ; end_update_player_position
     .no_down
     ld a, $1
     ld [falling_speed], a
@@ -222,6 +210,36 @@ update_player_position:
     ld a, [player_state]
     and b 
     ld [player_state], a
+    ret
+
+update_player_position:
+    ; Start by setting the state to idle, if it's not the correct state it will be
+    ; overwritten by the next instructions
+    ld b , %00011100 ; Mask to reset every state but jmp, falling, and in water bit
+    ld a, [player_state]
+    and b 
+    ld [player_state], a
+
+    ; check if player is underwater
+    bit 4, a
+    jr z, .not_underwater
+    ; TODO Type code for underwater here
+    ld a, $8d   ; Add fixed y to let head off the water
+    ld [oam_buffer_player_y], a
+    jp .end_update_player_position
+    .not_underwater
+
+    call try_move_left
+    call try_move_right
+    call try_jump
+    
+    ld a, [player_state]                ;
+    ld b, %00000100                     ;  If player state is jumping 
+    and b                               ;  we don't want  
+    jp nz, .end_update_player_position  ;  to apply gravity
+
+    call try_apply_gravity
+
     .end_update_player_position
     ret
 
@@ -268,7 +286,17 @@ get_tile_by_pixel:
 ; @param a: tile ID
 ; @return z: set if a is a wall.
 is_wall_tile:
-    or a, $00
+    cp a, $02
+    jr nz, .not_water_tile
+    ld a, %00010000
+    ld [player_state], a
+    ret
+    .not_water_tile
+    ;ld b, %11101111        ;
+    ;ld a, [player_state]   ;
+    ;and a, b               ;  If not a water tile, remove underwater status
+    ;ld [player_state], a   ;
+    or a, $00              ;
     ret
 
 player_animation:

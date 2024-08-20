@@ -188,7 +188,7 @@ update_player2_position:
     ld b, a
     call get_tile_by_pixel ; Returns tile address in hl
     ld a, [hl]
-    call is_wall_tile
+    call is_wall_tile_player2
     jr z, .go_up_normally_player2
     ; Update state with climbing animation
     ld a, %00100000                  
@@ -251,7 +251,7 @@ update_player2_position:
     ld b, a
     call get_tile_by_pixel ; Returns tile address in hl
     ld a, [hl]
-    call is_wall_tile
+    call is_wall_tile_player2
     jr nz, .no_down_2 
     ld bc, oam_buffer_player2_y
     ld a, [bc]
@@ -435,4 +435,21 @@ player_2_animation:
 
 
     .endstatecheckplayer2
+    ret
+
+
+; @param a: tile ID
+; @return z: set if a is a wall.
+is_wall_tile_player2:
+    ;cp a, $02
+    ;jr nz, .not_water_tile_p2
+    ;ld a, %00010000
+    ;ld [player2_state], a
+    ;ret
+    ;.not_water_tile_p2
+    ;ld b, %11101111        ;
+    ;ld a, [player2_state]   ;
+    ;and a, b               ;  If not a water tile, remove underwater status
+    ;ld [player2_state], a   ;
+    or a, $00              ;
     ret
