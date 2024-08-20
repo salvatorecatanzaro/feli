@@ -46,11 +46,12 @@ player2_got_food:
     .modified_digits_player2
     ; remove from screen the food
     ld a, $D8                ;
-    ld [oam_buffer + 4], a       ; D8 And CC are just some off screen coordinates
-    ld a, $CC                ;
+    ld [oam_buffer + 4], a       ; D8 And 5B are just some off screen coordinates
+    ld a, $5B                ;
     ld [oam_buffer + 5], a   ;
     ; Play animation
     ;call joy_animation_player2
+    call spawn_food
     ; Play sound
     .not_equal_player2 ; do nothing
     ret
@@ -66,7 +67,7 @@ reset_positions_player2:
 update_player2_position:
     ; Start by setting the state to idle, if it's not the correct state it will be
     ; overwritten by the next instructions
-    ld b , %00101100 ; Mask to reset every state but jmp, falling and climbing bit
+    ld b , %01101100 ; Mask to reset every state but jmp, go down one platfor, falling and climbing bit
     ld a, [player2_state]
     and b 
     ld [player2_state], a
@@ -93,12 +94,48 @@ update_player2_position:
 
     ld bc, oam_buffer +8         ; y pos  
     ld a, [bc]                   ;
-    sub a, 4                     ;  Go on top of the obstacle
+    sub a, 6                     ;  Go on top of the obstacle
     ld [bc], a                   ;  
-
-    .not_climbing
+    .not_climbing 
     call reset_positions_player2
 
+    ld a, [player2_state]
+    bit 6, a
+    jr nz, .go_down_one_platform
+
+    ld a, [player_2_y] ; y position of the food
+    ld b, a
+    ld a, [oam_buffer + 4]
+    cp a, b                   ;  If food is up compared with player2
+    jr c, .food_is_up         ;
+    ld a, [oam_buffer + 5]  ; x position of the food
+    ld h, a                 ;  
+    ld a, [player_2_x]      ;   If food is down remove the possibility
+    cp a, h                 ;   of performing jumps
+    jr c, .move_right       ;
+    ld a, [player2_state]
+    bit 3, a                             ;  If bit falling is set we do not need to go down one platform,
+    jp nz, .gravity_check_player2        ;  we are falling already!!
+    ld a, [player_2_x]
+    cp a, h
+    jp z, .go_down_one_platform_status_set
+    jp .move_left
+    .go_down_one_platform_status_set
+    ld a, [player_2_y]     ; Save platform before moving
+    ld [platform_y_old], a ; save player2 y + 5 in y old. 
+    ld a, [player2_state]     ;
+    ld b, a                   ;
+    ld a, %01000000           ;
+    or a, b                   ; Set the state for going down one platform
+    ld [player2_state], a     ;
+    .go_down_one_platform 
+    ld a, [oam_buffer + 1]  ; x position of the player
+    ld h, a                 ;
+    ld a, [player_2_x]      ;
+    cp a, h                 ; 
+    jr c, .move_right       ;  Compare the position of player 2 and player 1 and go in player1 
+    jp .move_left           ;  direction in order to try and fall down one platform
+    .food_is_up
     ld a, [oam_buffer + 5]  ; x position of the food
     ld h, a
     ld a, [player_2_x]
@@ -169,13 +206,13 @@ update_player2_position:
     .up_by_one_player2                   ;
     ld bc, oam_buffer +8            ; y pos  
     ld a, [bc]                   ;
-    sub a, 1                     ;  The player will go up by 3 positions at start
+    sub a, 2                     ;  The player will go up by 3 positions at start
     ld [bc], a                   ;  at the before falling, it will slow down
     jp .__up_by                  ;  and it will go up just by 2
     .up_by_three_player2                 ;
     ld bc, oam_buffer + 8 ; y pos    ;
     ld a, [bc]                   ;
-    sub a, 3                     ;
+    sub a, 4                     ;
     ld [bc], a                   ;
     .__up_by
     ; increment by 1 state counter
@@ -220,16 +257,46 @@ update_player2_position:
     ld a, [bc]
     add a, $1
     ld [bc], a
-    ; When the player is falling will go in the state falling
+    ; When the player is falling will go in the state falling, reset everything but go down one platform
+    ld a, [player2_state]
+    and a, %01000000
+    ld [player2_state], a
+    ld b, a
     ld a, %00001000
+    or a, b
+    ld [player2_state], a
+
+    bit 6, a
+    jp z, .end_p2_position_update
+    ; if we went down one platform, remove status go down one platform
+    ld a, [platform_y_old]                                   ;
+    ld b, a                                                  ;  if old position is 
+    ld a, [player_2_y]                                       ;  greater then new y
+    sub a, b                                                  ;  we are falling, we can reset
+    cp a, $5 
+    jr nz, .end_p2_position_update                           ;  our go down state to 0
+    ld b , %10111111                                         ; Mask to reset go down one platform bit
+    ld a, [player2_state]                 
+    and b 
     ld [player2_state], a
     jp .end_p2_position_update
     .no_down_2
     ; If no down condition is met, we are not falling anymore
     ld b , %11110111 ; Mask to reset falling bit
+
+    ; if playery and playeryold are not equal it means that the player2 has hit a new ground,
+    ; lets add to the mask the go down one platform
+    ld a, [platform_y_old]
+    ld c, a 
+    ld a, [player_2_y]
+    cp a, c
+    jr z, .dont_update_mask
+    ld b, %10110111
+    .dont_update_mask
     ld a, [player2_state]
     and b 
     ld [player2_state], a
+
     .end_p2_position_update
     ret
 

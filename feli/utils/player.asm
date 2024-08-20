@@ -463,11 +463,12 @@ ld [hl], a
 .modified_digits
 ; remove from screen the food
 ld a, $D8                ;
-ld [oam_buffer + 4], a       ; D8 And CC are just some off screen coordinates
-ld a, $CC                ;
+ld [oam_buffer + 4], a       ; D8 And 5B are just some off screen coordinates
+ld a, $5B                ;
 ld [oam_buffer + 5], a   ;
 ; Play animation
 call joy_animation
+call spawn_food
 ; Play sound
 .not_equal ; do nothing
 ret 

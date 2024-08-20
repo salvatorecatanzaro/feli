@@ -47,3 +47,4 @@ player2_climbing_counter: ds 1
 player2_climb_max_count: ds 1
 water_animation_counter: ds 1
 water_animation_frame_counter: ds 1
+platform_y_old: ds 1            ; used to keep track of the current platform
