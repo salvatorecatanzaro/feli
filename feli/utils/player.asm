@@ -220,9 +220,6 @@ update_player_position:
     and b 
     ld [player_state], a
 
-
-
-    ; if underwater move left or right every swimming counter
     ; check if player is underwater
     ld a, [player_state]
     bit 4, a

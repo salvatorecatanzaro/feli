@@ -64,3 +64,5 @@ water_animation_counter: ds 1
 water_animation_frame_counter: ds 1
 platform_y_old: ds 1            ; used to keep track of the current platform
 state_swimming_count: ds 1          ; move every swimming_counter 
+state_swimming_count_p2: ds 1          ; move every swimming_counter 
+presentation_screen_flicker_counter: ds 1

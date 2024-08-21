@@ -18,6 +18,8 @@ scroll_x_register:
 ; Creates the score labels for the player
 ; no input params needed
 presentation_screen:
+    xor a                                         ;  Init variable to 0
+    ld [presentation_screen_flicker_counter], a   ;
     ; color writing background
     ld a, %10000000
     ld hl, palettes
@@ -66,11 +68,61 @@ presentation_screen:
     ld [rLCDC], a
     ;se non preme nulla rimani su questa schermata
 
+    ld a, %00000001          ; set vram bank to 1
+    ld [rVBK], a             ;
     .start_loop
+    ;Change bg palette every 5 loop
+    ld a, [presentation_screen_flicker_counter]
+    add a, $1
+    ld [presentation_screen_flicker_counter], a
+    cp a, $20
+    jr nc, .black_press_start
+    .white_press_start
+    ld hl, $9984
+    ld a, %00000011
+    ld [hli], a
+    ld [hli], a
+    ld [hli], a
+    ld [hli], a
+    ld [hli], a
+    inc hl
+    inc hl
+    ld [hli], a
+    ld [hli], a
+    ld [hli], a
+    ld [hli], a
+    ld [hli], a
+    jp .end_presentation_screen_palette_assignation
+    .black_press_start
+    ld hl, $9984
+    ld a, %00000000
+    ld [hli], a
+    ld [hli], a
+    ld [hli], a
+    ld [hli], a
+    ld [hli], a
+    inc hl
+    inc hl
+    ld [hli], a
+    ld [hli], a
+    ld [hli], a
+    ld [hli], a
+    ld [hli], a
+    .end_presentation_screen_palette_assignation
+    ld a, [presentation_screen_flicker_counter]
+    cp a, $30
+    jr nz, .dont_reset_counter
+    xor a
+    ld [presentation_screen_flicker_counter], a
+    .dont_reset_counter
+    ;Change bg palette every 5 loop
     call get_buttons_state
     ld a, [buttons]
     bit 7, a
     jr nz, .start_loop
+    ld a, %00000000          ; set vram bank to 0
+    ld [rVBK], a             ;
+
 
     ld hl, $5FFF          ;
     .bwait                ;

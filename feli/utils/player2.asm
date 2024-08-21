@@ -67,10 +67,25 @@ reset_positions_player2:
 update_player2_position:
     ; Start by setting the state to idle, if it's not the correct state it will be
     ; overwritten by the next instructions
-    ld b , %01101100 ; Mask to reset every state but jmp, go down one platfor, falling and climbing bit
+    ld b , %01111100 ; Mask to reset every state but jmp, go down one platfor, falling, swimming and climbing bit
     ld a, [player2_state]
     and b 
     ld [player2_state], a
+
+    ; check if player is underwater
+    ld a, [player2_state]
+    bit 4, a
+    jr z, .not_underwater_p2
+    ; if the player is underwater, remove the falling bit
+    ld a, %11110111
+    ld b, a
+    ld a, [player2_state]
+    and a, b
+    ld [player2_state], a
+    ld a, $8d                          ;
+    ld [oam_buffer_player2_y], a       ;
+    jp .not_climbing
+    .not_underwater_p2
 
     bit 5, a                           ;
     jr z, .not_climbing                ; 
@@ -153,10 +168,23 @@ update_player2_position:
     ; set x flip to 1
     ld a, %00100111
     ld [oam_buffer_player2_attrs], a
+    ld a, [player_2_y]
+    add a, 4  ; don t check collision from the top left of the sprite, but from a more mid position
+    sub a, 16 ; the sprite y is not aligned with tile position (0, 0), removing 16 bit removes this difference
+    ld c, a
+    ld a, [player_2_x]
+    sub a, 8+1
+    ld b, a
+    call get_tile_by_pixel ; Returns tile address in hl
+    ld a, [hl]
+    call is_wall_tile_player2
+    jr nz, .no_left_p2
     ld a, [oam_buffer_player2_x]
     sub a, 1
     ld [oam_buffer_player2_x], a
     jp .gravity_check_player2 
+    .no_left_p2
+    jp .jump
 
     .move_right
     ; set player animation to running
@@ -167,10 +195,24 @@ update_player2_position:
     ; set x flip to 0
     ld a, %00000111
     ld [oam_buffer_player2_attrs], a
+    ld a, [player_2_y]
+    add a, 4  ; don t check collision from the top left of the sprite, but from a more mid position
+    sub a, 16 ; the sprite y is not aligned with tile position (0, 0), removing 16 bit removes this difference
+    ld c, a
+    ld a, [player_2_x]
+    add a, 4 ; dont start checking from the top left
+    sub a, 8-4
+    ld b, a
+    call get_tile_by_pixel ; Returns tile address in hl
+    ld a, [hl]
+    call is_wall_tile_player2
+    jr nz, .no_right_p2
     ld a, [oam_buffer_player2_x]
     add a, 1
     ld [oam_buffer_player2_x], a
     jp .gravity_check_player2
+    .no_right_p2
+    jp .jump
 
     .jump
     ld a, %00001000           ;  
@@ -257,9 +299,9 @@ update_player2_position:
     ld a, [bc]
     add a, $1
     ld [bc], a
-    ; When the player is falling will go in the state falling, reset everything but go down one platform
+    ; When the player is falling will go in the state falling, reset everything but go down one platform and swimming
     ld a, [player2_state]
-    and a, %01000000
+    and a, %01010000
     ld [player2_state], a
     ld b, a
     ld a, %00001000
@@ -399,12 +441,28 @@ player_2_animation:
     ; increment by 1 state counter
     jp .endstatecheckplayer2
 
-    .gotoplayer2state4 ; hurt
+    .gotoplayer2state4 ; swimming
     ; Copy the bin data to video ram
     ld hl, $8820
-    ld de, player ; Starting address
-    ld bc, __player - player ; Length -> it's a subtraciton
+    ld a, [state_swimming_count_p2]
+    ld b, $1
+    cp a, b
+    jr nz, .state_swimming_frame_2_p2
+    ; draw frame 1
+    ld de, player1_state_swimming_2 ; Starting address
+    ld bc, __player1_state_swimming_2 - player1_state_swimming_2 ; Length -> it's a subtraciton
     call copy_data_to_destination
+    ld a, $2
+    ld [state_swimming_count_p2], a
+    jp .endstatecheckplayer2
+    ; draw frame 2
+    .state_swimming_frame_2_p2
+    ld de, player1_state_swimming_1 ; Starting address
+    ld bc, __player1_state_swimming_1 - player1_state_swimming_1 ; Length -> it's a subtraciton
+    call copy_data_to_destination
+    ; reset state to 1
+    ld a, $1
+    ld [state_swimming_count_p2], a
     jp .endstatecheckplayer2
 
     .gotoplayer2state5 ; climbing
@@ -441,15 +499,11 @@ player_2_animation:
 ; @param a: tile ID
 ; @return z: set if a is a wall.
 is_wall_tile_player2:
-    ;cp a, $02
-    ;jr nz, .not_water_tile_p2
-    ;ld a, %00010000
-    ;ld [player2_state], a
-    ;ret
-    ;.not_water_tile_p2
-    ;ld b, %11101111        ;
-    ;ld a, [player2_state]   ;
-    ;and a, b               ;  If not a water tile, remove underwater status
-    ;ld [player2_state], a   ;
+    cp a, $02
+    jr nz, .not_water_tile_p2
+    ld a, %00010000
+    ld [player2_state], a
+    ret
+    .not_water_tile_p2
     or a, $00              ;
     ret
