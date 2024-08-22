@@ -66,3 +66,23 @@ platform_y_old: ds 1            ; used to keep track of the current platform
 state_swimming_count: ds 1          ; move every swimming_counter 
 state_swimming_count_p2: ds 1          ; move every swimming_counter 
 presentation_screen_flicker_counter: ds 1
+sound_length: ds 1
+sound_counter: ds 1
+;1
+def SOL EQU $06a0
+def FA EQU $0680
+def DO EQU $0512
+def MI EQU $0500
+def RE EQU $0640
+;2 imperial
+;def SOL EQU $08a0
+;def FA EQU $0680
+;def DO EQU $0412
+;def MI EQU $0400
+;def RE EQU $0440
+;3 DARK
+;def SOL EQU $0bff
+;def FA EQU $02ff
+;def DO EQU $04f0
+;def MI EQU $05ff
+;def RE EQU $04f0

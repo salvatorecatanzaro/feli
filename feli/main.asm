@@ -9,6 +9,8 @@ INCLUDE "utils/controls.asm"
 INCLUDE "utils/player.asm"
 INCLUDE "utils/rom.asm"
 INCLUDE "utils/player2.asm"
+INCLUDE "utils/sound.asm"
+
 SECTION "Header", ROM0[$100]
     ; Our code here
 EntryPoint: ; This is where execution begins
@@ -184,6 +186,8 @@ Start:
 
     call copy_oam_sprites
 
+
+    call init_audio
 	; bit 4 select from which bank of vram you want to take tiles: 0 8800 based, 1 8000 based
 	; bit 2 object sprite size 0 = 8x8; 1 = 8x16
 	; bit 1 sprite enabled
@@ -199,9 +203,11 @@ Start:
     ld [player_state], a  ; setting player state to IDLE
     ld [player2_state], a  ; setting player2 state to IDLE
     ld [player_animation_frame_counter], a
+    ld [sound_length], a
     ld [water_animation_frame_counter], a        ; this value is used to wait n frames before changing water frame
     ld [player2_animation_frame_counter], a
     ld [food_xy_position_counter], a
+    ld [sound_counter], a
     ; init all states to 1
     ld a, 1
     ld [state_idle_count], a
@@ -256,6 +262,7 @@ Start:
     call player2_got_food
     call food_position_handler
     call $ff80 ; refresh oam
+    call update_audio
 
     jp .main_loop
 
