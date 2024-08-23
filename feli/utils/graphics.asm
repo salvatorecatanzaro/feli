@@ -15,6 +15,20 @@ scroll_x_register:
 	ld [rSCX], a
 	ret
 
+
+; TODO Add this code when .png will be available
+background_presentation_screen:
+;ld hl, $8200
+;ld bc, __pres_screen - pres_screen
+;ld de, pres_screen
+;call copy_data_to_destination
+
+;ld bc, __pres_screen_tile_map - pres_screen_tile_map
+;ld hl, $9800
+;ld de, pres_screen_tile_map
+;call copy_data_to_destination
+ret
+    
 ; Creates the score labels for the player
 ; no input params needed
 presentation_screen:

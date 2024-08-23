@@ -69,11 +69,12 @@ presentation_screen_flicker_counter: ds 1
 sound_length: ds 1
 sound_counter: ds 1
 ;1
-def SOL EQU $06a0
-def FA EQU $0680
-def DO EQU $0512
-def MI EQU $0500
-def RE EQU $0640
+;def SOL EQU $06a0
+;def FA EQU $0680
+;def DO EQU $0512
+;def MI EQU $0500
+;def RE EQU $0640
+
 ;2 imperial
 ;def SOL EQU $08a0
 ;def FA EQU $0680
@@ -86,3 +87,9 @@ def RE EQU $0640
 ;def DO EQU $04f0
 ;def MI EQU $05ff
 ;def RE EQU $04f0
+def SOL EQU $0f00
+def FA EQU $0f61
+def DO EQU $0f30
+def MI EQU $0f60
+def RE EQU $0f89
+win_points: ds 1

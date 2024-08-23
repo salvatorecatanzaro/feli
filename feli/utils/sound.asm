@@ -59,11 +59,11 @@ init_audio:
 	ld [rNR14], a          
 
 
-	ld a, %00000000 ; duty cycle 12.5 
+	ld a, %01000010 ; duty cycle 50% 
 	ld [rNR21], a
-	ld a, %00011111 ; init volume to max for channel 2
+	ld a, %11110000 ; init volume to max for channel 2
 	ld [rNR22], a
-	ld a, %00000000 ; turn the channel off, turn it on just for playing player sounds
+	ld a, %11000000 ; turn the channel off, turn it on just for playing player sounds
 	ld [rNR24], a
 
     ret
@@ -115,11 +115,22 @@ update_audio:
     ret
 
  jump_sound:
- 	.reproduce_another_freq
- 	ld hl, $0700
+ 	ld hl, $06fa
  	ld a, l
- 	ld [rNR23], a   ; Load lower part to 13
+ 	ld [rNR23], a         ; Load lower part to 13
  	ld a, h
- 	ld [rNR24], a   ; Load High bit to 14
+ 	or a, %11000000       ; bit 7 - Channel enabled. 
+ 	ld [rNR24], a         ; bit 6 - Period enabled (Or the sound will play forever). Period depends on nr21
+ 	inc hl
  	ret
 
+
+victory_sound:
+ 	ld hl, $08fa
+ 	ld a, l
+ 	ld [rNR13], a         ; Load lower part to 13
+ 	ld a, h
+ 	or a, %11000000       ; bit 7 - Channel enabled. 
+ 	ld [rNR14], a         ; bit 6 - Period enabled (Or the sound will play forever). Period depends on nr11
+ 	inc hl
+ 	ret

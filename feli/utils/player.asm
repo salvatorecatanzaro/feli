@@ -104,6 +104,7 @@ try_jump:
     ; when jumping the player can still move left or right
     ; also the gravity will be affecting his position
     .jumping 
+    call jump_sound
     ld a, %00000100
     ld [player_state], a
     ld a, [main_player_y]
@@ -515,7 +516,16 @@ ld a, $5B                ;
 ld [oam_buffer_food_x], a   ;
 ; Play animation
 call joy_animation
-call spawn_food
+ld a, [win_points]    ;
+ld b, a               ;
+ld hl, $9806          ; 
+ld a, [hl]            ; If the player has win_points, he W   
+cp a, b               ; 
+jr z, .player_win     ;
+call spawn_food    
 ; Play sound
 .not_equal ; do nothing
 ret 
+.player_win
+ld a, $ff
+ret

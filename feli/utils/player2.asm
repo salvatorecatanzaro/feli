@@ -51,11 +51,19 @@ player2_got_food:
     ld [oam_buffer_food_x], a   ;
     ; Play animation
     ;call joy_animation_player2
+    ld a, [win_points]    ;
+    ld b, a               ;
+    ld hl, $9812          ; 
+    ld a, [hl]            ; If the player has win_points, he W   
+    cp a, b               ; 
+    jr z, .player2_win     ;
     call spawn_food
     ; Play sound
     .not_equal_player2 ; do nothing
     ret
-
+    .player2_win
+    ld a, $ff
+    ret
 
 reset_positions_player2:
     ld a, [oam_buffer_player2_y]
@@ -215,6 +223,7 @@ update_player2_position:
     jp .jump
 
     .jump
+    call jump_sound
     ld a, %00001000           ;  
     ld b, a                   ;
     ld a, [player2_state]     ;

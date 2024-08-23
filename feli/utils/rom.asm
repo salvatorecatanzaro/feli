@@ -210,3 +210,14 @@ dw FA
 dw SOL
 dw MI
 dw RE
+
+
+SECTION "textures_2", ROMX[$4000]
+; TODO Add this code when background .png will be available
+;pres_screen:
+;	INCBIN "backgrounds/pres_screen"
+;__pres_screen:
+;pres_screen_tile_map:
+;	INCBIN "backgrounds/pres_screen_tilemap"
+;__pres_screen_tile_map:
+
