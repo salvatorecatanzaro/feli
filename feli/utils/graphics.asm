@@ -35,43 +35,43 @@ presentation_screen:
     xor a                                         ;  Init variable to 0
     ld [presentation_screen_flicker_counter], a   ;
     ; color writing background
-    ld a, %10000000
-    ld hl, palettes
-    ld bc, __palettes - palettes
-    call set_palettes_bg
-    ld hl, $9984
-    ld de, P_
-    ld a, [de]
-    ld [hli], a
-    ld de, R_
-    ld a, [de]
-    ld [hli], a
-    ld de, E_
-    ld a, [de]
-    ld [hli], a
-    ld de, S_
-    ld a, [de]
-    ld [hli], a
-    ld de, S_
-    ld a, [de]
-    ld [hli], a
-    inc hl
-    inc hl
-    ld de, S_
-    ld a, [de]
-    ld [hli], a
-    ld de, T_
-    ld a, [de]
-    ld [hli], a
-    ld de, A_
-    ld a, [de]
-    ld [hli], a
-    ld de, R_
-    ld a, [de]
-    ld [hli], a
-    ld de, T_
-    ld a, [de]
-    ld [hli], a
+    ld a, %10000000                  ;
+    ld hl, palettes                  ; Load background palettes into memory
+    ld bc, __palettes - palettes     ;
+    call set_palettes_bg             ;
+    ld hl, $9984                     ;
+    ld de, P_                        ;
+    ld a, [de]                       ;
+    ld [hli], a                      ;
+    ld de, R_                        ;
+    ld a, [de]                       ;
+    ld [hli], a                      ;
+    ld de, E_                        ;
+    ld a, [de]                       ;     ADD SCORE LABEL
+    ld [hli], a                      ;     TO THE SCREEN
+    ld de, S_                        ;
+    ld a, [de]                       ;
+    ld [hli], a                      ;
+    ld de, S_                        ;
+    ld a, [de]                       ;
+    ld [hli], a                      ;
+    inc hl                           ;
+    inc hl                           ;
+    ld de, S_                        ;
+    ld a, [de]                       ;
+    ld [hli], a                      ;
+    ld de, T_                        ;
+    ld a, [de]                       ;
+    ld [hli], a                      ;
+    ld de, A_                        ;
+    ld a, [de]                       ;
+    ld [hli], a                      ; 
+    ld de, R_                        ;
+    ld a, [de]                       ;
+    ld [hli], a                      ;
+    ld de, T_                        ;
+    ld a, [de]                       ;
+    ld [hli], a                      ;
     
     ; Turn on the screen
     ; bit 4 select from which bank of vram you want to take tiles: 0 8800 based, 1 8000 based
@@ -80,70 +80,70 @@ presentation_screen:
     ; Turn on LCD
     ld a, %10000011 ;bg will start from 9800
     ld [rLCDC], a
-    ;se non preme nulla rimani su questa schermata
 
     ld a, %00000001          ; set vram bank to 1
     ld [rVBK], a             ;
-    .start_loop
-    ;Change bg palette every 5 loop
-    ld a, [presentation_screen_flicker_counter]
-    add a, $1
-    ld [presentation_screen_flicker_counter], a
-    cp a, $20
-    jr nc, .black_press_start
-    .white_press_start
-    ld hl, $9984
-    ld a, %00000011
-    ld [hli], a
-    ld [hli], a
-    ld [hli], a
-    ld [hli], a
-    ld [hli], a
-    inc hl
-    inc hl
-    ld [hli], a
-    ld [hli], a
-    ld [hli], a
-    ld [hli], a
-    ld [hli], a
+    .start_loop                                        ;
+    ;Change bg palette every 5 loop                    ;
+    ld a, [presentation_screen_flicker_counter]        ;     Every 20 iterations, change the screen
+    add a, $1                                          ;     label PRESS START with a new color
+    ld [presentation_screen_flicker_counter], a        ;
+    cp a, $20                                          ;
+    jr nc, .black_press_start                          ;
+    .white_press_start                                 
+    ld hl, $9984                                       ;
+    ld a, %00000011                                    ;
+    ld [hli], a                                        ;
+    ld [hli], a                                        ;
+    ld [hli], a                                        ;     PRESS START White color
+    ld [hli], a                                        ;
+    ld [hli], a                                        ;
+    inc hl                                             ;
+    inc hl                                             ;
+    ld [hli], a                                        ;
+    ld [hli], a                                        ;
+    ld [hli], a                                        ;
+    ld [hli], a                                        ;
+    ld [hli], a                                        ;
     jp .end_presentation_screen_palette_assignation
     .black_press_start
-    ld hl, $9984
-    ld a, %00000000
-    ld [hli], a
-    ld [hli], a
-    ld [hli], a
-    ld [hli], a
-    ld [hli], a
-    inc hl
-    inc hl
-    ld [hli], a
-    ld [hli], a
-    ld [hli], a
-    ld [hli], a
-    ld [hli], a
+    ld hl, $9984                                       ;
+    ld a, %00000000                                    ;
+    ld [hli], a                                        ;
+    ld [hli], a                                        ;      PRESS START Black color
+    ld [hli], a                                        ;
+    ld [hli], a                                        ;
+    ld [hli], a                                        ;
+    inc hl                                             ;
+    inc hl                                             ;
+    ld [hli], a                                        ;
+    ld [hli], a                                        ;
+    ld [hli], a                                        ;
+    ld [hli], a                                        ;
+    ld [hli], a                                        ;
     .end_presentation_screen_palette_assignation
-    ld a, [presentation_screen_flicker_counter]
-    cp a, $30
-    jr nz, .dont_reset_counter
-    xor a
-    ld [presentation_screen_flicker_counter], a
+    ld a, [presentation_screen_flicker_counter]        ;
+    cp a, $30                                          ;   When the presentation_screen_flicker_counter is $30
+    jr nz, .dont_reset_counter                         ;   reset it to 0.
+    xor a                                              ;
+    ld [presentation_screen_flicker_counter], a        ;
     .dont_reset_counter
     ;Change bg palette every 5 loop
-    call get_buttons_state
-    ld a, [buttons]
-    bit 7, a
-    jr nz, .start_loop
-    ld a, %00000000          ; set vram bank to 0
-    ld [rVBK], a             ;
+
+    call get_buttons_state                             ;
+    ld a, [buttons]                                    ;
+    bit 7, a                                           ;
+    jr nz, .start_loop                                 ;
+    ld a, %00000000          ; set vram bank to 0      ; 
+    ld [rVBK], a             ;                         ;
 
 
-    ld hl, $5FFF          ;
-    .bwait                ;
-    dec HL                ;  Busy wait for some instants
-    ld a, h               ;
-    or l                  ;
-    jr nz, .bwait         ;
+    ld hl, $5FFF                                       ;
+    .bwait                                             ;
+    dec HL                                             ;  Busy wait for some instants
+    ld a, h                                            ;  fter the user has press start button before
+    or l                                               ;  starting the game
+    jr nz, .bwait                                      ;
 
     ; turn off the screen again and wait some seconds
     xor a
@@ -215,6 +215,12 @@ get_new_xy_coords:
     ld a, [food_xy_position_counter]      ;    Take food xy position counter
     add a, c                              ;    add food position counter to the less significant part 
     ld c, a                               ;    of the bit
+
+    jr nc, .__end_new_xy_coords
+    ld a, b
+    add a, $1
+    ld b, a
+    .__end_new_xy_coords
     ret
 
 
