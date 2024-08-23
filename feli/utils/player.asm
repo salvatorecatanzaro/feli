@@ -452,13 +452,18 @@ joy_animation:
     ld hl, $8800
     ld de, joy ; Starting address
     ld bc, __joy - joy ; Length -> it's a subtraciton
-    call $ff80 ; refresh oam
     call copy_data_to_destination
-    ld hl, $5FFF
+    ld hl, $6FFF
     .keep_joying
-    dec HL
-    ld a, h
+    ld a, l
+    sub a, $1
+    ld l, a
     or l
+    jr nz, .keep_joying
+    ld a, h
+    sub a, $1
+    ld h, a
+    or h
     jr nz, .keep_joying
     ret
 
@@ -508,6 +513,8 @@ add $1
 ld [hl], a
 .modified_digits
 
+call spawn_food
+
 ; Play animation
 call joy_animation
 ld a, [win_points]    ;
@@ -516,11 +523,12 @@ ld hl, $9806          ;
 ld a, [hl]            ; If the player has win_points, he W   
 cp a, b               ; 
 jr z, .player_win     ;
-call spawn_food    
+
 ; Play sound
-;call 
+call eat_food_sound 
 .not_equal ; do nothing
+xor a      ; not win
 ret 
 .player_win
-ld a, $ff
+ld a, $ff  ; win
 ret

@@ -124,6 +124,15 @@ update_audio:
  	inc hl
  	ret
 
+eat_food_sound:
+ 	ld hl, $06fa
+ 	ld a, l
+ 	ld [rNR23], a         ; Load lower part to 13
+ 	ld a, h
+ 	or a, %11000000       ; bit 7 - Channel enabled. 
+ 	ld [rNR24], a         ; bit 6 - Period enabled (Or the sound will play forever). Period depends on nr21
+ 	inc hl
+ 	ret
 
 victory_sound:
  	ld hl, $08fa

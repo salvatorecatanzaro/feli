@@ -60,6 +60,7 @@ player2_got_food:
     call spawn_food
     ; Play sound
     .not_equal_player2 ; do nothing
+    xor a      ; not win
     ret
     .player2_win
     ld a, $ff
