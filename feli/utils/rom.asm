@@ -212,7 +212,7 @@ dw MI
 dw RE
 
 
-SECTION "textures_2", ROMX[$4000]
+;SECTION "textures_2", ROMX[$4000]
 ; TODO Add this code when background .png will be available
 ;pres_screen:
 ;	INCBIN "backgrounds/pres_screen"

@@ -466,19 +466,19 @@ joy_animation:
 ; This method will be used to check if player and food are on the same tile, if this is 
 ; the case the player gets the food
 player_got_food:
-ld a, [oam_buffer_player_y] ; y
+ld a, [oam_buffer_player_y]
 ld c, a
 ld a, [oam_buffer_player_x]
 ld b, a  ; x
 call get_tile_by_pixel
-ld e, l                   ;   de contains the tile position of the player
-ld d, h                   ; 
+ld e, l                            ;   de contains the tile position of the player
+ld d, h                            ; 
 
 ld a, [oam_buffer_food_y]
-ld c, a
-ld a, [oam_buffer_food_x]
+ld c, a                            
+ld a, [oam_buffer_food_x]          
 ld b, a  ; x
-call get_tile_by_pixel
+call get_tile_by_pixel             ;   hl  contains the tile position of the food
 
 ; now let's see if hl and de contains the same value
 ld a, h
@@ -488,17 +488,15 @@ ld a, l
 cp a, e
 jr nz, .not_equal
 .equal ; eat the food and update the score
-;xor a
-;ld [time_frame_based], a
 ; increase score
 ld hl, $9807       ; 9806 is the second digit of the first player
 ld a, [hl]
 sub $40            ; idx 0 for digits is 40, this way we are normalizing the number, eg. id 42 is 2 minus 40 we have now 2 
-cp a, $9
+cp a, $9           ; second digit minus 9 to check if we need to modify the second digit
 jr nz, .modify_second_digit
-;modify_first_digit and put second digit to 0 which corresponds to $40
+; modify_first_digit and put second digit to 0 which corresponds to $40
 ld a, $40
-ld [hl], a ; second digit set to 0
+ld [hl], a          ; second digit set to 0
 ld hl, $9806
 ld a, [hl]
 add $1
@@ -509,11 +507,7 @@ ld a, [hl]
 add $1
 ld [hl], a
 .modified_digits
-; remove from screen the food
-ld a, $D8                ;
-ld [oam_buffer_food_y], a       ; D8 And 5B are just some off screen coordinates
-ld a, $5B                ;
-ld [oam_buffer_food_x], a   ;
+
 ; Play animation
 call joy_animation
 ld a, [win_points]    ;
@@ -524,6 +518,7 @@ cp a, b               ;
 jr z, .player_win     ;
 call spawn_food    
 ; Play sound
+;call 
 .not_equal ; do nothing
 ret 
 .player_win

@@ -58,6 +58,8 @@ Start:
     call clear_mem_area
     
     ; PRESENTATION SCREEN
+    call init_audio
+    ;call background_presentation_screen
     ; copying characters into vram 
     ld hl, $9300
     ld bc, __char_bin - char_bin
@@ -186,8 +188,6 @@ Start:
 
     call copy_oam_sprites
 
-
-    call init_audio
 	; bit 4 select from which bank of vram you want to take tiles: 0 8800 based, 1 8000 based
 	; bit 2 object sprite size 0 = 8x8; 1 = 8x16
 	; bit 1 sprite enabled
@@ -231,6 +231,8 @@ Start:
     ld [jp_max_count], a
     ld a, $80
     ld [player2_climb_max_count], a
+    ld a, $42
+    ld [win_points], a    ; 
     xor a
     ld [holding_jump], a
 
@@ -259,7 +261,13 @@ Start:
     call player_animation
     call player_2_animation
     call player_got_food
+    ; if a contains FF player 1 has won
+    cp a, $ff
+    jp z, Start
     call player2_got_food
+    ; if a contains FF player 1 has won
+    cp a, $ff
+    jp z, Start
     call food_position_handler
     call $ff80 ; refresh oam
     call update_audio
