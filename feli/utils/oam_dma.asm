@@ -51,12 +51,6 @@ copy_oam_sprites:
     ld de, sprite_ids
     ld hl, oam_buffer_player_y
 .oam_loop
-    ld a, 63
-    ld [hl+], a ; y
-    ld [hl+], a ; x
-    ld a, [de]
-    ld [hl+], a
-
     ld a, [de]
     ld c, $81            ; $81 is the food id             
     cp a, c              ; if a - e is 0 this is the food attrs
@@ -66,17 +60,33 @@ copy_oam_sprites:
     cp a, c              ; if a - e is 0 this is the food attrs
     jr z, .player2_attrs    ;
 
-    
-    
     .player1attrs
+    ld a, $55
+    ld [hl+], a ; y
+    ld a, $0E
+    ld [hl+], a ; x
+    ld a, [de]
+    ld [hl+], a
     ld a, %00000000   ;atts
     jp .endattrs
     
     .player2_attrs
+    ld a, $55
+    ld [hl+], a ; y
+    ld a, $9A
+    ld [hl+], a ; x
+    ld a, [de]
+    ld [hl+], a
     ld a, %00000111   ; palette 1 for player 2
     jp .endattrs 
     
     .food_attrs
+    ld a, $55
+    ld [hl+], a ; y
+    ld a, $50
+    ld [hl+], a ; x
+    ld a, [de]
+    ld [hl+], a
     ld a, %00000010
 
     .endattrs
