@@ -35,19 +35,15 @@ Start:
 	xor a
 	ld [rLCDC], a  ; Turn off the LCD by putting zero in the rLCDC register
 
-; let's clear the screen
-    ld hl, $9800
-    ld de, $9bff
-    call clear_mem_area
-; let's clear vram 0:8800
-    ld hl, $8800
-    ld de, $8ff0
+; let's clear the vRAM
+    ld hl, $8000
+    ld de, $9fff
     call clear_mem_area
 ; let's clear vram 1:8800
     ld a, %00000001
     ld [rVBK], a
-    ld hl, $8800
-    ld de, $8ff0
+    ld hl, $8000
+    ld de, $9fff
     call clear_mem_area
     ;set again vram 0
     xor a
@@ -68,19 +64,15 @@ Start:
     call presentation_screen
     ; PRESENTATION SCREEN
 
-    ; let's clear the screen
-    ld hl, $9800
-    ld de, $9bff
-    call clear_mem_area
-; let's clear vram 0:8800
-    ld hl, $8800
-    ld de, $8ff0
+    ; let's clear the vRAM
+    ld hl, $8000
+    ld de, $9fff
     call clear_mem_area
 ; let's clear vram 1:8800
     ld a, %00000001
     ld [rVBK], a
-    ld hl, $8800
-    ld de, $8ff0
+    ld hl, $8000
+    ld de, $9fff
     call clear_mem_area
     ;set again vram 0
     xor a

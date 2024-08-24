@@ -44,11 +44,7 @@ player2_got_food:
     add $1
     ld [hl], a
     .modified_digits_player2
-    ; remove from screen the food
-    ld a, $D8                ;
-    ld [oam_buffer_food_y], a       ; D8 And 5B are just some off screen coordinates
-    ld a, $5B                ;
-    ld [oam_buffer_food_x], a   ;
+    call spawn_food    
     ; Play animation
     ;call joy_animation_player2
     ld a, [win_points]    ;
@@ -57,8 +53,8 @@ player2_got_food:
     ld a, [hl]            ; If the player has win_points, he W   
     cp a, b               ; 
     jr z, .player2_win     ;
-    call spawn_food
     ; Play sound
+    call eat_food_sound
     .not_equal_player2 ; do nothing
     xor a      ; not win
     ret
