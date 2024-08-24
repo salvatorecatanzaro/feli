@@ -52,7 +52,7 @@ presentation_screen:
     ld hl, palettes                  ; Load background palettes into memory
     ld bc, __palettes - palettes     ;
     call set_palettes_bg             ;
-    ld hl, $9984                     ;
+    ld hl, $99c4                     ;
     ld de, P_                        ;
     ld a, [de]                       ;
     ld [hli], a                      ;
@@ -104,7 +104,7 @@ presentation_screen:
     cp a, $20                                          ;
     jr nc, .black_press_start                          ;
     .white_press_start                                 
-    ld hl, $9984                                       ;
+    ld hl, $99c4                                       ;
     ld a, %00000011                                    ;
     ld [hli], a                                        ;
     ld [hli], a                                        ;
@@ -120,7 +120,7 @@ presentation_screen:
     ld [hli], a                                        ;
     jp .end_presentation_screen_palette_assignation
     .black_press_start
-    ld hl, $9984                                       ;
+    ld hl, $99c4                                       ;
     ld a, %00000000                                    ;
     ld [hli], a                                        ;
     ld [hli], a                                        ;      PRESS START Black color
