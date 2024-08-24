@@ -39,6 +39,12 @@ Start:
     ld hl, $8000
     ld de, $9fff
     call clear_mem_area
+
+; let's clear OAM 
+    ld hl, $fe00
+    ld de, $fe9f
+    call clear_mem_area
+
 ; let's clear vram 1:8800
     ld a, %00000001
     ld [rVBK], a
@@ -81,6 +87,11 @@ Start:
 ; let's clear the ram 
     ld hl, $C000
     ld de, $DFFF
+    call clear_mem_area
+
+    ; let's clear OAM 
+    ld hl, $fe00
+    ld de, $fe9f
     call clear_mem_area
     ; Copy the bin data to video ram
     ld hl, $8800
