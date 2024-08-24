@@ -212,12 +212,17 @@ dw MI
 dw RE
 
 
-;SECTION "textures_2", ROMX[$4000]
-; TODO Add this code when background .png will be available
-;pres_screen:
-;	INCBIN "backgrounds/pres_screen"
-;__pres_screen:
-;pres_screen_tile_map:
-;	INCBIN "backgrounds/pres_screen_tilemap"
-;__pres_screen_tile_map:
+SECTION "textures_2", ROMX[$4000]
+adventures_pres_screen:
+	INCBIN "backgrounds/adventures_pres_screen"
+__adventures_pres_screen:
+adventures_pres_screen_tile_map:
+	INCBIN "backgrounds/adventures_pres_screen_tilemap"
+__adventures_pres_screen_tile_map:
+feli_pres_screen:
+	INCBIN "backgrounds/feli_pres_screen"
+__feli_pres_screen:
+feli_pres_screen_tile_map:
+	INCBIN "backgrounds/feli_pres_screen_tilemap"
+__feli_pres_screen_tile_map:
 

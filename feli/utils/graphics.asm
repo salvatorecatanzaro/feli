@@ -16,17 +16,30 @@ scroll_x_register:
 	ret
 
 
-; TODO Add this code when .png will be available
-background_presentation_screen:
-;ld hl, $8200
-;ld bc, __pres_screen - pres_screen
-;ld de, pres_screen
-;call copy_data_to_destination
 
-;ld bc, __pres_screen_tile_map - pres_screen_tile_map
-;ld hl, $9800
-;ld de, pres_screen_tile_map
-;call copy_data_to_destination
+background_presentation_screen:
+; The last tile ids of feli_pres_screen are in the adventures_pres_screen file to make 
+; the distance between the two sprites smaller
+ld hl, $8800
+ld bc, __adventures_pres_screen - adventures_pres_screen
+ld de, adventures_pres_screen
+call copy_data_to_destination
+
+ld bc, __adventures_pres_screen_tile_map - adventures_pres_screen_tile_map
+ld hl, $9880
+ld de, adventures_pres_screen_tile_map
+call copy_data_to_destination
+
+ld hl, $8d40
+ld bc, __feli_pres_screen - feli_pres_screen
+ld de, feli_pres_screen
+call copy_data_to_destination
+
+ld bc, __feli_pres_screen_tile_map - feli_pres_screen_tile_map
+ld hl, $9800
+ld de, feli_pres_screen_tile_map
+call copy_data_to_destination
+
 ret
     
 ; Creates the score labels for the player

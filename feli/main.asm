@@ -55,6 +55,7 @@ Start:
     
     ; PRESENTATION SCREEN
     call init_audio
+    call background_presentation_screen
     ;call background_presentation_screen
     ; copying characters into vram 
     ld hl, $9300
