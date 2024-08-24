@@ -223,7 +223,7 @@ Start:
     ld [jp_max_count], a
     ld a, $80
     ld [player2_climb_max_count], a
-    ld a, $42
+    ld a, $41
     ld [win_points], a    ; 
     xor a
     ld [holding_jump], a

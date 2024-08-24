@@ -1,7 +1,7 @@
 ; This method will be used to check if player and food are on the same tile, if this is 
 ; the case the player gets the food
 player2_got_food:
-    ld a, [oam_buffer_player2_y] ; y
+    ld a, [oam_buffer_player2_y]
     ld c, a
     ld a, [oam_buffer_player2_x]
     ld b, a  ; x
@@ -9,7 +9,7 @@ player2_got_food:
     ld e, l                   ;   de contains the tile position of the player
     ld d, h                   ; 
 
-    ld a, [oam_buffer_food_y] ; y
+    ld a, [oam_buffer_food_y]
     ld c, a
     ld a, [oam_buffer_food_x]
     ld b, a  ; x
@@ -23,36 +23,34 @@ player2_got_food:
     cp a, e
     jr nz, .not_equal_player2
     .equal_player_2 ; eat the food and update the score
-    ;xor a
-    ;ld [time_frame_based], a
     ; increase score
     ld hl, $9813       ; 9806 is the second digit of the first player
     ld a, [hl]
-    sub $40            ; idx 0 for digits is 40, this way we are normalizing the number, eg. id 42 is 2 minus 40 we have now 2 
+    sub a, $40            ; idx 0 for digits is 40, this way we are normalizing the number, eg. id 42 is 2 minus 40 we have now 2 
     cp a, $9
     jr nz, .modify_second_digit_player2
     ;modify_first_digit and put second digit to 0 which corresponds to $40
     ld a, $40
+    ld hl, $9813
     ld [hl], a ; second digit set to 0
     ld hl, $9812
     ld a, [hl]
-    add $1
+    add a, $1
     ld [hl], a
     jp .modified_digits_player2
     .modify_second_digit_player2
+    ld hl, $9813
     ld a, [hl]
-    add $1
+    add a, $1
     ld [hl], a
     .modified_digits_player2
-    call spawn_food    
-    ; Play animation
-    ;call joy_animation_player2
     ld a, [win_points]    ;
     ld b, a               ;
     ld hl, $9812          ; 
     ld a, [hl]            ; If the player has win_points, he W   
     cp a, b               ; 
     jr z, .player2_win     ;
+    call spawn_food    
     ; Play sound
     call eat_food_sound
     .not_equal_player2 ; do nothing

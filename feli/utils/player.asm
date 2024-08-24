@@ -448,7 +448,6 @@ player_animation:
 ; This method will use busy wait to play the joy animation of the player
 ; It is not in the state machine because it is an instant status
 joy_animation:
-
     ld hl, $8800
     ld de, joy ; Starting address
     ld bc, __joy - joy ; Length -> it's a subtraciton
@@ -496,34 +495,33 @@ jr nz, .not_equal
 ; increase score
 ld hl, $9807       ; 9806 is the second digit of the first player
 ld a, [hl]
-sub $40            ; idx 0 for digits is 40, this way we are normalizing the number, eg. id 42 is 2 minus 40 we have now 2 
+sub a, $40            ; idx 0 for digits is 40, this way we are normalizing the number, eg. id 42 is 2 minus 40 we have now 2 
 cp a, $9           ; second digit minus 9 to check if we need to modify the second digit
 jr nz, .modify_second_digit
 ; modify_first_digit and put second digit to 0 which corresponds to $40
 ld a, $40
+ld hl, $9807
 ld [hl], a          ; second digit set to 0
 ld hl, $9806
 ld a, [hl]
-add $1
+add a, $1
 ld [hl], a
 jp .modified_digits
 .modify_second_digit
+ld hl, $9807
 ld a, [hl]
-add $1
+add a, $1
 ld [hl], a
 .modified_digits
-
-call spawn_food
-
-; Play animation
-call joy_animation
 ld a, [win_points]    ;
 ld b, a               ;
 ld hl, $9806          ; 
 ld a, [hl]            ; If the player has win_points, he W   
 cp a, b               ; 
 jr z, .player_win     ;
-
+call spawn_food
+; Play animation
+call joy_animation
 ; Play sound
 call eat_food_sound 
 .not_equal ; do nothing
