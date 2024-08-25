@@ -87,9 +87,9 @@ sound_counter: ds 1
 ;def DO EQU $04f0
 ;def MI EQU $05ff
 ;def RE EQU $04f0
-def SOL EQU $0f00
-def FA EQU $0f61
-def DO EQU $0f30
-def MI EQU $0f60
-def RE EQU $0f89
+def FREQ1 EQU $0c00
+def FREQ2 EQU $0c61
+def FREQ3 EQU $0c30
+def FREQ4 EQU $0d60
+def FREQ5 EQU $0d89
 win_points: ds 1

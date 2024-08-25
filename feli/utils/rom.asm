@@ -205,11 +205,11 @@ player1_state_swimming_2:
 __player1_state_swimming_2:
 sound_note_n: db $0A    ; note x 2. Each note is 2 bytes
 sound_melody:
-dw FA
-dw FA
-dw SOL
-dw MI
-dw RE
+dw FREQ1
+dw FREQ1
+dw FREQ1
+dw FREQ2
+dw FREQ2
 
 
 SECTION "textures_2", ROMX[$4000]
