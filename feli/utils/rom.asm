@@ -203,14 +203,82 @@ __player1_state_swimming_1:
 player1_state_swimming_2:
 	INCBIN "sprites/swimming_2.chr"
 __player1_state_swimming_2:
-sound_note_n: db $0A    ; note x 2. Each note is 2 bytes
+sound_melody_n_of_notes: db 52 * 4    ; note number x 4. Each field contains 4 bytes (two words)
 sound_melody:
-dw FREQ1
-dw FREQ1
-dw FREQ1
-dw FREQ2
-dw FREQ2
+dw A3, 08 
+dw A3, 08
+dw A3, 08
+dw A3, 08
+dw G3, 08
+dw F3, 08
+dw E3, 08
+dw F3, 08
+dw G3, 08
+dw A3, 08
+dw A3, 08
+dw A3, 08
+dw A3, 08
+dw C4, 08
+dw A3, 08
+dw A3, 08
+dw F3, 08
+dw E3, 08
+dw D3, 08
+dw A3, 08
+dw G3, 08
+dw A3, 08
+dw A3, 08
+dw G3, 08
+dw F3, 08
+dw G3, 08
+dw A3, 08
+dw A3, 08
+dw C4, 08
+dw A3, 08
+dw A3, 08
+dw G3, 08
+dw F3, 08
+dw D3, 08
+dw F3, 08
+dw D3, 08
+dw F3, 08
+dw D3, 08
+dw F3, 08
+dw D3, 08
+dw E3, 08
+dw F3, 08
+dw E3, 08
+dw F3, 08
+dw G3, 08
+dw A3, 08
+dw G3, 08
+dw A3, 08
+dw A3, 08
+dw C4, 08
+dw D4, 08
 
+; same length as sound_melody
+sound_melody_pres_screen:
+dw G2, $05
+dw G2, $05
+dw F2, $05
+dw C2, $05
+dw Gd2, $05
+dw Gd2, $05
+dw Fd2, $05
+dw Cd2, $05
+dw G2, $05
+dw G2, $05
+dw F2, $05
+dw C2, $05
+dw Gd3, $05
+dw Gd3, $05
+dw Fd3, $05
+dw Cd3, $05
+dw G3, $05
+dw G3, $05
+dw F3, $05
+dw C3, $05
 
 SECTION "textures_2", ROMX[$4000]
 adventures_pres_screen:

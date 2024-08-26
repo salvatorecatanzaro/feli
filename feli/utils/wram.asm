@@ -67,29 +67,82 @@ state_swimming_count: ds 1          ; move every swimming_counter
 state_swimming_count_p2: ds 1          ; move every swimming_counter 
 presentation_screen_flicker_counter: ds 1
 sound_length: ds 1
-sound_counter: ds 1
-;1
-;def SOL EQU $06a0
-;def FA EQU $0680
-;def DO EQU $0512
-;def MI EQU $0500
-;def RE EQU $0640
 
-;2 imperial
-;def SOL EQU $08a0
-;def FA EQU $0680
-;def DO EQU $0412
-;def MI EQU $0400
-;def RE EQU $0440
-;3 DARK
-;def SOL EQU $0bff
-;def FA EQU $02ff
-;def DO EQU $04f0
-;def MI EQU $05ff
-;def RE EQU $04f0
-def FREQ1 EQU $0c00
-def FREQ2 EQU $0c61
-def FREQ3 EQU $0c30
-def FREQ4 EQU $0d60
-def FREQ5 EQU $0d89
+; Notes list
+def C0 EQU 44
+def Cd0 EQU 156
+def D0 EQU 262
+def Dd0 EQU 363
+def E0 EQU 457
+def F0 EQU 547
+def Fd0 EQU 631
+def G0 EQU 710
+def Gd0 EQU 786
+def A0 EQU 854
+def Ad0 EQU 923
+def B0 EQU 986
+def C1 EQU 1046
+def Cd1 EQU 1102
+def D1 EQU 1155
+def Dd1 EQU 1205
+def E1 EQU 1253
+def F1 EQU 1297
+def Fd1 EQU 1339
+def G1 EQU 1379
+def Gd1 EQU 1417
+def A1 EQU 1452
+def Ad1 EQU 1486
+def B1 EQU 1517
+def C2 EQU 1546
+def Cd2 EQU 1575
+def D2 EQU 1602 
+def Dd2 EQU 1627
+def E2 EQU 1650
+def F2 EQU 1673
+def Fd2 EQU 1694
+def G2 EQU 1714
+def Gd2 EQU 1732
+def A2 EQU 1767
+def B2 EQU 1783
+def C3 EQU 1798
+def Cd3 EQU 1812
+def D3 EQU 1825
+def Dd3 EQU 1837
+def E3 EQU 1849
+def F3 EQU 1860
+def Fd3 EQU 1871
+def G3 EQU 1881
+def Gd3 EQU 1890
+def A3 EQU 1899
+def Ad3 EQU 1907
+def B3 EQU 1915
+def C4 EQU 1923
+def Cd4 EQU 1930
+def D4 EQU 1936
+def Dd4 EQU 1943
+def E4 EQU 1949
+def F4 EQU 1954
+def Fd4 EQU 1959
+def G4 EQU 1964
+def Gd4 EQU 1969
+def A4 EQU 1974
+def Ad4 EQU 1978
+def B4 EQU 1982
+def C5 EQU 1985
+def Cd5 EQU 1988
+def D5 EQU 1992
+def Dd5 EQU 1995
+def E5 EQU 1998
+def F5 EQU 2001
+def Fd5 EQU 2004
+def G5 EQU 2009
+def A5 EQU 2011
+def Ad5 EQU 2013 
+def B5 EQU 2015
+def FREQ4 EQU 1627
+def FREQ5 EQU 1627
 win_points: ds 1
+note_tick: ds 1
+sound_pointer: ds 2
+current_note: ds 2
+current_note_length: ds 2
