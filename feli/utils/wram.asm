@@ -141,8 +141,10 @@ def Ad5 EQU 2013
 def B5 EQU 2015
 def FREQ4 EQU 1627
 def FREQ5 EQU 1627
+def NO_SOUND EQU $0fff
 win_points: ds 1
 note_tick: ds 1
 sound_pointer: ds 2
 current_note: ds 2
 current_note_length: ds 2
+pres_screen_sound_counter: ds 1

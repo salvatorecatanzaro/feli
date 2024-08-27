@@ -97,6 +97,15 @@ presentation_screen:
     ld a, %00000001          ; set vram bank to 1
     ld [rVBK], a             ;
     .start_loop
+    ld a, [pres_screen_sound_counter]
+    add a, $1
+    ld [pres_screen_sound_counter], a
+    cp a, $18
+    jr nz, .dont_play_note 
+    call pres_screen_audio
+    xor a
+    ld [pres_screen_sound_counter], a
+    .dont_play_note                                 
     ;Change bg palette every 5 loop                    ;
     ld a, [presentation_screen_flicker_counter]        ;     Every 20 iterations, change the screen
     add a, $1                                          ;     label PRESS START with a new color
@@ -104,7 +113,6 @@ presentation_screen:
     cp a, $20                                          ;
     jr nc, .black_press_start                          ;
     .white_press_start
-    call victory_sound                                 
     ld hl, $99c4                                       ;
     ld a, %00000011                                    ;
     ld [hli], a                                        ;

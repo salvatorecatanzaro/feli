@@ -237,7 +237,7 @@ Start:
     ld [win_points], a    ; 
     xor a
     ld [holding_jump], a
-
+    call init_audio       ; Reset all counters and variables coming from pres screen audio
 
 
 .main_loop:
