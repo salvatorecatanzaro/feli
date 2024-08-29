@@ -150,9 +150,9 @@ update_player2_position:
     ld a, [oam_buffer_player_x]
     ld h, a                 ;
     ld a, [player_2_x]      ;
-    cp a, h                 ; 
-    jr c, .move_right       ;  Compare the position of player 2 and player 1 and go in player1 
-    jp .move_left           ;  direction in order to try and fall down one platform
+    cp a, $53               ; 
+    jr c, .move_left        ;  Compare the position of player 2 and $53 (mid screen) and left 
+    jp .move_right          ;  if there is carry, else go right
     .food_is_up
     ld a, [oam_buffer_food_x]
     ld h, a
