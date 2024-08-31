@@ -110,8 +110,14 @@ update_audio:
     ld [sound_pointer], a                ; the sound_pointer to the next note
     xor a                                ; and we need to reset note_tick to zero in order
     ld [note_tick], a                    ; to play the new sound.
+    ld a, [sound_pointer]                ;
+    ld b, a                              ;  if sound pointer is the same length as sound_length, reset it 
+    ld a, [sound_melody_n_of_notes]      ;  to zero and start the melody from the beginning
+    cp a, b                              ;
+    jr nz, .end_update_audio             ;
+    xor a                                ;
+    ld [sound_pointer], a                ;
     jp .end_update_audio
-
     .play_new_note
 	call get_current_note ; current note will be put in hl
  	ld a, l
@@ -122,13 +128,6 @@ update_audio:
  	ld a, [note_tick]                    ;
 	inc a                                ;  Note tick will tell us how many cycles the note has been
     ld [note_tick], a                    ;  playing. if it is zero we are on a new note and we should just
-    ld a, [sound_pointer]                ;
-    ld b, a                              ;  if sound pointer is the same length as sound_length, reset it 
-    ld a, [sound_melody_n_of_notes]      ;  to zero and start the melody from the beginning
-    cp a, b                              ;
-    jr nz, .end_update_audio             ;
-    xor a                                ;
-    ld [sound_pointer], a                ;
     .end_update_audio
     ret
 
@@ -171,6 +170,13 @@ eat_food_sound:
     ld [sound_pointer], a                ; the sound_pointer to the next note
     xor a                                ; and we need to reset note_tick to zero in order
     ld [note_tick], a                    ; to play the new sound.
+    ld a, [sound_pointer]                ;
+    ld b, a                              ;  if sound pointer is the same length as sound_length, reset it 
+    ld a, [pres_screen_n_of_notes]       ;  to zero and start the melody from the beginning
+    cp a, b                              ;
+    jr nz, .end_update_audiops           ;
+    xor a                                ;
+    ld [sound_pointer], a                ;
     jp .end_update_audiops
 
     .play_new_noteps
@@ -183,12 +189,5 @@ eat_food_sound:
  	ld a, [note_tick]                    ;
 	inc a                                ;  Note tick will tell us how many cycles the note has been
     ld [note_tick], a                    ;  playing. if it is zero we are on a new note and we should just
-    ld a, [sound_pointer]                ;
-    ld b, a                              ;  if sound pointer is the same length as sound_length, reset it 
-    ld a, [pres_screen_n_of_notes]       ;  to zero and start the melody from the beginning
-    cp a, b                              ;
-    jr nz, .end_update_audiops             ;
-    xor a                                ;
-    ld [sound_pointer], a                ;
     .end_update_audiops
     ret

@@ -203,7 +203,7 @@ __player1_state_swimming_1:
 player1_state_swimming_2:
 	INCBIN "sprites/swimming_2.chr"
 __player1_state_swimming_2:
-sound_melody_n_of_notes: db 50 * 4    ; note number x 4. Each field contains 4 bytes (two words)
+sound_melody_n_of_notes: db 51 * 4    ; note number x 4. Each field contains 4 bytes (two words)
 sound_melody:
 dw A3, 08 
 dw A3, 08
