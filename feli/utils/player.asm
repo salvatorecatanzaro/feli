@@ -470,65 +470,65 @@ joy_animation:
 ; This method will be used to check if player and food are on the same tile, if this is 
 ; the case the player gets the food
 player_got_food:
-ld a, [oam_buffer_player_y]
-ld c, a
-ld a, [oam_buffer_player_x]
-ld b, a  ; x
-call get_tile_by_pixel
-ld e, l                            ;   de contains the tile position of the player
-ld d, h                            ; 
+    ld a, [oam_buffer_player_y]
+    ld c, a
+    ld a, [oam_buffer_player_x]
+    ld b, a  ; x
+    call get_tile_by_pixel
+    ld e, l                            ;   de contains the tile position of the player
+    ld d, h                            ; 
 
-ld a, [oam_buffer_food_y]
-ld c, a                            
-ld a, [oam_buffer_food_x]          
-ld b, a  ; x
-call get_tile_by_pixel             ;   hl  contains the tile position of the food
+    ld a, [oam_buffer_food_y]
+    ld c, a                            
+    ld a, [oam_buffer_food_x]          
+    ld b, a  ; x
+    call get_tile_by_pixel             ;   hl  contains the tile position of the food
 
-; now let's see if hl and de contains the same value
-ld a, h
-cp a, d
-jr nz, .not_equal
-ld a, l
-cp a, e
-jr nz, .not_equal
-.equal ; eat the food and update the score
-halt    ;  Before updating score wait for vblank, as a bonus this will save some battery
-nop     ;
-; increase score
-ld hl, $9807       ; 9806 is the second digit of the first player
-ld a, [hl]
-sub a, $40            ; idx 0 for digits is 40, this way we are normalizing the number, eg. id 42 is 2 minus 40 we have now 2 
-cp a, $9           ; second digit minus 9 to check if we need to modify the second digit
-jr nz, .modify_second_digit
-; modify_first_digit and put second digit to 0 which corresponds to $40
-ld a, $40
-ld hl, $9807
-ld [hl], a          ; second digit set to 0
-ld hl, $9806
-ld a, [hl]
-add a, $1
-ld [hl], a
-jp .modified_digits
-.modify_second_digit
-ld hl, $9807
-ld a, [hl]
-add a, $1
-ld [hl], a
-.modified_digits
-ld a, [win_points]    ;
-ld b, a               ;
-ld hl, $9806          ; 
-ld a, [hl]            ; If the player has win_points, he W   
-cp a, b               ; 
-jr z, .player_win     ;
-call spawn_food
-; Play animation
-call joy_animation
-; Play sound
-call eat_food_sound 
-.not_equal ; do nothing
-xor a      ; not win
-ret 
-.player_win
-ld a, $ff  ; win
-ret
+    ; now let's see if hl and de contains the same value
+    ld a, h
+    cp a, d
+    jr nz, .not_equal
+    ld a, l
+    cp a, e
+    jr nz, .not_equal
+    .equal ; eat the food and update the score
+    halt    ;  Before updating score wait for vblank, as a bonus this will save some battery
+    nop     ;
+    ; increase score
+    ld hl, $9807       ; 9806 is the second digit of the first player
+    ld a, [hl]
+    sub a, $40            ; idx 0 for digits is 40, this way we are normalizing the number, eg. id 42 is 2 minus 40 we have now 2 
+    cp a, $9           ; second digit minus 9 to check if we need to modify the second digit
+    jr nz, .modify_second_digit
+    ; modify_first_digit and put second digit to 0 which corresponds to $40
+    ld a, $40
+    ld hl, $9807
+    ld [hl], a          ; second digit set to 0
+    ld hl, $9806
+    ld a, [hl]
+    add a, $1
+    ld [hl], a
+    jp .modified_digits
+    .modify_second_digit
+    ld hl, $9807
+    ld a, [hl]
+    add a, $1
+    ld [hl], a
+    .modified_digits
+    ld a, [win_points]    ;
+    ld b, a               ;
+    ld hl, $9806          ; 
+    ld a, [hl]            ; If the player has win_points, he W   
+    cp a, b               ; 
+    jr z, .player_win     ;
+    call spawn_food
+    ; Play animation
+    call joy_animation
+    ; Play sound
+    call eat_food_sound 
+    .not_equal ; do nothing
+    xor a      ; not win
+    ret 
+    .player_win
+    ld a, $ff  ; win
+    ret

@@ -24,160 +24,145 @@ ENDR
 SECTION "Game code", ROM0[$150]
 
 Start:
-; GAME LOOP ################################################################
-	; Enable interrupts (Only vblank)
-    di
-    ld a, IEF_VBLANK ; Only vblank interrupt bit put in 'a'register
-    ldh [rIE], a     ; Only vblank interrupt selected
+    di                    ;
+    ld a, IEF_VBLANK      ;  Only vblank interrupt bit put in 'a' register
+    ldh [rIE], a          ;  Only vblank interrupt selected
     ei
-	; LCD memory location, if 0 LCD is off
 	call wait_vblank
-	xor a
-	ld [rLCDC], a  ; Turn off the LCD by putting zero in the rLCDC register
+	xor a                 ;
+	ld [rLCDC], a         ;  Turn off the LCD by putting zero in the rLCDC register
 
-; let's clear the vRAM
-    ld hl, $8000
-    ld de, $9fff
-    call clear_mem_area
+    ld hl, $8000          ;  let's clear the vRAM
+    ld de, $9fff          ;  Clear memory area from 0:$8000 to 0:$9fff
+    call clear_mem_area   ;
 
-; let's clear OAM 
-    ld hl, $fe00
-    ld de, $fe9f
-    call clear_mem_area
+    ld hl, $fe00          ;  let's clear OAM 
+    ld de, $fe9f          ;  Clear memory area from 0:$fe00 to 0:$fe9f
+    call clear_mem_area   ;
 
-; let's clear vram 1:8800
-    ld a, %00000001
-    ld [rVBK], a
-    ld hl, $8000
-    ld de, $9fff
-    call clear_mem_area
-    ;set again vram 0
-    xor a
-    ld [rVBK], a
-; let's clear the ram 
-    ld hl, $C000
-    ld de, $DFFF
-    call clear_mem_area
+    ; let's clear vram 1:8800
+    ld a, %00000001       ;  Select vRAM bank 1
+    ld [rVBK], a          ;
+    ld hl, $8000          ;  Clear memory area from 1:$8000 1:$9fff 
+    ld de, $9fff          ;
+    call clear_mem_area   ; 
+
+    xor a                 ;  Select again vRAM bank 0
+    ld [rVBK], a          ;
+
+    ld hl, $C000          ;
+    ld de, $DFFF          ;  Clear the ram from $C000 to $DFFF
+    call clear_mem_area   ;
     
     ; PRESENTATION SCREEN
     call init_audio
     call background_presentation_screen
-    ;call background_presentation_screen
-    ; copying characters into vram 
-    ld hl, $9300
-    ld bc, __char_bin - char_bin
-    ld de, char_bin
-    call copy_data_to_destination
-    call presentation_screen
+
+    ld hl, $9300                    ;
+    ld bc, __char_bin - char_bin    ; Copying characters into vram 
+    ld de, char_bin                 ;
+    call copy_data_to_destination   ;
+    call presentation_screen        ;
     ; PRESENTATION SCREEN
 
-    ; let's clear the vRAM
-    ld hl, $8000
-    ld de, $9fff
-    call clear_mem_area
-; let's clear vram 1:8800
-    ld a, %00000001
-    ld [rVBK], a
-    ld hl, $8000
-    ld de, $9fff
-    call clear_mem_area
-    ;set again vram 0
-    xor a
-    ld [rVBK], a
-; let's clear the ram 
-    ld hl, $C000
-    ld de, $DFFF
-    call clear_mem_area
+    ld hl, $8000                    ; let's clear the vRAM 
+    ld de, $9fff                    ; Clear memory area from 0:$8000 to 0:$9fff
+    call clear_mem_area             ;
 
-    ; let's clear OAM 
-    ld hl, $fe00
-    ld de, $fe9f
-    call clear_mem_area
-    ; Copy the bin data to video ram
-    ld hl, $8800
-	ld de, player_1_idle ; Starting address
-	ld bc, __player_1_idle - player_1_idle ; Length -> it's a subtraciton
-	call copy_data_to_destination
+    ld a, %00000001                 ;
+    ld [rVBK], a                    ; Select vRAM bank 1
+    ld hl, $8000                    ;
+    ld de, $9fff                    ; Clear memory area from 1:$8000 1:$9fff 
+    call clear_mem_area             ;
 
-    ld hl, $8810
-    ld de, food ; Starting address
-    ld bc, __food - food ; Length -> it's a subtraciton
-    call copy_data_to_destination
+    xor a                           ; Select again vRAM bank 0
+    ld [rVBK], a                    ;
 
-    ld hl, $8820
-    ld de, player ; Starting address
-    ld bc, __player - player ; Length -> it's a subtraciton
-    call copy_data_to_destination
+    ld hl, $C000                    ; Clear the ram from $C000 to $DFFF
+    ld de, $DFFF                    ;
+    call clear_mem_area             ;
 
-    ; copying map into vram
-    ld hl, $9040
-    ld bc, __mud - mud
-    ld de, mud
-    call copy_data_to_destination ; copying characters into vram 
+    ld hl, $fe00                    ; let's clear OAM 
+    ld de, $fe9f                    ; Clear oam from $fe00 to $fe9f
+    call clear_mem_area             ;
+
+    ld hl, $8800                                 ;
+	ld de, player_1_idle                         ; Starting address
+	ld bc, __player_1_idle - player_1_idle       ; Length -> it's a subtraciton
+	call copy_data_to_destination                ; Copy the bin data to video ram
+
+    ld hl, $8810                                 ; 
+    ld de, food                                  ; Starting address
+    ld bc, __food - food                         ; Length -> it's a subtraciton
+    call copy_data_to_destination                ; Copy the bin data to video ram
+
+    ld hl, $8820                                 ;
+    ld de, player                                ; Starting address
+    ld bc, __player - player                     ; Length -> it's a subtraciton
+    call copy_data_to_destination                ; Copy the bin data to video ram
+
+    ld hl, $9040                                 ;
+    ld bc, __mud - mud                           ; 
+    ld de, mud                                   ; Copy mud tile data to vram
+    call copy_data_to_destination                ; 
     
-    ld hl, $9010
-    ld bc, __grass - grass
-    ld de, grass
-    call copy_data_to_destination ; copying characters into vram 
+    ld hl, $9010                                 ;
+    ld bc, __grass - grass                       ;
+    ld de, grass                                 ; Copy grass tile data to vram
+    call copy_data_to_destination                ; 
     
-    ld hl, $9020
-    ld bc, __water_1 - water_1
-    ld de, water_1
-    call copy_data_to_destination ;
+    ld hl, $9020                                 ; 
+    ld bc, __water_1 - water_1                   ;
+    ld de, water_1                               ; Copy water tile data to vram
+    call copy_data_to_destination                ;
 
-    ld hl, $9030
-    ld bc, __water_2 - water_2
-    ld de, water_2
-    call copy_data_to_destination ;
+    ld hl, $9030                                 ;
+    ld bc, __water_2 - water_2                   ;
+    ld de, water_2                               ; Copy water2 tile data to vram
+    call copy_data_to_destination                ;        
 
-    ld hl, $9050
-    ld bc, __grass_mud - grass_mud
-    ld de, grass_mud
-    call copy_data_to_destination ;
+    ld hl, $9050                                 ;
+    ld bc, __grass_mud - grass_mud               ;
+    ld de, grass_mud                             ; Copy grass mud tile data to vram
+    call copy_data_to_destination                ;
 
-    ld hl, $9300
-    ld bc, __char_bin - char_bin
-    ld de, char_bin
-    call copy_data_to_destination
+    ld hl, $9300                                 ;
+    ld bc, __char_bin - char_bin                 ;
+    ld de, char_bin                              ; Copy characters to vram
+    call copy_data_to_destination                ;
 
-    ; color writing background
-    ld a, %10000000
-    ld hl, palettes
-    ld bc, __palettes - palettes
-    call set_palettes_bg
+    ld a, %10000000                              ;
+    ld hl, palettes                              ; Setup all the palettes
+    ld bc, __palettes - palettes                 ;
+    call set_palettes_bg                         ;
 
-    ; color writing obj
-    ld a, %10000000
-    ld hl, obj_palettes
-    ld bc, __obj_palettes - obj_palettes
-    call set_palettes_obj
+    ld a, %10000000                              ;
+    ld hl, obj_palettes                          ; Select all the object palettes
+    ld bc, __obj_palettes - obj_palettes         ;
+    call set_palettes_obj                        ;
 
 
     ; Adding map to screen----------------------
     ; Copying the tile map to the screen starting from $9800
     ; gravity_tile_map contains a list of the ids of the tile that has to be copyied. 
-    ; 2 number at time are loaded into memory from the gravity_tile_map file (Spaces not included)
+    ; 2 byte at time are loaded into memory from the gravity_tile_map file (Spaces not included)
     ld bc, __gravity_tile_map - gravity_tile_map
     ld hl, $9800
     ld de, gravity_tile_map
     call copy_data_to_destination
-    ; now adding attributes to that map
-    call background_assign_attributes
 
+    call background_assign_attributes             ; Adding attributes to each tile
 
     call create_score_labels
 
-    
-    xor a
-    ld [rVBK], a
+    xor a                                         ; Turn off the LCD
+    ld [rVBK], a                                  ; 
     ;---------------------------------------------
 
-    ; copy dma transfer routine into high ram
-    ; because only high ram can be accessed during dma transfer
-    ld bc, dma_copy
-    ld hl, $ff80
-	ld de, dma_copy_end - dma_copy
-    call copy_in_high_ram
+    ld bc, dma_copy                 ;
+    ld hl, $ff80                    ; Copy dma transfer routine into high ram
+	ld de, dma_copy_end - dma_copy  ; because only high ram can be accessed during dma transfer
+    call copy_in_high_ram           ;
     
     ld bc, sprite_count
     ld a, $03
@@ -242,7 +227,6 @@ Start:
 
 .main_loop:
     ; Main loop: gett button pressed, halt, wait for a vblank, then do stuff
-
 
     call get_buttons_state
 

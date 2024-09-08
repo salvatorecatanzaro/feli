@@ -2,14 +2,14 @@ SECTION "Game graphics", ROM0
 
 wait_vblank:
     .notvblank
-        ld a, [$ff44] ;  144 - 153 VBlank area
-        cp 144 ; Check if the LCD is past VBlank
-        jr c, .notvblank
+        ld a, [$ff44]        ; 144 - 153 VBlank area
+        cp 144               ; Check if the LCD is past VBlank
+        jr c, .notvblank     ;
         ret
 
     	
 scroll_x_register:
-	xor a ;compare accumulator with itself which results always in a 0
+	xor a           ; compare accumulator with itself which results always in a 0
 	ld a, [rSCX]
 	inc a
 	ld [rSCX], a
@@ -20,27 +20,27 @@ scroll_x_register:
 background_presentation_screen:
 ; The last tile ids of feli_pres_screen are in the adventures_pres_screen file to make 
 ; the distance between the two sprites smaller
-ld hl, $8800
-ld bc, __adventures_pres_screen - adventures_pres_screen
-ld de, adventures_pres_screen
-call copy_data_to_destination
+    ld hl, $8800
+    ld bc, __adventures_pres_screen - adventures_pres_screen
+    ld de, adventures_pres_screen
+    call copy_data_to_destination
 
-ld bc, __adventures_pres_screen_tile_map - adventures_pres_screen_tile_map
-ld hl, $9880
-ld de, adventures_pres_screen_tile_map
-call copy_data_to_destination
+    ld bc, __adventures_pres_screen_tile_map - adventures_pres_screen_tile_map
+    ld hl, $9880
+    ld de, adventures_pres_screen_tile_map
+    call copy_data_to_destination
 
-ld hl, $8d40
-ld bc, __feli_pres_screen - feli_pres_screen
-ld de, feli_pres_screen
-call copy_data_to_destination
+    ld hl, $8d40
+    ld bc, __feli_pres_screen - feli_pres_screen
+    ld de, feli_pres_screen
+    call copy_data_to_destination
 
-ld bc, __feli_pres_screen_tile_map - feli_pres_screen_tile_map
-ld hl, $9800
-ld de, feli_pres_screen_tile_map
-call copy_data_to_destination
+    ld bc, __feli_pres_screen_tile_map - feli_pres_screen_tile_map
+    ld hl, $9800
+    ld de, feli_pres_screen_tile_map
+    call copy_data_to_destination
 
-ret
+    ret
     
 ; Creates the score labels for the player
 ; no input params needed
