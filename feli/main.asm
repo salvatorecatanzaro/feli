@@ -241,7 +241,10 @@ Start:
 
 
 .main_loop:
-    ; Main loop: halt, wait for a vblank, then do stuff
+    ; Main loop: gett button pressed, halt, wait for a vblank, then do stuff
+
+
+    call get_buttons_state
 
     ; The halt instruction stops all CPU activity until the
     ; next interrupt, which saves on battery, or at least on
@@ -254,10 +257,7 @@ Start:
     ; every halt, so I don't even really need this here!
     nop
 
-    xor a
-
     call water_animation
-    call get_buttons_state
     call update_player_position
     call update_player2_position
     call player_animation

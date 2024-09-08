@@ -23,6 +23,8 @@ player2_got_food:
     cp a, e
     jr nz, .not_equal_player2
     .equal_player_2 ; eat the food and update the score
+    halt    ;  Before updating score wait for vblank, as a bonus this will save some battery
+    nop     ;
     ; increase score
     ld hl, $9813       ; 9806 is the second digit of the first player
     ld a, [hl]
@@ -350,7 +352,7 @@ player_2_animation:
     ld a, [player2_animation_frame_counter]
     inc a
     ld [player2_animation_frame_counter], a
-    cp a, 15 ; Every 10 frames (a tenth of a second), run the following code
+    cp a, $9 ; Every 10 frames (a tenth of a second), run the following code
     jp nz, .endstatecheckplayer2
 
     ; Reset the frame counter back to 0

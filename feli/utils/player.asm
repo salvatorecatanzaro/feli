@@ -452,7 +452,7 @@ joy_animation:
     ld de, joy ; Starting address
     ld bc, __joy - joy ; Length -> it's a subtraciton
     call copy_data_to_destination
-    ld hl, $6FFF
+    ld hl, $1f00
     .keep_joying
     ld a, l
     sub a, $1
@@ -492,6 +492,8 @@ ld a, l
 cp a, e
 jr nz, .not_equal
 .equal ; eat the food and update the score
+halt    ;  Before updating score wait for vblank, as a bonus this will save some battery
+nop     ;
 ; increase score
 ld hl, $9807       ; 9806 is the second digit of the first player
 ld a, [hl]
