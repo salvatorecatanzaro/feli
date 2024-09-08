@@ -260,24 +260,24 @@ dw D4, 08
 pres_screen_n_of_notes: db 18 * 4    ; note number x 4. Each field contains 4 bytes (two words)
 ; same length as sound_melody
 sound_melody_pres_screen:
-dw D2, $05
-dw B2, $55
-dw D2, $55 
-dw G2, $25
-dw D2, $55
-dw A2, $55
-dw C2, $55
-dw F2, $55
-dw G2, $25
-dw D2, $55
-dw B2, $55
-dw D2, $55 
-dw G2, $25
-dw D2, $55
-dw A2, $55
-dw C2, $55
-dw F2, $55
-dw NO_SOUND,$aa 
+dw D2, $06
+dw B2, $10
+dw D2, $10
+dw G2, $10
+dw D2, $10
+dw A2, $10
+dw C2, $10
+dw F2, $10
+dw G2, $06
+dw D2, $10
+dw B2, $10
+dw D2, $10
+dw G2, $06
+dw D2, $10
+dw A2, $10
+dw C2, $10
+dw F2, $10
+dw NO_SOUND,$20 
 
 
 SECTION "textures_2", ROMX[$4000]

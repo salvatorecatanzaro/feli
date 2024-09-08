@@ -97,10 +97,12 @@ presentation_screen:
     ld a, %00000001          ; set vram bank to 1
     ld [rVBK], a             ;
     .start_loop
+    halt
+    nop
     ld a, [pres_screen_sound_counter]
     add a, $1
     ld [pres_screen_sound_counter], a
-    cp a, $18
+    cp a, $1
     jr nz, .dont_play_note 
     call pres_screen_audio
     xor a
