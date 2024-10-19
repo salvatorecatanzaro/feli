@@ -1,3 +1,0 @@
-Generate tilemap tile and attrs from png
-
- # rgbgfx -o char -t char_tilemap -a char_attrs -p char_palettes /Users/salvatorecatanzaro/Downloads/Security\ Concepts/GameBoy/Security\ Concepts.png 
