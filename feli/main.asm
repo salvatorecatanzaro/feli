@@ -14,7 +14,7 @@ INCLUDE "utils/sound.asm"
 SECTION "Header", ROM0[$100]
     ; Our code here
 EntryPoint: ; This is where execution begins
-    nop ; Disable interrupts. That way we can avoid dealing with them, especially since we didn't talk about them yet :p
+    nop ; 
     jp Start ; Leave this tiny space
 	
 REPT $150 - $104
