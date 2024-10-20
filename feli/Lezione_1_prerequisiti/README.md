@@ -21,7 +21,7 @@ Per ora lasceremo tutte le cartelle vuote, tranne Emulicious che non è altro ch
 Includiamo nella root del progetto il file hardware.inc che contiene tutte le costanti che useremo nel progetto e aggiungiamo i due script utilizzati per la compilazione.
 
 ```
-nome file: run_program.sh
+*file: run_program.sh*
 
 #!/bin/bash
 
@@ -36,7 +36,7 @@ rgbfix -C -v -p 0 feli.gbc
 ```
 ---
 ```
-nome file: run_program.bat
+*file: run_program.bat*
 
 rgbasm -o feli.o main.asm
 if %errorlevel% neq 0 exit 1
