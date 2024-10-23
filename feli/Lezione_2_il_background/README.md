@@ -1,77 +1,14 @@
 # Lezione 2 - Il Background
 
-## Inizializzazione progetto
-
-Ogni volta che avviamo la nostra console, le aree di memoria potrebbero essere sporche e non inizializzate a zero, per evitare qualsiasi tipo di comportamento inaspettato durante l’esecuzione del gioco, inizializzeremo tutte le aree di memoria a zero con la seguente subroutine
-
-```
-*file: utils/vram.asm*
-
-; -- Prima di richiamare questo metodo disabilita lo schermo
-; -- Questa subroutine pulisce la memoria che parte dall'indirizzo contenuto in hl fino a quello contenuto in de
-; -- hl: start
-; -- de: end
-clear_mem_area:         ; Nome della subroutine
-.clear_loop             ; Dichiarazione label .clear_loop
-xor a                   ; il registro a (Accumulatore) viene inizializzato a zero
-ld [hli], a             ; inserisce il valore di a all’indirizzo di memoria puntato da hl per poi far puntare 
-                        ; hl all’indirizzo di memoria successivo (HL Incement)
- 
-ld a, l                 ; Carica il valore del registro l nel registro a
-cp a, e                 ; Viene eseguita l’operazione aritmetica a - e
-jp nz, .clear_loop      ; Se il valore non è zero, viene rieseguito il codice a partire da .clear_loop
-ld a, h                 ; Carica il valore di h in a 
-cp a, d                 ; Viene eseguita l’operazione aritmetica a - d
-jp nz, .clear_loop      ; se il valore non è zero si riesegue il codice a partire da .clear_loop
-ret                     ; Ritorna dalla subroutine
-
-```
-
-La subroutine è molto semplice: essa non fa altro che impostare a zero tutti gli indirizzi di memoria che vanno dall’ indirizzo contenuto nella coppia di registri hl fino all’indirizzo che si trova nella coppia di registri de. Il codice lo salveremo nella cartella utils, in un file denominato vram.asm. Per includerlo nel nostro programma ci basterà inserire la direttiva INCLUDE come prima istruzione del file main.asm. Includeremo inoltre anche il file hardware.inc che contiene tutte quante le costanti associati agli indirizzi dei registri.
-Quando utilizziamo la direttiva INCLUDE tutto il codice presente nel file indicato tra doppi apici viene incluso nel file dove è dichiarato il comando.
-
-```
-*file: main.asm*
-
-INCLUDE "utils/vram.asm"
-INCLUDE “utils/hardware.inc”
-```
-
-L’operazione di pulizia della memoria la verrà effettuata una sola volta, prima di entrare nel loop del gioco, quindi subito dopo la label start.
-
-```
-*file: main.asm*
-
-ld hl, $8000                   ; vRAM
-ld de, $9fff                   ; dall’indirizzo 0:$8000 a 0:$9fff 
-call clear_mem_area            ;
-ld hl, $fe00                   ; OAM
-ld de, $fe9f                   ; dall’indirizzo 0:$fe00 a 0:$fe9f
-call clear_mem_area            ;
-                               ;  
-ld a, %00000001                ; vRAM bank 1
-ld [rVBK], a                   ; Quando in questo registro inseriamo il valore 1, viene impostato il bank 1 
-                               ; della vRAM
-ld hl, $8000                   ; Impostiamo tutti I valori della 1:$8000 1:$9fff 
-ld de, $9fff                   ;
-call clear_mem_area            ;  
-xor a                          ; Impostiamo tutti I valori della vRAM bank a 0
-ld [rVBK], a                   ; 
-ld hl, $C000                   ; WRAM
-ld de, $DFFF                   ;  dall’indirizzo $C000 to $DFFF
-call clear_mem_area            ;
-```  
-
 ## Gestione Background
 Dopo aver pulito tutta la memoria ci occupiamo del background. Ci sono due momenti in cui è possibile disegnare sullo schermo:
 * *VBlank* è il momento in cui il Game Boy non sta aggiornando i pixel sullo schermo perché si prepara a disegnare il prossimo frame.
 * *Schermo spento* è possibile spegnere lo schermo (Questa operazione può essere effettuata solo durante un VBlank oppure si potrebbe danneggiare lo schermo) , aggiornare il suo contenuto per poi riaccenderlo.
 
-Quindi definiamo la subroutine che ci permette di aspettare un periodo di VBlank e inseriamola in utils/graphics.asm
+Quindi definiamo la subroutine che ci permette di aspettare un periodo di VBlank
 
-```
 *file: utils/graphics.asm*
-
+```
   SECTION "vRAM code", ROM0 ; In cima al nostro file definiamo una 
                             ; nuova sezione
   
@@ -85,30 +22,145 @@ Quindi definiamo la subroutine che ci permette di aspettare un periodo di VBlank
                       ; il ciclo
 ret
 ```
-definiamo anche la subroutine che si occupa della copia dei dati da una parte all’altra della memoria e inseriamola nel file utils/vram.asm
 
-```
+Definiamo quindi la subroutine che si occupa della copia dei dati da una parte all’altra della memoria
+
+
 *file: utils/vram.asm*
 
-1.  ; -- !!!Disable screen - ppu before calling this method!!!
-2.  ; -- this subroutine is used to copy data from source to destination
-3.  ; -- hl: destination
-4.  ; -- de: source
-5.  ; -- bc: map len
-6.  copy_data_to_destination:
-7.  .copy_bin_loop           ; definita la label copy_bin_loop
-8.  ld a, [de]               ; Prendiamo un byte dall’indirizzo contenuto 
-9.                           ; nella coppia di registri de
-10. ld [hli], a              ; Lo inseriamo nell’indirizzo contenuto dalla 
-11.                          ; coppia di registri hl e incrementiamo hl
-12. inc de                   ; incrementiamo di uno de cosi puntiamo al 
-13.                          ; prossimo indirizzo
-14. dec bc                   ; Decrementiamo bc (La quantita di dati da 
-15.                          ; copiare)
-16. ld a, b
-17. or c
-18. jr nz, .copy_bin_loop    ; Cicliamo fin quando bc non diventa zero
-19. ret
+```
+  ; -- !!!Disable screen - ppu before calling this method!!!
+  ; -- this subroutine is used to copy data from source to destination
+  ; -- hl: destination
+  ; -- de: source
+  ; -- bc: map len
+  copy_data_to_destination:
+  .copy_bin_loop           ; definita la label copy_bin_loop
+  ld a, [de]               ; Prendiamo un byte dall’indirizzo contenuto 
+                           ; nella coppia di registri de
+  ld [hli], a              ; Lo inseriamo nell’indirizzo contenuto dalla 
+                          ; coppia di registri hl e incrementiamo hl
+  inc de                   ; incrementiamo di uno de cosi puntiamo al 
+                           ; prossimo indirizzo
+  dec bc                   ; Decrementiamo bc (La quantita di dati da 
+                           ; copiare)
+  ld a, b
+  or c
+  jr nz, .copy_bin_loop    ; Cicliamo fin quando bc non diventa zero
+  ret
+```
+
+includiamo il file utils/graphics.asm e copiamo le texture dalla rom alla vram
+
+*file: main.asm*
+```
+INCLUDE "utils/vram.asm"
+INCLUDE “utils/hardware.inc”
+INCLUDE “utils/graphics.asm”
+
+<operazioni pulizia memoria … >
+
+call wait_vblank                             ; aspettiamo il periodo di vblank 
+ld hl, $9040                                 ; carichiamo il tile della zolla 
+                                             ; di terreno nell’indirizzo 
+                                             ; $9040 della vram
+ld bc, __mud - mud                           ; 
+ld de, mud                                   ; Copy mud tile data to vram
+call copy_data_to_destination                ; 
+
+ld hl, $9010                                 ;
+ld bc, __grass - grass                       ;
+ld de, grass                                 ; Copy grass tile data to vram
+call copy_data_to_destination                ; 
+
+ld hl, $9020                                 ; 
+ld bc, __water_1 - water_1                   ;
+ld de, water_1                               ; Copy water tile data to vram
+call copy_data_to_destination                ;
+
+ld hl, $9030                                 ;
+ld bc, __water_2 - water_2                   ;
+ld de, water_2                               ; Copy water2 tile data to vram
+call copy_data_to_destination                ;        
+
+ld hl, $9050                                 ;
+ld bc, __grass_mud - grass_mud               ;
+ld de, grass_mud                             ; Copy grass mud tile data to vram
+call copy_data_to_destination                ;
+```
+
+Tutte le texture necessarie per generare il background citate nel codice precedente vanno incluse nella ROM
+
+*file: utils/rom.asm*
+```
+SECTION “textures”, ROM0
+mud:
+INCBIN "backgrounds/mud.chr"
+__mud:
+grass:
+INCBIN "backgrounds/grass.chr"
+__grass:
+grass_mud:
+INCBIN "backgrounds/grass_mud.chr"
+__grass_mud:
+water_1:
+INCBIN "backgrounds/water_1.chr"
+__water_1:
+water_2:
+INCBIN "backgrounds/water_2.chr"
+__water_2: 
+```
+
+[IMMAGINE DELLA VRAM POPOLATA]
+
+
+Ogni tile della VRAM è caratterizzata da un ID e l’inserimento di quest’ultimo negli indirizzi di memoria di un tile dello schermo consente di riportarne il contenuto. Per poter riportare una intera mappa quindi, definiamo una tile map.
+
+*file utils/rom.asm*
+```
+gravity_tile_map:
+db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, 1,1,1,1,1,1,1,1,1,1,1,1
+db $00, $00, $00, $00, $00, $00, $00, $00, $00, $06, $06, $00, $00, $00, $00, $00, $06, $00, $00, $00, 1,1,1,1,1,1,1,1,1,1,1,1
+db $00, $00, $00, $00, $00, $00, $00, $00, $06, $06, $06, $06, $00, $00, $00, $06, $06, $06, $00, $00, 1,1,1,1,1,1,1,1,1,1,1,1
+db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, 1,1,1,1,1,1,1,1,1,1,1,1
+db $00, $00, $06, $00, $00, $00, $05, $05, $05, $05, $05, $05, $05, $05, $00, $00, $00, $00, $00, $00, 1,1,1,1,1,1,1,1,1,1,1,1
+db $00, $06, $06, $06, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, 1,1,1,1,1,1,1,1,1,1,1,1
+db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, 1,1,1,1,1,1,1,1,1,1,1,1
+db $05, $05, $05, $05, $05, $05, $00, $00, $00, $00, $00, $00, $00, $00, $05, $05, $05, $05, $05, $05, 1,1,1,1,1,1,1,1,1,1,1,1
+db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, 1,1,1,1,1,1,1,1,1,1,1,1
+db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $06, $06, $06, $06, $00, $00, $00, $00, 1,1,1,1,1,1,1,1,1,1,1,1
+db $00, $00, $00, $00, $00, $05, $05, $05, $05, $05, $05, $05, $05, $05, $05, $06, $06, $00, $00, $00, 1,1,1,1,1,1,1,1,1,1,1,1
+db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $06, $06, $06, $06, $06, $06, $00, $00, $00, 1,1,1,1,1,1,1,1,1,1,1,1
+db $00, $06, $06, $06, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, 1,1,1,1,1,1,1,1,1,1,1,1
+db $05, $05, $05, $06, $06, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $05, $05, $05, 1,1,1,1,1,1,1,1,1,1,1,1
+db $06, $06, $06, $06, $06, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, 1,1,1,1,1,1,1,1,1,1,1,1
+db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, 1,1,1,1,1,1,1,1,1,1,1,1
+db $01, $01, $01, $01, $01, $01, $01, $02, $02, $02, $02, $02, $01, $01, $01, $01, $01, $01, $01, $01, 1,1,1,1,1,1,1,1,1,1,1,1
+db $04, $04, $04, $04, $04, $04, $04, $02, $02, $02, $02, $02, $04, $04, $04, $04, $04, $04, $04, $04, 1,1,1,1,1,1,1,1,1,1,1,1
+__gravity_tile_map:
 
 ```
+
+Copiamo sullo schermo la tilemap con la routine definita in precedenza
+
+*file: main.asm*
+```
+ld bc, __gravity_tile_map - gravity_tile_map
+ld hl, $9800
+ld de, gravity_tile_map
+call copy_data_to_destination
+ld a, %10000011 ;bg will start from 9800  ; Riaccendiamo lo schermo 
+ld [rLCDC], a                             ;
+
+```
+
+Infine, compiliamo il codice e carichiamo la rom
+
+```
+cd /<directory_del_progetto/feli/
+./run_program.<estensione>
+```
+
+Output ROM: feli.gbc
+![Testo alternativo](output_lezione_2.png "Output lezione 2")
 
