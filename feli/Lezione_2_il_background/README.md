@@ -59,10 +59,14 @@ INCLUDE "hardware.inc"
 INCLUDE "utils/graphics.asm"
 INCLUDE "utils/rom.asm"
 
+SECTION "Header", ROM0[$100]
 
-call wait_vblank
-xor a                 ;
-ld [rLCDC], a         ;  spegnamo l' LCD inserendo zero nel registro rLCDC
+EntryPoint: 
+nop 
+jp Start ; Leave this tiny space
+
+SECTION "Game code", ROM0[$150]
+Start:
 
 <operazioni pulizia memoria … >
 
