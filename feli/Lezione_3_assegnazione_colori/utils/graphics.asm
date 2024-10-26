@@ -1,90 +1,17 @@
-# Lezione 3 Assegnazione colori
-
-## Palettes
-Al momento tutte quante le tile hanno come colore assegnato il bianco, è necessario quindi assegnare dei colori alle palette del background per poterle visualizzare correttamente.
-Inseriamo il codice che segue prima dell'operazione di accensione dello schermo
-
-*file: main.asm*
-```
-ld a, %10000000                              ;
-ld hl, palettes                              ; Assegnazione palette di colori
-ld bc, __palettes - palettes                 ;
-call set_palettes_bg                         ;
-```
-
-La subroutine set_palettes_bg la definiamo in un nuovo file che chiameremo palettes.asm
-
-*file: utils/palettes.asm*
-```
-SECTION "Palettes code", ROM0
-
-set_palettes_bg:
-ld [$ff68], a                       ; inseriamo %10000000 in $ff68, questo 
-                                    ; significa che popoliamo a partire dalla 
-                                    ; palette 0 e che ad ogni colore  
-                                    ; inserito incrementiamo di 1 
-                                    ; l’indirizzamento andando a popolare il            
-                                    ; prossimo colore della palette
-.palette_loop
-ld a, [hli]                         ; Carico l’indirizzo della prima palette 
-ld [$ff69], a                       ; inserisco il colore in $ff69
-dec bc
-ld a, c
-or b
-jr nz, .palette_loop                ; ripeto il ciclo fino a quando non 
-                                    ; abbiamo inserito tutti i colori
-ret
-
-```
-
-Andiamo a definire ora nella rom i valori delle palettes. ogni due byte definiscono uno dei quattro colori della palette
-
-*file: utils/rom.asm*
-```
-palettes:
-  db $bf, $66, $f7, $29, $00, $00, $00, $00   ; The color selection for the map
-  db $87, $8e, $21, $11, $00, $00, $00, $00   ; 
-  db $8f, $8d, $ee, $94, $00, $00, $00, $00   ; 
-  db $0f, $df, $43, $78, $ff, $ff, $ff, $ff   ; 
-  db $43, $78, $0f, $df, $43, $78, $43, $78   ; 
-  db $EE, $94, $00, $00, $87, $8E, $28, $13
-  db $ff, $ff, $ff, $ff, $00, $00, $00, $00   ; 
-  db $ae, $6e, $ae, $6e, $00, $00, $00, $00   ; 
-__palettes:
-```
-
-e includiamo nel file main il file delle palette
-
-*file main.asm*
-```
-INCLUDE "utils/palettes.asm"
-```
-
-Arrivati a questo punto compilando la rom possiamo vedere che i colori son presenti, ma assegnati in maniera errata
-
-![Testo alternativo](img/assegnazione_colori.png "Assegnazione colori")
+SECTION "Game graphics", ROM0
 
 
-Per assegnare i colori corretti ad ognuna delle tile presenti sullo schermo bisogna inserire nella bank uno dell'indirizzo desiderato un byte, a seconda del valore asssunto da quest ultimo le tile assumeranno diversi attributi.
-Se per esempio volessimo assegnare al tile in alto a sinistra (Indirizzo $9800) la palette di colori uno, dovremmo inserire nella parte bassa del byte degli attributi il valore uno.
-Il Game Boy color ha due bank, una utilizzata per salvare l'id del tile e l'altra per assegnarvi gli attributi.
-
-eseguiamo quindi le seguenti operazioni
-* inseriamo il valore uno nel registro rVBK (Bank uno selezionata)
-* Inseriamo nell'indirizzo $9800 il seguente byte %00000001 (Gli ultimi tre bit ci permettono di selezionare BG Palette da 0 a 7)
-
-Per assegnare a tutti i tile del nostro schermo gli attributi è stata definita la subroutine background_assign_attributes, che invochiamo nel file main
-
-*file: main.asm*
-```
-call background_assign_attributes                                 
-```
-
-e definiamo all’interno del file graphics
+wait_vblank:         
+  .notvblank           ; definita la label notvblank
+  ld a, [$ff44]        ; salviamo in a la coordinata y (la linea che 
+                       ; sta disegnando al momento il Game Boy)
+                       ; 144 - 153 VBlank area
+  cp 144               ; Operazione aritmetica a - 144
+  jr c, .notvblank     ; Se c’è un carry non siamo in vblank, ripetiamo 
+                       ; il ciclo
+  ret
 
 
-*file: utils/graphics.asm*
-```
 background_assign_attributes:
     ; Il background puo iniziare da $9800 o $9c00 a seconda del valore inserito nel registro rLCDC
     ld a, [rLCDC]              ; Spostiamo il valore di rLCDC in a
@@ -177,14 +104,3 @@ background_assign_attributes:
     xor a                    ; resettiamo la vram bank a zero
     ld [rVBK], a         ;
     ret
-```
-
-Infine, compiliamo il codice e carichiamo la rom
-
-```
-# cd /<directory_del_progetto/feli/
-# ./run_program.<estensione>
-```
-
-![Testo alternativo](img/output_lezione_3.png "Output lezione 3")
-

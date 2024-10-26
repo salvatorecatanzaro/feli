@@ -9,21 +9,21 @@ Quindi definiamo la subroutine che ci permette di aspettare un periodo di VBlank
 
 *file: utils/graphics.asm*
 ```
-  SECTION "vRAM code", ROM0 ; In cima al nostro file definiamo una 
-                            ; nuova sezione
+SECTION "Game graphics", ROM0
+
   
-  wait_vblank:         
+wait_vblank:         
   .notvblank           ; definita la label notvblank
   ld a, [$ff44]        ; salviamo in a la coordinata y (la linea che 
                        ; sta disegnando al momento il Game Boy)
                        ; 144 - 153 VBlank area
   cp 144               ; Operazione aritmetica a - 144
- jr c, .notvblank     ; Se c’è un carry non siamo in vblank, ripetiamo 
+  jr c, .notvblank     ; Se c’è un carry non siamo in vblank, ripetiamo 
                       ; il ciclo
-ret
+  ret
 ```
 
-Definiamo quindi la subroutine che si occupa della copia dei dati da una parte all’altra della memoria
+Per disegnare i tile sullo schermo, dobbiamo prima caricarli all'interno della VRAM, definiamo quindi la subroutine che si occupa della copia dei dati da una parte all’altra della memoria per poter effettuare questa operazione
 
 
 *file: utils/vram.asm*
@@ -50,18 +50,20 @@ Definiamo quindi la subroutine che si occupa della copia dei dati da una parte a
   ret
 ```
 
-includiamo il file utils/graphics.asm e copiamo le texture dalla rom alla vram
+aggiungiamo gli include necessari e copiamo le texture dalla rom alla vram
 
 *file: main.asm*
 ```
 INCLUDE "utils/vram.asm"
-INCLUDE “utils/hardware.inc”
-INCLUDE “utils/graphics.asm”
+INCLUDE "hardware.inc"
+INCLUDE "utils/graphics.asm"
+INCLUDE "utils/rom.asm"
 
 <operazioni pulizia memoria … >
 
-call wait_vblank                             ; aspettiamo il periodo di vblank 
-ld hl, $9040                                 ; carichiamo il tile della zolla 
+call wait_vblank
+xor a                 ;
+ld [rLCDC], a         ;  spegnamo l' LCD inserendo zero nel registro rLCDC
                                              ; di terreno nell’indirizzo 
                                              ; $9040 della vram
 ld bc, __mud - mud                           ; 
@@ -93,7 +95,7 @@ Tutte le texture necessarie per generare il background citate nel codice precede
 
 *file: utils/rom.asm*
 ```
-SECTION “textures”, ROM0
+SECTION "textures", ROM0
 mud:
 INCBIN "backgrounds/mud.chr"
 __mud:
@@ -111,10 +113,17 @@ INCBIN "backgrounds/water_2.chr"
 __water_2: 
 ```
 
-[IMMAGINE DELLA VRAM POPOLATA]
+se compiliamo ed inseriamo la rom all'interno dell'emulatore, visualizzando la VRAM potremo vedere che tutti i tile son stati correttamente caricati
+```
+# cd /<directory_del_progetto/feli
+# ./run_program.<estensione>
+```
+
+![Testo alternativo](img/stato_della_vram "Stato della VRAM")
 
 
-Ogni tile della VRAM è caratterizzata da un ID e l’inserimento di quest’ultimo negli indirizzi di memoria di un tile dello schermo consente di riportarne il contenuto. Per poter riportare una intera mappa quindi, definiamo una tile map.
+Ogni tile della VRAM è caratterizzata da un ID e l’inserimento di quest’ultimo negli indirizzi di memoria di un tile dello schermo consente di riportarne il contenuto. 
+Per poter riportare una intera mappa quindi, definiamo una tile map.
 
 *file utils/rom.asm*
 ```
@@ -141,7 +150,7 @@ __gravity_tile_map:
 
 ```
 
-Copiamo sullo schermo la tilemap con la routine definita in precedenza
+Copiamo sullo schermo la tilemap con la routine definita in precedenza, inserendo le righe di codice che seguono subito dopo le operazioni di pulizia della memoria
 
 *file: main.asm*
 ```
@@ -162,5 +171,11 @@ cd /<directory_del_progetto/feli/
 ```
 
 Output ROM: feli.gbc
-![Testo alternativo](output_lezione_2.png "Output lezione 2")
+![Testo alternativo](img/output_lezione_2.png "Output lezione 2")
+
+Lo schermo nonostante l'inserimento degli id delle tile presenti nella VRAM è ancora bianco, ed è tutto corretto.
+La ragione per cui non riusciamo a vedere il disegno risiede nell'assenza dei colori nelle palette: 
+ogni Game Boy Color ha 8 palette dedicate al background e otto dedicate agli oggetti e, mentre per gli oggetti vengono generate automaticamente, quelle per il background sono inizialmente bianche
+
+![Testo alternativo](img/stato_palette_2.png "Stato delle palette lezione 2")
 

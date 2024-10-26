@@ -33,3 +33,6 @@ type=instruction address=Start%20+%2082 end=Start%20+%2083 enabled=false suspend
 suspend=true address=gravity_palettes read=true end=gravity_palettes%20+%207 location=rom type=watchpoint write=true enabled=false
 type=instruction address=Start%20+%20266 end=Start%20+%20268 enabled=true suspend=true condition= message=
 suspend=true address=_LABEL_15EA_%20+%2012 end=_LABEL_15EA_%20+%2013 type=instruction enabled=true
+type=instruction address=set_palettes_bg.palette_loop%20+%201 end=set_palettes_bg.palette_loop%20+%203 enabled=true suspend=true condition= message=
+type=instruction address=set_palettes_bg end=set_palettes_bg%20+%202 enabled=true suspend=true condition= message=
+type=instruction address=Start%20+%2049 end=Start%20+%2051 enabled=true suspend=true condition= message=

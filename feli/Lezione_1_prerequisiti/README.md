@@ -20,9 +20,8 @@ La cartella utils è fondamentale e contiene molta della logica aggiuntiva che v
 Per ora lasceremo tutte le cartelle vuote, tranne Emulicious che non è altro che il progetto dell'emulatore, backgrounds e sprites.
 Includiamo nella root del progetto il file hardware.inc che contiene tutte le costanti che useremo nel progetto e aggiungiamo i due script utilizzati per la compilazione.
 
-```
 *file: run_program.sh*
-
+```
 #!/bin/bash
 
 rgbasm -o main.o main.asm
@@ -34,10 +33,11 @@ fi
 rgblink -o feli.gbc main.o
 rgbfix -C -v -p 0 feli.gbc
 ```
----
-```
-*file: run_program.bat*
 
+---
+
+*file: run_program.bat*
+```
 rgbasm -o feli.o main.asm
 if %errorlevel% neq 0 exit 1
 rgblink -o feli.gbc feli.o
@@ -66,9 +66,9 @@ jp .main_loop
 
 Ogni volta che avviamo la nostra console, le aree di memoria potrebbero essere sporche e non inizializzate a zero, per evitare qualsiasi tipo di comportamento inaspettato durante l’esecuzione del gioco, inizializzeremo tutte le aree di memoria a zero con la seguente subroutine
 
-```
 *file: utils/vram.asm*
-
+```
+SECTION "vRAM code", ROM0
 ; -- Prima di richiamare questo metodo disabilita lo schermo
 ; -- Questa subroutine pulisce la memoria che parte dall'indirizzo contenuto in hl fino a quello contenuto in de
 ; -- hl: start
@@ -96,7 +96,7 @@ Quando utilizziamo la direttiva INCLUDE tutto il codice presente nel file indica
 
 ```
 INCLUDE "utils/vram.asm"
-INCLUDE “utils/hardware.inc”
+INCLUDE "hardware.inc"
 ```
 
 L’operazione di pulizia della memoria la verrà effettuata una sola volta, prima di entrare nel loop del gioco, quindi subito dopo la label start.
@@ -134,4 +134,4 @@ cd /<directory_del_progetto/feli/
 ```
 
 Output ROM: feli.gbc
-![Testo alternativo](output_lezione_1.png "Output lezione 1")
+![Testo alternativo](img/output_lezione_1.png "Output lezione 1")
