@@ -7,7 +7,7 @@ Per poter sviluppare un gioco per Game Boy Color avremo bisogno di alcuni strume
 ## 1.1 Struttura del progetto
 Prima di cominciare a programmare definiamo la struttura del nostro progetto, l’immagine che segue mostra l’alberatura scelta
 
-![Testo alternativo](alberatura_progetto.png "Alberatura progetto")
+![Testo alternativo](alberatura_progetto.png "Alberatura progetto"){style="display: block; margin: auto;" width=150 height=150}
 
 Di seguito una breve descrizione delle varie directory
 *	*artifacts* Contiene le rom che produciamo per il nostro progetto
@@ -134,4 +134,4 @@ cd /<directory_del_progetto/feli/
 ```
 
 Output ROM: feli.gbc
-![Testo alternativo](img/output_lezione_1.png "Output lezione 1")
+![Testo alternativo](img/output_lezione_1.png "Output lezione 1"){style="display: block; margin: auto;" width=150 height=150}

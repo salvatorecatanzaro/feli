@@ -186,5 +186,8 @@ Infine, compiliamo il codice e carichiamo la rom
 # ./run_program.<estensione>
 ```
 
+<div style="text-align: center;">
+  <img src="img/output_lezione_3.png" alt="Output lezione 3" width="150" height="150">
+</div>
 ![Testo alternativo](img/output_lezione_3.png "Output lezione 3"){style="display: block; margin: auto;" width=150 height=150}
 
