@@ -126,7 +126,7 @@ se compiliamo ed inseriamo la rom all'interno dell'emulatore, visualizzando la V
 # ./run_program.<estensione>
 ```
 
-![Testo alternativo](img/stato_della_vram "Stato della VRAM")
+![Testo alternativo](img/stato_della_vram.png "Stato della VRAM")
 
 
 Ogni tile della VRAM è caratterizzata da un ID e l’inserimento di quest’ultimo negli indirizzi di memoria di un tile dello schermo consente di riportarne il contenuto. 
@@ -178,6 +178,7 @@ cd /<directory_del_progetto/feli/
 ```
 
 Output ROM: feli.gbc
+
 ![Testo alternativo](img/output_lezione_2.png "Output lezione 2")
 
 Lo schermo nonostante l'inserimento degli id delle tile presenti nella VRAM è ancora bianco, ed è tutto corretto.
