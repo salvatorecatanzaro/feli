@@ -1,5 +1,5 @@
 .gitignore
-**.DS**
+**ds_store**
 *.gbc
 main.o
 

@@ -124,14 +124,15 @@ se compiliamo ed inseriamo la rom all'interno dell'emulatore, visualizzando la V
 ```
 # cd /<directory_del_progetto/feli
 # ./run_program.<estensione>
+# java -jar Emulicius/Emulicius.jar feli.gbc
 ```
 
-
-![Testo alternativo](img/stato_della_vram.png "Stato della VRAM"){style="display: block; margin: auto;" width=150 height=150}
-
+<div align="center">
+  <img src="img/stato_della_vram.png" title="Stato della VRAM" width="300" height="300">
+</div>
 
 Ogni tile della VRAM è caratterizzata da un ID e l’inserimento di quest’ultimo negli indirizzi di memoria di un tile dello schermo consente di riportarne il contenuto. 
-Per poter riportare una intera mappa quindi, definiamo una tile map.
+Per poter disegnare una intera mappa quindi, definiamo una tile map.
 
 *file utils/rom.asm*
 ```
@@ -171,11 +172,12 @@ ld [rLCDC], a                             ;
 
 ```
 
-Infine, compiliamo il codice e carichiamo la rom
+Infine, eseguiamo i seguenti comandi per avviare il gioco
 
 ```
-cd /<directory_del_progetto/feli/
-./run_program.<estensione>
+# cd /<directory_del_progetto/feli/
+# ./run_program.<estensione>
+# java -jar Emulicius/Emulicius.jar feli.gbc
 ```
 
 Output ROM: feli.gbc

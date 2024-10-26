@@ -62,20 +62,25 @@ INCLUDE "utils/palettes.asm"
 
 Arrivati a questo punto compilando la rom possiamo vedere che i colori son presenti, ma assegnati in maniera errata
 
+```
+# cd /<directory_del_progetto/feli/
+# ./run_program.<estensione>
+# java -jar Emulicius/Emulicius.jar feli.gbc
+```
+
 <div align="center">
   <img src="img/assegnazione_colori.png" title="Assegnazione colori" width="300" height="300">
 </div>
 
 
-Per assegnare i colori corretti ad ognuna delle tile presenti sullo schermo bisogna inserire nella bank uno dell'indirizzo desiderato un byte, a seconda del valore asssunto da quest ultimo le tile assumeranno diversi attributi.
-Se per esempio volessimo assegnare al tile in alto a sinistra (Indirizzo $9800) la palette di colori uno, dovremmo inserire nella parte bassa del byte degli attributi il valore uno.
-Il Game Boy color ha due bank, una utilizzata per salvare l'id del tile e l'altra per assegnarvi gli attributi.
+Il Game Boy Color ha due aree di memoria per gestire le informazioni sullo schermo (Bank 1, Bank 2), una utilizzata per salvare l'id del tile e l'altra per assegnarvi gli attributi.
+Per assegnare i colori corretti ad ognuna delle tile presenti sullo schermo bisogna inserire nella bank uno dell'indirizzo desiderato un byte contenente gli attributi.
+Se per esempio volessimo assegnare al tile in alto a sinistra (Indirizzo $9800) la palette di colori numero uno, dovremmo inserire nella parte bassa del byte degli attributi il valore uno.
+Le operazioni eseguite sarebbero quindi le seguenti
+* inseriamo il valore uno nel registro rVBK per selezionare la bank 1.
+* Inseriamo nell'indirizzo $9800 il seguente byte %00000001 (Gli ultimi tre bit ci permettono di selezionare una delle BG Palette da 0 a 7).
 
-eseguiamo quindi le seguenti operazioni
-* inseriamo il valore uno nel registro rVBK (Bank uno selezionata)
-* Inseriamo nell'indirizzo $9800 il seguente byte %00000001 (Gli ultimi tre bit ci permettono di selezionare BG Palette da 0 a 7)
-
-Per assegnare a tutti i tile del nostro schermo gli attributi è stata definita la subroutine background_assign_attributes, che invochiamo nel file main
+Per assegnare a tutti i tile del nostro schermo gli attributi è stata definita la subroutine background_assign_attributes, che invochiamo nel file main subito dopo aver inserito i colori delle palette.
 
 *file: main.asm*
 ```
@@ -186,6 +191,7 @@ Infine, compiliamo il codice e carichiamo la rom
 ```
 # cd /<directory_del_progetto/feli/
 # ./run_program.<estensione>
+# java -jar Emulicius/Emulicius.jar feli.gbc
 ```
 
 <div align="center">

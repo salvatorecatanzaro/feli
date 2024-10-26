@@ -19,8 +19,13 @@ Di seguito una breve descrizione delle varie directory
 *	*Utils* Contiene tutti i file .asm che includeremo nel main
 
 La cartella utils è fondamentale e contiene molta della logica aggiuntiva che viene inclusa ed utilizzata dal file main.asm, il codice presente all’interno di essi sarà discusso nei prossimi capitoli.
-Per ora lasceremo tutte le cartelle vuote, tranne Emulicious che non è altro che il progetto dell'emulatore, backgrounds e sprites.
-Includiamo nella root del progetto il file hardware.inc che contiene tutte le costanti che useremo nel progetto e aggiungiamo i due script utilizzati per la compilazione.
+Copiamo quindi le directory presenti in questa lezione nella root del progetto
+* *Emulicius*
+* *hardware.inc*
+* *backgrounds*
+* *sprites*
+
+e aggiungiamo i due script utilizzati per la compilazione.
 
 *file: run_program.sh*
 ```
@@ -36,6 +41,12 @@ rgblink -o feli.gbc main.o
 rgbfix -C -v -p 0 feli.gbc
 ```
 
+Se siamo su un sistema operativo linux, andiamo a rendere il file appena creato eseguibile con il comando
+
+```
+# chmod +x run_program.sh
+```
+
 ---
 
 *file: run_program.bat*
@@ -48,16 +59,21 @@ rgbfix -C -v -p 0 feli.gbc
 
 ## 1.2 Il main loop
 Il primo passo è quello di creare il file main.asm nella stessa directory dell’immagine "Alberatura progetto".
-Il processore del Game Boy e del Game Boy color iniziano ad eseguire le istruzioni a partire dall’indirizzo di memoria $100, in questa area di memoria c’è abbastanza spazio per eseguire soltanto due comandi, il primo sarà nop (No operation), il secondo un salto all’indirizzo di memoria dove risiede il nostro codice. l’istruzione jp farà in modo che la prossima riga di codice ad essere eseguita sarà quella che corrisponde all’indirizzo di memoria dove risiede la label Start.
-Una label non è altro che un’etichetta che dice al compilatore in quale area dell’hardware salvare il codice e da quale indirizzo
+Il processore del Game Boy e del Game Boy color inizia ad eseguire le istruzioni a partire dall’indirizzo di memoria $100, in questa area di memoria c’è abbastanza spazio per eseguire soltanto due comandi, il primo sarà nop (No operation), il secondo un salto all’indirizzo di memoria dove risiede il nostro codice. l’istruzione jp farà in modo che la prossima riga di codice ad essere eseguita dal program counter sarà quella che corrisponde all’indirizzo di memoria dove risiede la label Start.
+Una label non è altro che un’etichetta che dice al compilatore in quale area dell’hardware salvare il codice e in quale indirizzo
+```
+SECTION "Header", ROM0[$100]
+EntryPoint: 
+nop 
+jp Start
+```
+Definiamo una nuova sezione che parte dall’indirizzo di memoria $150 e, come per ogni gioco, definiamo il main loop
 ```
 SECTION "Header", ROM0[$100]
 EntryPoint: 
 nop 
 jp Start ; Leave this tiny space
-```
-Definiamo una nuova sezione che parte dall’indirizzo di memoria $150 e, come per ogni gioco, definiamo il main loop
-```
+
 SECTION "Game code", ROM0[$150]
 Start:
 .main_loop:
@@ -92,7 +108,6 @@ ret                     ; Ritorna dalla subroutine
 ```
 
 La subroutine è molto semplice: essa non fa altro che impostare a zero tutti gli indirizzi di memoria che vanno dall’ indirizzo contenuto nella coppia di registri hl fino all’indirizzo che si trova nella coppia di registri de. Il codice lo salveremo nella cartella utils, in un file denominato vram.asm. Per includerlo nel nostro programma ci basterà inserire la direttiva INCLUDE come prima istruzione del file main.asm. Includeremo inoltre anche il file hardware.inc che contiene tutte quante le costanti associati agli indirizzi dei registri.
-Quando utilizziamo la direttiva INCLUDE tutto il codice presente nel file indicato tra doppi apici viene incluso nel file dove è dichiarato il comando.
 
 *file: main.asm*
 
@@ -101,12 +116,10 @@ INCLUDE "utils/vram.asm"
 INCLUDE "hardware.inc"
 ```
 
-L’operazione di pulizia della memoria la verrà effettuata una sola volta, prima di entrare nel loop del gioco, quindi subito dopo la label start.
+L’operazione di pulizia della memoria la verrà effettuata una sola volta, prima di entrare nel loop del gioco, subito dopo la label start.
 
-
-```
 *file: main.asm*
-
+```
 ld hl, $8000                   ; vRAM
 ld de, $9fff                   ; dall’indirizzo 0:$8000 a 0:$9fff 
 call clear_mem_area            ;
@@ -127,12 +140,14 @@ ld de, $DFFF                   ;  dall’indirizzo $C000 to $DFFF
 call clear_mem_area            ;
 ```  
 
+## 1.4 Esecuzione del codice
 Adesso che è stato definito lo scheletro di base del nostro codice, possiamo compilarlo e caricare la nostra rom in un emulatore. Al momento non c’è nulla presente sullo schermo, ma questa è la nostra prima rom.
-Comandi per compilare il nostro codice:
+Comandi per compilare il codice:
 
 ```
-cd /<directory_del_progetto/feli/
-./run_program.<estensione>
+# cd /<directory_del_progetto/feli/
+# ./run_program.<estensione>
+# java -jar Emulicius/Emulicius.jar feli.gbc
 ```
 
 <div align="center">
