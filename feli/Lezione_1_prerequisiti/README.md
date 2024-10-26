@@ -7,7 +7,9 @@ Per poter sviluppare un gioco per Game Boy Color avremo bisogno di alcuni strume
 ## 1.1 Struttura del progetto
 Prima di cominciare a programmare definiamo la struttura del nostro progetto, l’immagine che segue mostra l’alberatura scelta
 
-![Testo alternativo](alberatura_progetto.png "Alberatura progetto"){style="display: block; margin: auto;" width=150 height=150}
+<div align="center">
+  <img src="img/alberatura_progetto.png" title="Alberatura progetto" width="300" height="300">
+</div>
 
 Di seguito una breve descrizione delle varie directory
 *	*artifacts* Contiene le rom che produciamo per il nostro progetto
