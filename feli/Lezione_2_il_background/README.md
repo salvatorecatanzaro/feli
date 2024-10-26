@@ -9,7 +9,7 @@ Quindi definiamo la subroutine che ci permette di aspettare un periodo di VBlank
 
 *file: utils/graphics.asm*
 ```
-SECTION "Game graphics", ROM0
+SECTION "Game graphics", ROM0[$13c4]
 
   
 wait_vblank:         
@@ -102,7 +102,7 @@ Tutte le texture necessarie per generare il background citate nel codice precede
 
 *file: utils/rom.asm*
 ```
-SECTION "textures", ROM0
+SECTION "textures", ROM0[$031c]
 mud:
 INCBIN "backgrounds/mud.chr"
 __mud:

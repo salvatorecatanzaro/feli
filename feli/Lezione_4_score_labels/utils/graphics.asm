@@ -16,7 +16,7 @@ background_assign_attributes:
     ; Il background puo iniziare da $9800 o $9c00 a seconda del valore inserito nel registro rLCDC
     ld a, [rLCDC]              ; Spostiamo il valore di rLCDC in a
     ld b, a                         ; Lo salviamo in b
-    ld a, [LCDCF_BG9C00]          ; carichiamo LCDCF_BG9C00 in a 
+    ld a, LCDCF_BG9C00          ; carichiamo LCDCF_BG9C00 in a 
     cp a, b                                     ; effettuiamo una sottrazione
     jr z, .bg_start_from_9c00   ; se il valore è zero lo sfondo in utilizzo è $9c00
     .bg_start_from_9800          ; Altrimenti il valore è $9800
