@@ -317,7 +317,7 @@ background_assign_attributes:
     ;get current bg starting position 9800 or 9c00
     ld a, [rLCDC]
     ld b, a
-    ld a, [LCDCF_BG9C00]
+    ld a, LCDCF_BG9C00
     cp a, b
     jr z, .bg_start_from_9c00
     .bg_start_from_9800
