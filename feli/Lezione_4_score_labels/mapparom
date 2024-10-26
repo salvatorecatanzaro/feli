@@ -1,0 +1,88 @@
+SUMMARY:
+	ROM0: 2207 bytes used / 14177 free
+
+ROM0 bank #0:
+	SECTION: $0000-$00e4 ($00e5 bytes) ["Game graphics"]
+	         $0000 = wait_vblank
+	         $0000 = wait_vblank.notvblank
+	         $0008 = background_assign_attributes
+	         $0012 = background_assign_attributes.bg_start_from_9800
+	         $0018 = background_assign_attributes.bg_start_from_9c00
+	         $001b = background_assign_attributes.__bg_start_from
+	         $001e = background_assign_attributes.bg_tile_loop
+	         $0040 = background_assign_attributes.grass_tile
+	         $004b = background_assign_attributes.grass_mud_tile
+	         $0056 = background_assign_attributes.mud_tile
+	         $0061 = background_assign_attributes.water_tile
+	         $006c = background_assign_attributes.cloud_tile
+	         $0077 = background_assign_attributes.sky_tile
+	         $007f = background_assign_attributes.assigned
+	         $0095 = create_score_labels
+	SECTION: $00e5-$00fa ($0016 bytes) ["vRAM code"]
+	         $00e5 = clear_mem_area.clear_loop
+	         $00e5 = clear_mem_area
+	         $00f2 = copy_data_to_destination
+	         $00f2 = copy_data_to_destination.copy_bin_loop
+	EMPTY: $00fb-$00ff ($0005 bytes)
+	SECTION: $0100-$0103 ($0004 bytes) ["Header"]
+	         $0100 = EntryPoint
+	SECTION: $0104-$0110 ($000d bytes) ["Palettes code"]
+	         $0104 = set_palettes_bg
+	         $0107 = set_palettes_bg.palette_loop
+	EMPTY: $0111-$014f ($003f bytes)
+	SECTION: $0150-$01f0 ($00a1 bytes) ["Game code"]
+	         $0150 = Start
+	         $01ee = Start.main_loop
+	SECTION: $01f1-$08e2 ($06f2 bytes) ["textures"]
+	         $01f1 = mud
+	         $0201 = grass
+	         $0201 = __mud
+	         $0211 = grass_mud
+	         $0211 = __grass
+	         $0221 = water_1
+	         $0221 = __grass_mud
+	         $0231 = water_2
+	         $0231 = __water_1
+	         $0241 = gravity_tile_map
+	         $0241 = __water_2
+	         $0481 = palettes
+	         $0481 = __gravity_tile_map
+	         $04c1 = A_
+	         $04c1 = __palettes
+	         $04c2 = B_
+	         $04c3 = C_
+	         $04c4 = D_
+	         $04c5 = E_
+	         $04c6 = F_
+	         $04c7 = G_
+	         $04c8 = H_
+	         $04c9 = I_
+	         $04ca = J_
+	         $04cb = K_
+	         $04cc = L_
+	         $04cd = M_
+	         $04ce = N_
+	         $04cf = O_
+	         $04d0 = P_
+	         $04d1 = Q_
+	         $04d2 = R_
+	         $04d3 = S_
+	         $04d4 = T_
+	         $04d5 = U_
+	         $04d6 = V_
+	         $04d7 = X_
+	         $04d8 = Y_
+	         $04d9 = _0
+	         $04da = _1
+	         $04db = _2
+	         $04dc = _3
+	         $04dd = _4
+	         $04de = _5
+	         $04df = _6
+	         $04e0 = _7
+	         $04e1 = _8
+	         $04e2 = _9
+	         $04e3 = char_bin
+	         $08e3 = __char_bin
+	EMPTY: $08e3-$3fff ($371d bytes)
+	TOTAL EMPTY: $3761 bytes

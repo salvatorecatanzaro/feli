@@ -1,4 +1,4 @@
-SECTION "textures", ROM0
+SECTION "textures", ROM0[$031c]
 
 mud:
 INCBIN "backgrounds/mud.chr"

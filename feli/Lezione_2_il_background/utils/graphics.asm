@@ -1,4 +1,4 @@
-SECTION "Game graphics", ROM0
+SECTION "Game graphics", ROM0[$13c4]
 
 
 wait_vblank:         

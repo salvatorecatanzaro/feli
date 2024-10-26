@@ -104,3 +104,59 @@ background_assign_attributes:
     xor a                    ; resettiamo la vram bank a zero
     ld [rVBK], a         ;
     ret
+
+create_score_labels:
+    ld hl, $9800
+    ld de, S_
+    ld a, [de]
+    ld [hli], a
+    ld de, C_
+    ld a, [de]
+    ld [hli], a
+    ld de, O_
+    ld a, [de]
+    ld [hli], a
+    ld de, R_
+    ld a, [de]
+    ld [hli], a
+    ld de, E_
+    ld a, [de]
+    ld [hli], a
+    inc hl
+    ld de, _0
+    ld a, [de]
+    ld [hli], a
+    ld de, _0
+    ld a, [de]
+    ld [hli], a
+
+    inc hl
+    inc hl
+    inc hl
+    inc hl
+
+    ld de, S_
+    ld a, [de]
+    ld [hli], a
+    ld de, C_
+    ld a, [de]
+    ld [hli], a
+    ld de, O_
+    ld a, [de]
+    ld [hli], a
+    ld de, R_
+    ld a, [de]
+    ld [hli], a
+    ld de, E_
+    ld a, [de]
+    ld [hli], a
+    inc hl
+    ld de, _0
+    ld a, [de]
+    ld [hli], a
+    ld de, _0
+    ld a, [de]
+    ld [hli], a
+    ret
+
+  
