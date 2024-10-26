@@ -70,7 +70,7 @@ Start:
 
 <operazioni pulizia memoria … >
 
-
+                                             ; carichiamo il tile della zolla 
                                              ; di terreno nell’indirizzo 
                                              ; $9040 della vram
 ld bc, __mud - mud                           ; 
