@@ -41,7 +41,7 @@ rgblink -o feli.gbc main.o
 rgbfix -C -v -p 0 feli.gbc
 ```
 
-Se siamo su un sistema operativo linux, andiamo a rendere il file appena creato eseguibile con il comando
+Se ci troviamo su un sistema operativo Unix-like, eseguire il seguente comando per rendere lo script eseguibile
 
 ```
 # chmod +x run_program.sh
