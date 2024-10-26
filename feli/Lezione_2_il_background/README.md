@@ -59,11 +59,14 @@ INCLUDE "hardware.inc"
 INCLUDE "utils/graphics.asm"
 INCLUDE "utils/rom.asm"
 
-<operazioni pulizia memoria … >
 
 call wait_vblank
 xor a                 ;
 ld [rLCDC], a         ;  spegnamo l' LCD inserendo zero nel registro rLCDC
+
+<operazioni pulizia memoria … >
+
+
                                              ; di terreno nell’indirizzo 
                                              ; $9040 della vram
 ld bc, __mud - mud                           ; 
