@@ -27,6 +27,14 @@ Copiamo quindi le directory presenti in questa lezione nella root del progetto
 
 e aggiungiamo i due script utilizzati per la compilazione.
 
+*file: run_program.bat*
+```
+rgbasm -o feli.o main.asm
+if %errorlevel% neq 0 exit 1
+rgblink -o feli.gbc feli.o
+rgbfix -C -v -p 0 feli.gbc
+```
+---
 *file: run_program.sh*
 ```
 #!/bin/bash
@@ -47,15 +55,7 @@ Se ci troviamo su un sistema operativo Unix-like, eseguire il seguente comando p
 # chmod +x run_program.sh
 ```
 
----
 
-*file: run_program.bat*
-```
-rgbasm -o feli.o main.asm
-if %errorlevel% neq 0 exit 1
-rgblink -o feli.gbc feli.o
-rgbfix -C -v -p 0 feli.gbc
-```
 
 ## 1.2 Il main loop
 Il primo passo è quello di creare il file main.asm nella stessa directory dell’immagine "Alberatura progetto".
