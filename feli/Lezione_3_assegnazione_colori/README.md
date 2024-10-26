@@ -62,7 +62,9 @@ INCLUDE "utils/palettes.asm"
 
 Arrivati a questo punto compilando la rom possiamo vedere che i colori son presenti, ma assegnati in maniera errata
 
-![Testo alternativo](img/assegnazione_colori.png "Assegnazione colori"){style="display: block; margin: auto;" width=150 height=150}
+<div align="center">
+  <img src="img/assegnazione_colori.png" title="Assegnazione colori" width="300" height="300">
+</div>
 
 
 Per assegnare i colori corretti ad ognuna delle tile presenti sullo schermo bisogna inserire nella bank uno dell'indirizzo desiderato un byte, a seconda del valore asssunto da quest ultimo le tile assumeranno diversi attributi.
@@ -187,7 +189,6 @@ Infine, compiliamo il codice e carichiamo la rom
 ```
 
 <div align="center">
-  <img src="img/output_lezione_3.png" alt="Output lezione 3" width="300" height="300">
+  <img src="img/output_lezione_3.png" title="Output lezione 3" width="300" height="300">
 </div>
-![Testo alternativo](img/output_lezione_3.png "Output lezione 3"){style="display: block; margin: auto;" width=150 height=150}
 

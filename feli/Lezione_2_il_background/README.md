@@ -126,6 +126,7 @@ se compiliamo ed inseriamo la rom all'interno dell'emulatore, visualizzando la V
 # ./run_program.<estensione>
 ```
 
+
 ![Testo alternativo](img/stato_della_vram.png "Stato della VRAM"){style="display: block; margin: auto;" width=150 height=150}
 
 
@@ -179,11 +180,15 @@ cd /<directory_del_progetto/feli/
 
 Output ROM: feli.gbc
 
-![Testo alternativo](img/output_lezione_2.png "Output lezione 2"){style="display: block; margin: auto;" width=150 height=150}
+<div align="center">
+  <img src="img/output_lezione_2.png" title="Output lezione 2" width="300" height="300">
+</div>
 
 Lo schermo nonostante l'inserimento degli id delle tile presenti nella VRAM è ancora bianco, ed è tutto corretto.
 La ragione per cui non riusciamo a vedere il disegno risiede nell'assenza dei colori nelle palette: 
 ogni Game Boy Color ha 8 palette dedicate al background e otto dedicate agli oggetti e, mentre per gli oggetti vengono generate automaticamente, quelle per il background sono inizialmente bianche
 
-![Testo alternativo](img/stato_palette.png "Stato delle palette lezione 2"){style="display: block; margin: auto;" width=150 height=150}
+<div align="center">
+  <img src="img/stato_palette.png" title="Stato delle palette lezione 2" width="300" height="300">
+</div>
 

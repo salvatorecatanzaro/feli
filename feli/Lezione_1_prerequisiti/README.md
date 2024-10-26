@@ -133,5 +133,6 @@ cd /<directory_del_progetto/feli/
 ./run_program.<estensione>
 ```
 
-Output ROM: feli.gbc
-![Testo alternativo](img/output_lezione_1.png "Output lezione 1"){style="display: block; margin: auto;" width=150 height=150}
+<div align="center">
+  <img src="img/output_lezione_1.png" title="Output lezione 1" width="300" height="300">
+</div>
