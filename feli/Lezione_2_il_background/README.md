@@ -185,5 +185,5 @@ Lo schermo nonostante l'inserimento degli id delle tile presenti nella VRAM è a
 La ragione per cui non riusciamo a vedere il disegno risiede nell'assenza dei colori nelle palette: 
 ogni Game Boy Color ha 8 palette dedicate al background e otto dedicate agli oggetti e, mentre per gli oggetti vengono generate automaticamente, quelle per il background sono inizialmente bianche
 
-![Testo alternativo](img/stato_palette_2.png "Stato delle palette lezione 2")
+![Testo alternativo](img/stato_palette.png "Stato delle palette lezione 2")
 
