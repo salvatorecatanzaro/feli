@@ -35,7 +35,7 @@ dma_copy_end:
     nop
 
 
- ;sprite_count Il numero di sprites
+;sprite_count Il numero di sprites
 ;sprite_ids   ogni byte contiene 2 sprite id
 ; ogni OAM sprite è caratterizzato da questi valori
 ; byte 0 - Y position

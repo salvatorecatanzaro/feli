@@ -1,4 +1,4 @@
-SECTION "Palettes code", ROM0[$00b9]
+SECTION "Palettes code", ROM0
 
 set_palettes_bg:
 ld [$ff68], a                       ; inseriamo %10000000 in $ff68, questo 

@@ -1,5 +1,6 @@
 INCLUDE "utils/vram.asm"
 INCLUDE "hardware.inc"
+INCLUDE "utils/interrupts.asm"
 INCLUDE "utils/rom.asm"
 INCLUDE "utils/palettes.asm"
 INCLUDE "utils/wram.asm"
@@ -18,7 +19,7 @@ Start:
     ld a, IEF_VBLANK      ;  carico il bit dell’interrupt vblank in a
     ldh [rIE], a          ;  lo carico in rIE, in modo da abilitare solo vblank
     ei                    ;  riabilito le interruptcall wait_vblank
-
+call wait_vblank
 xor a                 ;
 ld [rLCDC], a         ;  Turn off the LCD by putting zero in the rLCDC register
 
@@ -105,7 +106,7 @@ ld bc, dma_copy                        ;
 ld hl, $ff80                           ; Copio la routine di dma transfer nella hram
 ld de, dma_copy_end - dma_copy      ; perche la cpu può accedere solo alla 
                                        ; hram durante dma access
-;call copy_in_high_ram                  ;
+call copy_in_high_ram                  ;
 
 ld bc, sprite_count  
 ld a, $03
@@ -118,19 +119,19 @@ ld [hl+], a
 ld a, $82                  ; id del terzo sprite
 ld [hl+], a
 
-;call copy_oam_sprites
+call copy_oam_sprites
 
 ld a, %10000011 ;bg will start from 9800  ; Riaccendiamo lo schermo 
 ld [rLCDC], a    
 
-;xor a
-;ld [water_animation_frame_counter], a
-;ld a, $1
-;ld [water_animation_counter], a
+xor a
+ld [water_animation_frame_counter], a
+ld a, $1
+ld [water_animation_counter], a
 
 .main_loop:
-halt
-nop
-call water_animation
-;call $ff80
-jp .main_loop
+    halt
+    nop
+    call water_animation
+    call $ff80
+    jp .main_loop
