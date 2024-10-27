@@ -1,6 +1,6 @@
-## Lezione 5 - Animazione Background
+# Lezione 5 - Animazione Background
 
-# Animazione acqua
+## Animazione acqua
 Le operazioni effettuate finora riguardano la parte di background statica, ovvero quella che non è animata. Le operazioni di aggiornamento sullo schermo sono conseguenza di ciò che avviene nel main loop che è quella porzione di codice che si ripete di continuo durante l’esecuzione del gioco.
 La struttura che seguiremo è la seguente:
 
