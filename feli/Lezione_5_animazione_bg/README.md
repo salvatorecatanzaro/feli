@@ -135,7 +135,7 @@ Prima di eseguire il main loop le inizializziamo e includiamo il file wram
 
 *file: main.asm*
 ```
-INCLUDE "utils/wram.asm"
+INCLUDE "utils/wram.asm"  ; questo include va prima dell’include di graphics.asm
 
 xor a
 ld [water_animation_frame_counter], a
@@ -150,3 +150,4 @@ ld [water_animation_counter], a
 # java -jar Emulicius/Emulicius.jar feli.gbc
 ```
 
+In questo momento l'acqua si muove ad una velocità altissima, ma l'inserimento di nuovi comandi nelle lezioni successive renderà questa animazione più lenta e armoniosa.
