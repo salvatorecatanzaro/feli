@@ -1,5 +1,6 @@
 INCLUDE "utils/vram.asm"
 INCLUDE "hardware.inc"
+INCLUDE "utils/interrupts.asm"
 INCLUDE "utils/rom.asm"
 INCLUDE "utils/palettes.asm"
 INCLUDE "utils/wram.asm"
@@ -17,7 +18,7 @@ Start:
     ld a, IEF_VBLANK      ;  carico il bit dell’interrupt vblank in a
     ldh [rIE], a          ;  lo carico in rIE, in modo da abilitare solo vblank
     ei                    ;  riabilito le interruptcall wait_vblank
-
+call wait_vblank
 xor a                 ;
 ld [rLCDC], a         ;  Turn off the LCD by putting zero in the rLCDC register
 

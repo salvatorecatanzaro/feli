@@ -19,17 +19,68 @@ La struttura che seguiremo è la seguente:
 
 In questo modo riusciremo a dividere il codice in diverse porzioni leggibili e soprattutto più semplici da manutenere.
 L’istruzione halt mette la CPU in uno stato di sospensione fino a quando non si verifica una qualsiasi interrupt, ma è possibile fare in modo che questo comando ne aspetti soltanto alcune o come nel nostro caso, soltanto quella del VBlank.
-Inseriamo quindi nel file main, subito dopo la label Start il seguente codice per poi inserire nel main loop la nostra prima subroutine
+Inseriamo quindi nel file main, subito dopo la label Start il seguente codice per poi inserire nel main loop la nostra prima subroutine e includiamo il file interrupt dove definiremo tutte le possibili interruzioni
 
 *file: main.asm*
 
 ```
+INCLUDE "utils/vram.asm"
+INCLUDE "hardware.inc"
+INCLUDE "utils/interrupts.asm"
+INCLUDE "utils/rom.asm"
+INCLUDE "utils/palettes.asm"
+INCLUDE "utils/wram.asm"
+INCLUDE "utils/graphics.asm"
+
+...
+
+
 Start:
-    di                    ;  disabilito le interrupt
-    ld a, IEF_VBLANK      ;  carico il bit dell’interrupt vblank in a
-    ldh [rIE], a          ;  lo carico in rIE, in modo da abilitare solo vblank
-    ei                    ;  riabilito le interrupt
+di                    ;  disabilito le interrupt
+ld a, IEF_VBLANK      ;  carico il bit dell’interrupt vblank in a
+ldh [rIE], a          ;  lo carico in rIE, in modo da abilitare solo vblank
+ei                    ;  riabilito le interrupt
+call wait_vblank
+
 ```
+*file: utils/interrupts.asm*
+```
+; Interrupt handlers
+SECTION "Vblank interrupt", ROM0[$0040]
+    ; Fires when the screen finishes drawing the last physical
+    ; row of pixels
+    push hl
+    ld hl, vblank_flag
+    ld [hl], 1
+    pop hl
+    reti
+
+SECTION "LCD controller status interrupt", ROM0[$0048]
+    ; Fires on a handful of selectable LCD conditions, e.g.
+    ; after repainting a specific row on the screen
+    reti
+
+SECTION "Timer overflow interrupt", ROM0[$0050]
+    ; Fires at a configurable fixed interval
+    reti
+
+SECTION "Serial transfer completion interrupt", ROM0[$0058]
+    ; Fires when the serial cable is done?
+    reti
+
+SECTION "P10-P13 signal low edge interrupt", ROM0[$0060]
+    ; Fires when a button is released?
+    reti
+```
+
+Definiamo la variabile vblank_flag nella WRAM
+*file: utils/wram.asm*
+```
+SECTION "Important twiddles", WRAM0[$C000]
+; Reserve a byte in working RAM to use as the vblank flag
+vblank_flag: ds 1
+```
+
 
 *file: main.asm*
 ```

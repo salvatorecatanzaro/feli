@@ -1,0 +1,104 @@
+SUMMARY:
+	ROM0: 2363 bytes used / 14021 free
+	WRAM0: 2 bytes used / 4094 free
+
+ROM0 bank #0:
+	EMPTY: $0000-$0028 ($0029 bytes)
+	SECTION: $0029-$003e ($0016 bytes) ["vRAM code"]
+	         $0029 = clear_mem_area
+	         $0029 = clear_mem_area.clear_loop
+	         $0036 = copy_data_to_destination.copy_bin_loop
+	         $0036 = copy_data_to_destination
+	EMPTY: $003f-$00b8 ($007a bytes)
+	SECTION: $00b9-$00c5 ($000d bytes) ["Palettes code"]
+	         $00b9 = set_palettes_bg
+	         $00bc = set_palettes_bg.palette_loop
+	EMPTY: $00c6-$00ff ($003a bytes)
+	SECTION: $0100-$0103 ($0004 bytes) ["Header"]
+	         $0100 = EntryPoint
+	EMPTY: $0104-$014f ($004c bytes)
+	SECTION: $0150-$0202 ($00b3 bytes) ["Game code"]
+	         $0150 = Start
+	         $01fb = Start.main_loop
+	EMPTY: $0203-$031b ($0119 bytes)
+	SECTION: $031c-$0a0d ($06f2 bytes) ["textures"]
+	         $031c = mud
+	         $032c = grass
+	         $032c = __mud
+	         $033c = __grass
+	         $033c = grass_mud
+	         $034c = water_1
+	         $034c = __grass_mud
+	         $035c = __water_1
+	         $035c = water_2
+	         $036c = gravity_tile_map
+	         $036c = __water_2
+	         $05ac = __gravity_tile_map
+	         $05ac = palettes
+	         $05ec = A_
+	         $05ec = __palettes
+	         $05ed = B_
+	         $05ee = C_
+	         $05ef = D_
+	         $05f0 = E_
+	         $05f1 = F_
+	         $05f2 = G_
+	         $05f3 = H_
+	         $05f4 = I_
+	         $05f5 = J_
+	         $05f6 = K_
+	         $05f7 = L_
+	         $05f8 = M_
+	         $05f9 = N_
+	         $05fa = O_
+	         $05fb = P_
+	         $05fc = Q_
+	         $05fd = R_
+	         $05fe = S_
+	         $05ff = T_
+	         $0600 = U_
+	         $0601 = V_
+	         $0602 = X_
+	         $0603 = Y_
+	         $0604 = _0
+	         $0605 = _1
+	         $0606 = _2
+	         $0607 = _3
+	         $0608 = _4
+	         $0609 = _5
+	         $060a = _6
+	         $060b = _7
+	         $060c = _8
+	         $060d = _9
+	         $060e = char_bin
+	         $0a0e = __char_bin
+	EMPTY: $0a0e-$13c3 ($09b6 bytes)
+	SECTION: $13c4-$1532 ($016f bytes) ["Game graphics"]
+	         $13c4 = wait_vblank.notvblank
+	         $13c4 = wait_vblank
+	         $13cc = background_assign_attributes
+	         $13d5 = background_assign_attributes.bg_start_from_9800
+	         $13db = background_assign_attributes.bg_start_from_9c00
+	         $13de = background_assign_attributes.__bg_start_from
+	         $13e1 = background_assign_attributes.bg_tile_loop
+	         $1403 = background_assign_attributes.grass_tile
+	         $140e = background_assign_attributes.grass_mud_tile
+	         $1419 = background_assign_attributes.mud_tile
+	         $1424 = background_assign_attributes.water_tile
+	         $142f = background_assign_attributes.cloud_tile
+	         $143a = background_assign_attributes.sky_tile
+	         $1442 = background_assign_attributes.assigned
+	         $1458 = create_score_labels
+	         $14a8 = water_animation
+	         $14bf = water_animation.water_tile_animation_1
+	         $14fc = water_animation.water_tile_animation_2
+	         $1532 = water_animation.__water_tile_animation
+	EMPTY: $1533-$3fff ($2acd bytes)
+	TOTAL EMPTY: $36c5 bytes
+
+WRAM0 bank #0:
+	SECTION: $c000-$c001 ($0002 bytes) ["Counter"]
+	         $c000 = water_animation_counter
+	         $c001 = water_animation_frame_counter
+	EMPTY: $c002-$cfff ($0ffe bytes)
+	TOTAL EMPTY: $0ffe bytes
