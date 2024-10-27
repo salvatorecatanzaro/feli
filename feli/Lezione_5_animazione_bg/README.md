@@ -131,10 +131,12 @@ water_animation_counter: ds 1         ; Definiamo lo spazio (Define Space)
 water_animation_frame_counter: ds 1   ; Per 1 Byte
 ```
 
-Prima di eseguire il main loop le inizializziamo
+Prima di eseguire il main loop le inizializziamo e includiamo il file wram
 
 *file: main.asm*
 ```
+INCLUDE "utils/wram.asm"
+
 xor a
 ld [water_animation_frame_counter], a
 ld a, $1
