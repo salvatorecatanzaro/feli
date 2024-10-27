@@ -212,6 +212,18 @@ ed aggiorniamo il main loop con la chiamata alla routine all’indirizzo $ff80 c
     jp .main_loop
 ```
 
+includiamo nel file main il file oam_dma
+*file: main.asm*
+```
+INCLUDE "utils/vram.asm"
+INCLUDE "hardware.inc"
+INCLUDE "utils/interrupts.asm"
+INCLUDE "utils/rom.asm"
+INCLUDE "utils/palettes.asm"
+INCLUDE "utils/wram.asm"
+INCLUDE "utils/graphics.asm"
+INCLUDE "utils/oam_dma.asm"
+```
 Ora gli sprite dovrebbero essere visibili sullo schermo! Compiliamo ed eseguiamo il codice per verificarlo
 
 ```
