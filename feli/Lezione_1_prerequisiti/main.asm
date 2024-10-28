@@ -5,6 +5,10 @@ SECTION "Header", ROM0[$100]
 EntryPoint: 
 nop 
 jp Start ; Leave this tiny space
+    
+REPT $150 - $104
+    db 0
+ENDR
 
 SECTION "Game code", ROM0[$150]
 Start:

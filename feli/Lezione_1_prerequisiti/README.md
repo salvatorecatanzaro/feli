@@ -66,6 +66,10 @@ SECTION "Header", ROM0[$100]
 EntryPoint: 
 nop 
 jp Start
+    
+REPT $150 - $104 ;
+    db 0         ; riservo lo spazio tra $104 e $150 all' header
+ENDR             ;
 ```
 Definiamo una nuova sezione che parte dall’indirizzo di memoria $150 e, come per ogni gioco, definiamo il main loop
 ```

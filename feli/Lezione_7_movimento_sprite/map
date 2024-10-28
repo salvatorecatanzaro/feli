@@ -1,0 +1,150 @@
+SUMMARY:
+	ROM0: 2775 bytes used / 13609 free
+	WRAM0: 189 bytes used / 3907 free
+
+ROM0 bank #0:
+	SECTION: $0000-$0028 ($0029 bytes) ["CONTROLS"]
+	         $0000 = get_buttons_state
+	SECTION: $0029-$003e ($0016 bytes) ["vRAM code"]
+	         $0029 = clear_mem_area.clear_loop
+	         $0029 = clear_mem_area
+	         $0036 = copy_data_to_destination
+	         $0036 = copy_data_to_destination.copy_bin_loop
+	EMPTY: $003f-$003f ($0001 byte)
+	SECTION: $0040-$0047 ($0008 bytes) ["Vblank interrupt"]
+	SECTION: $0048-$0048 ($0001 byte) ["LCD controller status interrupt"]
+	EMPTY: $0049-$004f ($0007 bytes)
+	SECTION: $0050-$0050 ($0001 byte) ["Timer overflow interrupt"]
+	EMPTY: $0051-$0057 ($0007 bytes)
+	SECTION: $0058-$0058 ($0001 byte) ["Serial transfer completion interrupt"]
+	EMPTY: $0059-$005f ($0007 bytes)
+	SECTION: $0060-$0060 ($0001 byte) ["P10-P13 signal low edge interrupt"]
+	SECTION: $0061-$00b8 ($0058 bytes) ["OAM-DMA code"]
+	         $0061 = copy_in_high_ram
+	         $0061 = copy_in_high_ram.hram_loop
+	         $006a = dma_copy
+	         $0072 = dma_copy.loop
+	         $0077 = dma_copy_end
+	         $0078 = copy_oam_sprites
+	         $0082 = copy_oam_sprites.oam_loop
+	         $008d = copy_oam_sprites.player1attrs
+	         $009a = copy_oam_sprites.player2_attrs
+	         $00a7 = copy_oam_sprites.food_attrs
+	         $00b1 = copy_oam_sprites.endattrs
+	SECTION: $00b9-$00fb ($0043 bytes) ["Player"]
+	         $00b9 = try_apply_gravity
+	         $00c1 = try_move_left
+	         $00cf = try_move_left.no_left
+	         $00d3 = try_move_right
+	         $00e1 = try_move_right.no_right
+	         $00e5 = reset_positions
+	         $00f2 = update_player_position
+	         $00fb = update_player_position.end_update_player_position
+	EMPTY: $00fc-$00ff ($0004 bytes)
+	SECTION: $0100-$014f ($0050 bytes) ["Header"]
+	         $0100 = EntryPoint
+	SECTION: $0150-$0252 ($0103 bytes) ["Game code"]
+	         $0150 = Start
+	         $0242 = Start.main_loop
+	SECTION: $0253-$0974 ($0722 bytes) ["textures"]
+	         $0253 = mud
+	         $0263 = grass
+	         $0263 = __mud
+	         $0273 = grass_mud
+	         $0273 = __grass
+	         $0283 = water_1
+	         $0283 = __grass_mud
+	         $0293 = water_2
+	         $0293 = __water_1
+	         $02a3 = gravity_tile_map
+	         $02a3 = __water_2
+	         $04e3 = palettes
+	         $04e3 = __gravity_tile_map
+	         $0523 = A_
+	         $0523 = __palettes
+	         $0524 = B_
+	         $0525 = C_
+	         $0526 = D_
+	         $0527 = E_
+	         $0528 = F_
+	         $0529 = G_
+	         $052a = H_
+	         $052b = I_
+	         $052c = J_
+	         $052d = K_
+	         $052e = L_
+	         $052f = M_
+	         $0530 = N_
+	         $0531 = O_
+	         $0532 = P_
+	         $0533 = Q_
+	         $0534 = R_
+	         $0535 = S_
+	         $0536 = T_
+	         $0537 = U_
+	         $0538 = V_
+	         $0539 = X_
+	         $053a = Y_
+	         $053b = _0
+	         $053c = _1
+	         $053d = _2
+	         $053e = _3
+	         $053f = _4
+	         $0540 = _5
+	         $0541 = _6
+	         $0542 = _7
+	         $0543 = _8
+	         $0544 = _9
+	         $0545 = char_bin
+	         $0945 = player_1_idle
+	         $0945 = __char_bin
+	         $0955 = food
+	         $0955 = __player_1_idle
+	         $0965 = player
+	         $0965 = __food
+	         $0975 = __player
+	SECTION: $0975-$0ae3 ($016f bytes) ["Game graphics"]
+	         $0975 = wait_vblank
+	         $0975 = wait_vblank.notvblank
+	         $097d = background_assign_attributes
+	         $0986 = background_assign_attributes.bg_start_from_9800
+	         $098c = background_assign_attributes.bg_start_from_9c00
+	         $098f = background_assign_attributes.__bg_start_from
+	         $0992 = background_assign_attributes.bg_tile_loop
+	         $09b4 = background_assign_attributes.grass_tile
+	         $09bf = background_assign_attributes.grass_mud_tile
+	         $09ca = background_assign_attributes.mud_tile
+	         $09d5 = background_assign_attributes.water_tile
+	         $09e0 = background_assign_attributes.cloud_tile
+	         $09eb = background_assign_attributes.sky_tile
+	         $09f3 = background_assign_attributes.assigned
+	         $0a09 = create_score_labels
+	         $0a59 = water_animation
+	         $0a70 = water_animation.water_tile_animation_1
+	         $0aad = water_animation.water_tile_animation_2
+	         $0ae3 = water_animation.__water_tile_animation
+	SECTION: $0ae4-$0af0 ($000d bytes) ["Palettes code"]
+	         $0ae4 = set_palettes_bg
+	         $0ae7 = set_palettes_bg.palette_loop
+	EMPTY: $0af1-$3fff ($350f bytes)
+	TOTAL EMPTY: $3529 bytes
+
+WRAM0 bank #0:
+	SECTION: $c000-$c001 ($0002 bytes) ["Important twiddles"]
+	         $c000 = vblank_flag
+	         $c001 = buttons
+	SECTION: $c002-$c005 ($0004 bytes) ["Player coordinates"]
+	         $c002 = main_player_y
+	         $c003 = main_player_x
+	         $c004 = player_2_y
+	         $c005 = player_2_x
+	SECTION: $c006-$c007 ($0002 bytes) ["Counter"]
+	         $c006 = water_animation_counter
+	         $c007 = water_animation_frame_counter
+	EMPTY: $c008-$c0ff ($00f8 bytes)
+	SECTION: $c100-$c1b4 ($00b5 bytes) ["OAM Buffer"]
+	         $c100 = oam_buffer
+	         $c1a0 = sprite_count
+	         $c1a1 = sprite_ids
+	EMPTY: $c1b5-$cfff ($0e4b bytes)
+	TOTAL EMPTY: $0f43 bytes
