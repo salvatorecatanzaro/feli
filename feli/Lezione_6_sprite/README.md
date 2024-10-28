@@ -1,7 +1,7 @@
 # Inserimento Sprite
-In questo capitolo ci occupiamo di mostrare a schermo gli sprite dei personaggi, in particolare ci saranno due gatti e del cibo che si contenderanno durante la partita. Ogni volta che un gatto tocca il cibo questo compare in una nuova posizione e lo score aumenta di una unità.
+In questo capitolo descriviamo il processo di visualizzazione degli sprite dei personaggi su schermo. I protagonisti sono due gatti che, durante il gioco, si contendono dei pezzi di cibo. Ogni volta che un gatto raccoglie il cibo, quest’ultimo appare in una nuova posizione e il punteggio aumenta di un punto.
 
-Includiamo gli sprite che andremo ad utilizzare nella rom
+Includiamo nella ROM gli sprite che andremo ad utilizzare.
 
 *file: utils/rom.asm*
 ```
