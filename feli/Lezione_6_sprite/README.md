@@ -79,7 +79,7 @@ dma_copy_end:
     nop
 ```
 
-nel file main, dopo le operazioni di copia degli sprite nella VRAM, andiamo a copiare la routine dma_copy nella HRAM invocando il metodo copy_in_high_ram per poi 
+nel file main, dopo le operazioni di copia degli sprite nella VRAM, andiamo a copiare la routine dma_copy nella HRAM invocando il metodo copy_in_high_ram
 
 *file: main.asm*
 ```
