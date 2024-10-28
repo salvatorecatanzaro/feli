@@ -38,7 +38,7 @@ Copiamo i byte inclusi nella ROM all'interno della VRAM con il codice che segue,
     call copy_data_to_destination                ; Copy the bin data to video ram
 ```
 
-Ogni volta che vogliamo copiare gli sprites dalla VRAM allo schermo, o se vogliamo aggiornarne lo stato, dobbiamo effettuare un’operazione detta direct memory access (DMA). La CPU del Game Boy durante un DMA può accedere solo la HRAM (Memoria che va da $FF80 a $FFFE). Per questo motivo dobbiamo copiare una piccola subroutine nella HRAM ed eseguirla mentre si trova in questa area di memoria. Il trasferimento ha bisogno di 160 cicli macchina, attesa che andremo a implementare nella subroutine dma_copy.
+Ogni volta che vogliamo copiare gli sprites dalla VRAM allo schermo o ggiornarne lo stato, dobbiamo effettuare un’operazione detta direct memory access (DMA). La CPU del Game Boy durante un DMA può accedere solo alla HRAM, un'area di memoria compresa tra $FF80 a $FFFE. Per questo motivo dobbiamo copiare una piccola subroutine nella HRAM ed eseguirla mentre si trova in questa area di memoria. Il trasferimento richiede di 160 cicli macchina, attesa che andremo a implementare nella subroutine dma_copy.
 
 *file: utils/oam_dma.asm*
 ```
