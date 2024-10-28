@@ -213,6 +213,7 @@ Aggiorniamo il main loop con la chiamata alla subroutine all’indirizzo $ff80 c
 ```
 
 includiamo nel file main il file oam_dma
+
 *file: main.asm*
 ```
 INCLUDE "utils/vram.asm"
