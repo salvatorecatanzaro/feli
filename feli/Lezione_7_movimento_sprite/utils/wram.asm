@@ -6,6 +6,13 @@ water_animation_frame_counter: ds 1   ; Per 1 Byte
 SECTION "Important twiddles", WRAM0[$C000]
 ; Reserve a byte in working RAM to use as the vblank flag
 vblank_flag: ds 1
+buttons: ds 1
+
+SECTION "Player coordinates", WRAM0
+main_player_y: ds 1
+main_player_x: ds 1
+player_2_y: ds 1
+player_2_x: ds 1
 
 SECTION "OAM Buffer", WRAM0[$C100]
 oam_buffer:  ds 4 * 40 ; to move to fe04  space necessary to store 40 sprites

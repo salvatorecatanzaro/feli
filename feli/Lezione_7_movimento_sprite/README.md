@@ -18,7 +18,7 @@ Definiamo la subroutine get_buttons_state nel file controls
 
 *file: utils/controls.asm*
 ```
-SECTION “CONTROLS”, ROM0[$0000]
+SECTION "CONTROLS", ROM0[$0000]
 get_buttons_state:
 ;   REGISTRO $FF00 - 
     ;    7/6      5                4                3               2          1           0
@@ -74,6 +74,8 @@ La subroutine update_player_position la implementiamo nel file denominato player
 
 *file: utils/player.asm*
 ```
+SECTION "Player", ROM0
+
 update_player_position:
     call try_move_left
     call try_move_right
@@ -117,6 +119,38 @@ reset_positions:
     ld [main_player_x], a
     ret
 
+```
+
+Definiamo tutte le variabili utilizzate nei file controls e player
+*file: utils/wram.asm*
+```
+SECTION "Important twiddles", WRAM0[$C000]
+; Reserve a byte in working RAM to use as the vblank flag
+vblank_flag: ds 1
+buttons: ds 1
+
+SECTION "Player coordinates", WRAM0
+main_player_y: ds 1
+main_player_x: ds 1
+player_2_y: ds 1
+player_2_x: ds 1
+```
+
+
+Includiamo infine i file appena creati
+
+*file: main.asm*
+```
+INCLUDE "utils/vram.asm"
+INCLUDE "hardware.inc"
+INCLUDE "utils/interrupts.asm"
+INCLUDE "utils/rom.asm"
+INCLUDE "utils/palettes.asm"
+INCLUDE "utils/wram.asm"
+INCLUDE "utils/graphics.asm"
+INCLUDE "utils/oam_dma.asm"
+INCLUDE "utils/controls.asm"
+INCLUDE "utils/player.asm"
 ```
 
 Ora con le frecce direzionali potremo muovere il nostro personaggio a destra e a sinistra.

@@ -6,6 +6,8 @@ INCLUDE "utils/palettes.asm"
 INCLUDE "utils/wram.asm"
 INCLUDE "utils/graphics.asm"
 INCLUDE "utils/oam_dma.asm"
+INCLUDE "utils/controls.asm"
+INCLUDE "utils/player.asm"
 
 SECTION "Header", ROM0[$100]
 
@@ -130,8 +132,10 @@ ld a, $1
 ld [water_animation_counter], a
 
 .main_loop:
+    call get_buttons_state
     halt
     nop
     call water_animation
+    call update_player_position
     call $ff80
     jp .main_loop
