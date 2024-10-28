@@ -18,7 +18,7 @@ player:
 __player:
 ```
 
-Andiamo poi a copiare questi valori nella VRAM così come facevamo per lo sfondo nel file main, prima di eseguire l’operazione dell’accensione dello schermo
+Copiamo i byte inclusi nella ROM all'interno della VRAM con il codice che segue, il codice va inserito prima di eseguire l’operazione dell’accensione dello schermo
 
 *file: main.asm*
 ```
@@ -38,7 +38,7 @@ Andiamo poi a copiare questi valori nella VRAM così come facevamo per lo sfondo
     call copy_data_to_destination                ; Copy the bin data to video ram
 ```
 
-Ogni volta che vogliamo copiare gli sprites dalla VRAM allo schermo, o se vogliamo aggiornarne lo stato, dobbiamo effettuare un’operazione detta direct memory access (DMA). La CPU del Game Boy durante un DMA può accedere solo la HRAM (Memoria che va da $FF80 a $FFFE). Per questo motivo dobbiamo copiare una piccola procedura nella HRAM ed eseguirla mentre si trova in questa area di memoria. Il trasferimento ha bisogno di 160 cicli macchina, attesa che andremo a implementare nella subroutine dma_copy implementata nel file oam_dma
+Ogni volta che vogliamo copiare gli sprites dalla VRAM allo schermo, o se vogliamo aggiornarne lo stato, dobbiamo effettuare un’operazione detta direct memory access (DMA). La CPU del Game Boy durante un DMA può accedere solo la HRAM (Memoria che va da $FF80 a $FFFE). Per questo motivo dobbiamo copiare una piccola subroutine nella HRAM ed eseguirla mentre si trova in questa area di memoria. Il trasferimento ha bisogno di 160 cicli macchina, attesa che andremo a implementare nella subroutine dma_copy.
 
 *file: utils/oam_dma.asm*
 ```
@@ -79,13 +79,13 @@ dma_copy_end:
     nop
 ```
 
-nel file main, prima del main loop, andiamo a copiare la routine dma_copy nella HRAM invocando il metodo appena creato
+nel file main, dopo le operazioni di copia degli sprite nella VRAM, andiamo a copiare la routine dma_copy nella HRAM invocando il metodo copy_in_high_ram per poi 
 
 *file: main.asm*
 ```
     ld bc, dma_copy                        ;
     ld hl, $ff80                           ; Copio la routine di dma transfer nella hram
-	ld de, dma_copy_end - dma_copy      ; perche la cpu può accedere solo alla 
+    ld de, dma_copy_end - dma_copy      ; perche la cpu può accedere solo alla 
                                            ; hram durante dma access
     call copy_in_high_ram                  ;
     
@@ -103,7 +103,7 @@ nel file main, prima del main loop, andiamo a copiare la routine dma_copy nella 
     call copy_oam_sprites
 ```
 
-Oltre a copiare nella HRAM la nostra subroutine abbiamo anche invocato il metodo copy oam sprites, che inseriamo nel file oam_dma
+La subroutine copy_oam_sprites, che inseriamo nel file oam_dma, serve ad assegnare gli attributi a tutti gli sprite
 
 *file: utils/oam_dma.asm*
 ```
@@ -175,7 +175,7 @@ copy_oam_sprites:
     ret
 ```
 
-definiamo le variabili utilizzate per la gestione degli sprites nella wram
+Definiamo le variabili utilizzate per la gestione degli sprites nella WRAM
 
 *file: utils/wram.asm*
 ```
@@ -201,7 +201,7 @@ sprite_ids: ds 20      ; each byte contains 2 sprite id
 ```
 
 
-ed aggiorniamo il main loop con la chiamata alla routine all’indirizzo $ff80 che è l’indirizzo di memoria dove abbiamo salvato la routine dma_copy
+Aggiorniamo il main loop con la chiamata alla subroutine all’indirizzo $ff80 che è l’indirizzo di memoria dove abbiamo salvato la routine dma_copy
 
 ```
 .main_loop:
