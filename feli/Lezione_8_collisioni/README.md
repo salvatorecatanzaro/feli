@@ -4,6 +4,7 @@ Ogni qual volta il nostro personaggio si sposta sullo schermo è necessario cont
 
 *file: utils/rom.asm*
 ```
+; All'interno della sezione textures
 collision_map:
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, 1,1,1,1,1,1,1,1,1,1,1,1
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, 1,1,1,1,1,1,1,1,1,1,1,1
@@ -111,6 +112,7 @@ try_apply_gravity:
     ld a, [bc]
     add a, $1
     ld [bc], a 
+    .no_down
     ret
 
 ```

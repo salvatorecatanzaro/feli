@@ -122,3 +122,47 @@ __food:
 player:
   INCBIN "sprites/cat.chr"                                             
 __player:
+
+player_state_running_1:
+  INCBIN "sprites/run_1.chr"                       ; Running state sprite 1
+__player_state_running_1:
+
+player_state_running_2:
+  INCBIN "sprites/run_2.chr"                       ; Running state sprite 2
+__player_state_running_2:
+
+player1_state_running_1:
+  INCBIN "sprites/player_1_running_1.chr"                       ; Running state sprite 1
+__player1_state_running_1:
+
+player1_state_running_2:
+  INCBIN "sprites/player_1_running_2.chr"                       ; Running state sprite 2
+__player1_state_running_2:
+
+player_state_jmp_1_1:
+  INCBIN "sprites/cat_jmp_1.chr"                   ; Jumping state sprite 1
+__player_state_jmp_1_1:
+
+player_state_jmp_1_2:
+  INCBIN "sprites/cat_jmp_2.chr"                   ; Jumping state sprite 2
+__player_state_jmp_1_2:
+
+player1_state_jmp_1_1:
+  INCBIN "sprites/player_1_jumping_1.chr"                   ; Jumping state sprite 1
+__player1_state_jmp_1_1:
+
+player1_state_jmp_1_2:
+  INCBIN "sprites/player_1_jumping_2.chr"                   ; Jumping state sprite 2
+__player1_state_jmp_1_2:
+
+joy:
+  INCBIN "sprites/joy.chr"                                            
+__joy:
+
+player1_state_swimming_1:
+  INCBIN "sprites/swimming_1.chr"
+__player1_state_swimming_1:
+
+player1_state_swimming_2:
+  INCBIN "sprites/swimming_2.chr"
+__player1_state_swimming_2:
