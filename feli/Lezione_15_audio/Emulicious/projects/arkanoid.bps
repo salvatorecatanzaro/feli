@@ -1,0 +1,4 @@
+type=instruction address=ClearOam%20+%2067 end=ClearOam%20+%2068 enabled=true suspend=true condition= message=
+type=instruction address=WaitVBlank%20+%208 end=WaitVBlank%20+%209 enabled=true suspend=true condition= message=
+type=instruction address=ClearOam%20+%205 end=ClearOam%20+%207 enabled=true suspend=true condition= message=
+type=instruction address=WaitVBlank2%20+%208 end=WaitVBlank2%20+%2010 enabled=true suspend=true condition= message=

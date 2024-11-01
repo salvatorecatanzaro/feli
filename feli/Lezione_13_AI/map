@@ -1,0 +1,300 @@
+SUMMARY:
+	ROM0: 5446 bytes used / 10938 free
+	WRAM0: 217 bytes used / 3879 free
+
+ROM0 bank #0:
+	SECTION: $0000-$0028 ($0029 bytes) ["CONTROLS"]
+	         $0000 = get_buttons_state
+	SECTION: $0029-$003e ($0016 bytes) ["vRAM code"]
+	         $0029 = clear_mem_area.clear_loop
+	         $0029 = clear_mem_area
+	         $0036 = copy_data_to_destination
+	         $0036 = copy_data_to_destination.copy_bin_loop
+	EMPTY: $003f-$003f ($0001 byte)
+	SECTION: $0040-$0047 ($0008 bytes) ["Vblank interrupt"]
+	SECTION: $0048-$0048 ($0001 byte) ["LCD controller status interrupt"]
+	EMPTY: $0049-$004f ($0007 bytes)
+	SECTION: $0050-$0050 ($0001 byte) ["Timer overflow interrupt"]
+	EMPTY: $0051-$0057 ($0007 bytes)
+	SECTION: $0058-$0058 ($0001 byte) ["Serial transfer completion interrupt"]
+	EMPTY: $0059-$005f ($0007 bytes)
+	SECTION: $0060-$0060 ($0001 byte) ["P10-P13 signal low edge interrupt"]
+	SECTION: $0061-$00b8 ($0058 bytes) ["OAM-DMA code"]
+	         $0061 = copy_in_high_ram
+	         $0061 = copy_in_high_ram.hram_loop
+	         $006a = dma_copy
+	         $0072 = dma_copy.loop
+	         $0077 = dma_copy_end
+	         $0078 = copy_oam_sprites
+	         $0082 = copy_oam_sprites.oam_loop
+	         $008d = copy_oam_sprites.player1attrs
+	         $009a = copy_oam_sprites.player2_attrs
+	         $00a7 = copy_oam_sprites.food_attrs
+	         $00b1 = copy_oam_sprites.endattrs
+	SECTION: $00b9-$00c5 ($000d bytes) ["Palettes code"]
+	         $00b9 = set_palettes_bg
+	         $00bc = set_palettes_bg.palette_loop
+	EMPTY: $00c6-$00ff ($003a bytes)
+	SECTION: $0100-$014f ($0050 bytes) ["Header"]
+	         $0100 = EntryPoint
+	SECTION: $0150-$02ca ($017b bytes) ["Game code"]
+	         $0150 = Start
+	         $029e = Start.main_loop
+	SECTION: $02cb-$0d0d ($0a43 bytes) ["textures"]
+	         $02cb = mud
+	         $02db = grass
+	         $02db = __mud
+	         $02eb = grass_mud
+	         $02eb = __grass
+	         $02fb = water_1
+	         $02fb = __grass_mud
+	         $030b = water_2
+	         $030b = __water_1
+	         $031b = climbing_1
+	         $031b = __water_2
+	         $032b = climbing_2
+	         $032b = __climbing_1
+	         $033b = gravity_tile_map
+	         $033b = __climbing_2
+	         $057b = palettes
+	         $057b = __gravity_tile_map
+	         $05bb = A_
+	         $05bb = __palettes
+	         $05bc = B_
+	         $05bd = C_
+	         $05be = D_
+	         $05bf = E_
+	         $05c0 = F_
+	         $05c1 = G_
+	         $05c2 = H_
+	         $05c3 = I_
+	         $05c4 = J_
+	         $05c5 = K_
+	         $05c6 = L_
+	         $05c7 = M_
+	         $05c8 = N_
+	         $05c9 = O_
+	         $05ca = P_
+	         $05cb = Q_
+	         $05cc = R_
+	         $05cd = S_
+	         $05ce = T_
+	         $05cf = U_
+	         $05d0 = V_
+	         $05d1 = X_
+	         $05d2 = Y_
+	         $05d3 = _0
+	         $05d4 = _1
+	         $05d5 = _2
+	         $05d6 = _3
+	         $05d7 = _4
+	         $05d8 = _5
+	         $05d9 = _6
+	         $05da = _7
+	         $05db = _8
+	         $05dc = _9
+	         $05dd = collision_map
+	         $081d = food_x_coords
+	         $081d = __collision_map
+	         $0825 = food_y_coords
+	         $082d = food_array_len
+	         $082e = char_bin
+	         $0c2e = player_1_idle
+	         $0c2e = __char_bin
+	         $0c3e = food
+	         $0c3e = __player_1_idle
+	         $0c4e = player
+	         $0c4e = __food
+	         $0c5e = player_state_running_1
+	         $0c5e = __player
+	         $0c6e = player_state_running_2
+	         $0c6e = __player_state_running_1
+	         $0c7e = player1_state_running_1
+	         $0c7e = __player_state_running_2
+	         $0c8e = player1_state_running_2
+	         $0c8e = __player1_state_running_1
+	         $0c9e = player_state_jmp_1_1
+	         $0c9e = __player1_state_running_2
+	         $0cae = player_state_jmp_1_2
+	         $0cae = __player_state_jmp_1_1
+	         $0cbe = player1_state_jmp_1_1
+	         $0cbe = __player_state_jmp_1_2
+	         $0cce = player1_state_jmp_1_2
+	         $0cce = __player1_state_jmp_1_1
+	         $0cde = joy
+	         $0cde = __player1_state_jmp_1_2
+	         $0cee = player1_state_swimming_1
+	         $0cee = __joy
+	         $0cfe = player1_state_swimming_2
+	         $0cfe = __player1_state_swimming_1
+	         $0d0e = __player1_state_swimming_2
+	SECTION: $0d0e-$13c6 ($06b9 bytes) ["Player"]
+	         $0d0e = try_jump
+	         $0d19 = try_jump.holding
+	         $0d3e = try_jump.jumping
+	         $0d60 = try_jump.up_by_one
+	         $0d6a = try_jump.up_by_three
+	         $0d71 = try_jump.__up_by
+	         $0d86 = try_jump.start_falling
+	         $0d90 = try_jump.not_jumping
+	         $0d90 = try_jump.no_up
+	         $0d94 = try_move_left
+	         $0dc7 = try_move_left.no_left
+	         $0dcb = try_move_right
+	         $0e00 = try_move_right.no_right
+	         $0e04 = try_apply_gravity
+	         $0e0c = try_apply_gravity.fall_fast
+	         $0e2d = try_apply_gravity.fall_slow
+	         $0e53 = try_apply_gravity.__fall_by
+	         $0e59 = try_apply_gravity.no_down
+	         $0e68 = get_tile_by_pixel
+	         $0e89 = is_wall_tile
+	         $0e93 = is_wall_tile.not_water_tile
+	         $0e96 = reset_positions
+	         $0ea3 = update_player_position
+	         $0eb8 = update_player_position.less_then_d
+	         $0ec4 = update_player_position.not_underwater
+	         $0ed9 = update_player_position.end_update_player_position
+	         $0eda = player_animation
+	         $0f14 = player_animation.gotostate0
+	         $0f28 = player_animation.gotostate1
+	         $0f44 = player_animation.state_running_frame_2
+	         $0f55 = player_animation.gotostate2
+	         $0f74 = player_animation.state_2_frame_2
+	         $0f80 = player_animation.gotostate3
+	         $0f8f = player_animation.gotostate4
+	         $0fab = player_animation.state_swimming_frame_2
+	         $0fbc = player_animation.gotostate5
+	         $0fcb = player_animation.gotostate6
+	         $0fda = player_animation.endstatecheck
+	         $0fdb = player_got_food
+	         $0ffb = player_got_food.equal
+	         $1017 = player_got_food.modify_second_digit
+	         $101e = player_got_food.modified_digits
+	         $102f = player_got_food.not_equal
+	         $1031 = player_got_food.player_win
+	         $1034 = joy_animation
+	         $1043 = joy_animation.keep_joying
+	         $1052 = player2_got_food
+	         $1072 = player2_got_food.equal_player_2
+	         $108e = player2_got_food.modify_second_digit_player2
+	         $1095 = player2_got_food.modified_digits_player2
+	         $10a3 = player2_got_food.not_equal_player2
+	         $10a5 = player2_got_food.player2_win
+	         $10a8 = reset_positions_player2
+	         $10b5 = update_player2_position
+	         $10d7 = update_player2_position.not_underwater_p2
+	         $10f0 = update_player2_position.stop_climbing_animation
+	         $1104 = update_player2_position.not_climbing
+	         $1134 = update_player2_position.go_down_one_platform_status_set
+	         $1144 = update_player2_position.go_down_one_platform
+	         $1152 = update_player2_position.food_is_up
+	         $115f = update_player2_position.move_left
+	         $118f = update_player2_position.no_left_p2
+	         $1192 = update_player2_position.move_right
+	         $11c4 = update_player2_position.no_right_p2
+	         $11c7 = update_player2_position.jump
+	         $11f9 = update_player2_position.go_up_normally_player2
+	         $1201 = update_player2_position.up_by_one_player2
+	         $120b = update_player2_position.up_by_three_player2
+	         $1212 = update_player2_position.__up_by
+	         $1227 = update_player2_position.start_falling_player2
+	         $1231 = update_player2_position.no_up_p2
+	         $1234 = update_player2_position.p2_not_jumping
+	         $123d = update_player2_position.gravity_check_player2
+	         $1287 = update_player2_position.no_down_2
+	         $1295 = update_player2_position.dont_update_mask
+	         $129c = update_player2_position.end_p2_position_update
+	         $129d = player_2_animation
+	         $12dd = player_2_animation.gotoplayer2state0
+	         $12f1 = player_2_animation.gotoplayer2state1
+	         $130d = player_2_animation.state_running_frame_2
+	         $131e = player_2_animation.gotoplayer2state2
+	         $133d = player_2_animation.p2_state_2_frame_2
+	         $1349 = player_2_animation.gotoplayer2state3
+	         $1358 = player_2_animation.gotoplayer2state4
+	         $1374 = player_2_animation.state_swimming_frame_2_p2
+	         $1385 = player_2_animation.gotoplayer2state5
+	         $138c = player_2_animation.climbing_1
+	         $139b = player_2_animation.climbing_2
+	         $13aa = player_2_animation.gotoplayer2state6
+	         $13b9 = player_2_animation.endstatecheckplayer2
+	         $13ba = is_wall_tile_player2
+	         $13c4 = is_wall_tile_player2.not_water_tile_p2
+	SECTION: $13c7-$1595 ($01cf bytes) ["Game graphics"]
+	         $13c7 = wait_vblank
+	         $13c7 = wait_vblank.notvblank
+	         $13cf = background_assign_attributes
+	         $13d8 = background_assign_attributes.bg_start_from_9800
+	         $13de = background_assign_attributes.bg_start_from_9c00
+	         $13e1 = background_assign_attributes.__bg_start_from
+	         $13e4 = background_assign_attributes.bg_tile_loop
+	         $1406 = background_assign_attributes.grass_tile
+	         $1411 = background_assign_attributes.grass_mud_tile
+	         $141c = background_assign_attributes.mud_tile
+	         $1427 = background_assign_attributes.water_tile
+	         $1432 = background_assign_attributes.cloud_tile
+	         $143d = background_assign_attributes.sky_tile
+	         $1445 = background_assign_attributes.assigned
+	         $145b = create_score_labels
+	         $14ab = water_animation
+	         $14c2 = water_animation.water_tile_animation_1
+	         $14ff = water_animation.water_tile_animation_2
+	         $1535 = water_animation.__water_tile_animation
+	         $1536 = food_position_handler
+	         $155b = food_position_handler.less_then_sixty
+	         $155c = spawn_food
+	         $1589 = spawn_food.skip_reset
+	         $158a = get_new_xy_coords
+	         $1595 = get_new_xy_coords.__end_new_xy_coords
+	EMPTY: $1596-$3fff ($2a6a bytes)
+	TOTAL EMPTY: $2aba bytes
+
+WRAM0 bank #0:
+	SECTION: $c000-$c001 ($0002 bytes) ["Important twiddles"]
+	         $c000 = vblank_flag
+	         $c001 = buttons
+	SECTION: $c002-$c010 ($000f bytes) ["Counter"]
+	         $c002 = player_animation_frame_counter
+	         $c003 = player2_animation_frame_counter
+	         $c004 = food_counter
+	         $c005 = frame_counter
+	         $c006 = time_frame_based
+	         $c007 = food_xy_position_counter
+	         $c008 = player2_climbing_counter
+	         $c009 = player2_climb_max_count
+	         $c00a = water_animation_counter
+	         $c00b = water_animation_frame_counter
+	         $c00c = platform_y_old
+	         $c00d = state_swimming_count
+	         $c00e = state_swimming_count_p2
+	         $c00f = presentation_screen_flicker_counter
+	         $c010 = sound_length
+	SECTION: $c011-$c01f ($000f bytes) ["Player_state"]
+	         $c011 = win_points
+	         $c012 = player_state
+	         $c013 = player2_state
+	         $c014 = state_idle_count
+	         $c015 = state_running_count
+	         $c016 = state_running_count_player2
+	         $c017 = state_jmp_count
+	         $c018 = state_jmp_count_player2
+	         $c019 = state_3_count
+	         $c01a = state_4_count
+	         $c01b = state_5_count
+	         $c01c = state_6_count
+	         $c01d = jp_max_count
+	         $c01e = holding_jump
+	         $c01f = falling_speed
+	SECTION: $c020-$c023 ($0004 bytes) ["Player coordinates"]
+	         $c020 = main_player_y
+	         $c021 = main_player_x
+	         $c022 = player_2_y
+	         $c023 = player_2_x
+	EMPTY: $c024-$c0ff ($00dc bytes)
+	SECTION: $c100-$c1b4 ($00b5 bytes) ["OAM Buffer"]
+	         $c100 = oam_buffer
+	         $c1a0 = sprite_count
+	         $c1a1 = sprite_ids
+	EMPTY: $c1b5-$cfff ($0e4b bytes)
+	TOTAL EMPTY: $0f27 bytes

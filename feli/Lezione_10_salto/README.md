@@ -8,7 +8,7 @@ update_player_position:
     ; Inizializziamo ad ogni iterazione lo stato ad idle, se non dovesse essere corretto
     ; sarebbe sovrascritto dalle istruzioni che seguono
     ld b , %00011100                    ; mascheriamo tutti gli stati 
-    ld a, [player_state]                ; tranne salto, caduta, e in acqua
+    ld a, [player_state]                ; tranne salto, caduta, e 'in acqua'
     and b                               ;
     ld [player_state], a                ;
     
@@ -113,14 +113,33 @@ Aggiornando la routine try_apply_gravity invece aggiorniamo lo stato del player 
 
 ```
 try_apply_gravity:
-    ld a, [falling_speed]
-    ld b, $12
-    cp a, b
-    jr c, .fall_slow
-    .fall_fast
+    ld a, [falling_speed]               ; Carico falling_speed in a
+    ld b, $12                           ; Carico $12 in b
+    cp a, b                             ; a - $12
+    jr c, .fall_slow                    ; 12 > di a? se si, esegui il codice fall_slow (Scendi lentamente)
+    .fall_fast                          ; Altrimenti scendi velocemente
+    
+    ld a, [main_player_y]               ; carico la posizione y del giocatore in a
+    add a, 4                            ; 
+    sub a, 16-2                         ;
+    ld c, a                             ; salvo la y in c
+    ld a, [main_player_x]               ; carico la posizione x del giocatore in a
+    sub a, 8                            ;
+    ld b, a                             ; salvo la x in b
+    call get_tile_by_pixel              ; Controllo la tile dove andrebbe a finire il player (risultato in hl)
+    ld a, [hl]                          ; 
+    call is_wall_tile                   ; è un muro ?
+    jr nz, .no_down                     ; se si, non applicare la logica per far scendere il player
+    ld bc, oam_buffer_player_y          ; 
+    ld a, [bc]                          ;
+    add a, $2                           ; Applico la gravita (fast quindi 2)
+    ld [bc], a                          ;
+    jp .__fall_by                       ;
+    .fall_slow                          ; FALL SLOW Uguale a fall fast, ma con gravità piu lenta
+    
     ld a, [main_player_y]
-    add a, 4 ; The check starts from upleft, lets add 4 pixel distance to make it more centered
-    sub a, 16-2 ; the sprite y is not aligned with tile position (0, 0), removing 16 bit removes this difference
+    add a, 4 
+    sub a, 16-1 
     ld c, a
     ld a, [main_player_x]
     sub a, 8
@@ -131,43 +150,23 @@ try_apply_gravity:
     jr nz, .no_down 
     ld bc, oam_buffer_player_y
     ld a, [bc]
-    add a, $2
-    ld [bc], a
-    jp .__fall_by
-    .fall_slow
-    ; No collision, update position
-    ld a, [main_player_y]
-    add a, 4 ; The check starts from upleft, lets add 4 pixel distance to make it more centered
-    sub a, 16-1 ; the sprite y is not aligned with tile position (0, 0), removing 16 bit removes this difference
-    ld c, a
-    ld a, [main_player_x]
-    sub a, 8
-    ld b, a
-    call get_tile_by_pixel ; Returns tile address in hl
-    ld a, [hl]
-    call is_wall_tile
-    jr nz, .no_down 
-    ld bc, oam_buffer_player_y
-    ld a, [bc]
-    add a, $1
+    add a, $1                            ; Applico la gravità (slow quindi 1)
     ld [bc], a
     ld a, [falling_speed]
     add 1
     ld [falling_speed], a
     .__fall_by
 
-    ; When the player is falling will go in the state falling
-    ld a, %00001000
-    ld [player_state], a
-    ret  ; end_update_player_position
-    .no_down
-    ld a, $1
-    ld [falling_speed], a
-    ; If no down condition is met, we are not falling anymore
-    ld b , %11110111 ; Mask to reset falling bit
-    ld a, [player_state]
-    and b 
-    ld [player_state], a
+    ld a, %00001000                       ; Se abbiamo applicato la gravità
+    ld [player_state], a                  ; player state va settato a falling
+    ret  ; end_update_player_position     ; e ritorniamo dalla subroutine
+    .no_down                            
+    ld a, $1                              ; Se non siamo scesi non stiamo piu cadendo, mascheriamo il bit falling
+    ld [falling_speed], a                 ; resetto falling speed a 1
+    ld b , %11110111                      ; mask per resettare falling bit
+    ld a, [player_state]                  ; prendo il player state 
+    and b                                 ; lo metto in and con b
+    ld [player_state], a                  ; e lo ricarico in player state mascherando il bit falling
     ret
 ```
 
@@ -178,3 +177,5 @@ Andiamo a compilare ed eseguire il nostro codice per poter testare il salto del 
 # ./run_program.<estensione>
 # java -jar Emulicius/Emulicius.jar feli.gbc
 ```
+
+Nel prossimo capitolo completeremo le animazioni del player uno.

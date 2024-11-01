@@ -1,0 +1,232 @@
+SUMMARY:
+	ROM0: 4266 bytes used / 12118 free
+	WRAM0: 216 bytes used / 3880 free
+
+ROM0 bank #0:
+	SECTION: $0000-$0028 ($0029 bytes) ["CONTROLS"]
+	         $0000 = get_buttons_state
+	SECTION: $0029-$003e ($0016 bytes) ["vRAM code"]
+	         $0029 = clear_mem_area.clear_loop
+	         $0029 = clear_mem_area
+	         $0036 = copy_data_to_destination
+	         $0036 = copy_data_to_destination.copy_bin_loop
+	EMPTY: $003f-$003f ($0001 byte)
+	SECTION: $0040-$0047 ($0008 bytes) ["Vblank interrupt"]
+	SECTION: $0048-$0048 ($0001 byte) ["LCD controller status interrupt"]
+	EMPTY: $0049-$004f ($0007 bytes)
+	SECTION: $0050-$0050 ($0001 byte) ["Timer overflow interrupt"]
+	EMPTY: $0051-$0057 ($0007 bytes)
+	SECTION: $0058-$0058 ($0001 byte) ["Serial transfer completion interrupt"]
+	EMPTY: $0059-$005f ($0007 bytes)
+	SECTION: $0060-$0060 ($0001 byte) ["P10-P13 signal low edge interrupt"]
+	SECTION: $0061-$00b8 ($0058 bytes) ["OAM-DMA code"]
+	         $0061 = copy_in_high_ram
+	         $0061 = copy_in_high_ram.hram_loop
+	         $006a = dma_copy
+	         $0072 = dma_copy.loop
+	         $0077 = dma_copy_end
+	         $0078 = copy_oam_sprites
+	         $0082 = copy_oam_sprites.oam_loop
+	         $008d = copy_oam_sprites.player1attrs
+	         $009a = copy_oam_sprites.player2_attrs
+	         $00a7 = copy_oam_sprites.food_attrs
+	         $00b1 = copy_oam_sprites.endattrs
+	SECTION: $00b9-$00c5 ($000d bytes) ["Palettes code"]
+	         $00b9 = set_palettes_bg
+	         $00bc = set_palettes_bg.palette_loop
+	EMPTY: $00c6-$00ff ($003a bytes)
+	SECTION: $0100-$014f ($0050 bytes) ["Header"]
+	         $0100 = EntryPoint
+	SECTION: $0150-$02ab ($015c bytes) ["Game code"]
+	         $0150 = Start
+	         $0298 = Start.main_loop
+	SECTION: $02ac-$0cbd ($0a12 bytes) ["textures"]
+	         $02ac = mud
+	         $02bc = grass
+	         $02bc = __mud
+	         $02cc = grass_mud
+	         $02cc = __grass
+	         $02dc = water_1
+	         $02dc = __grass_mud
+	         $02ec = water_2
+	         $02ec = __water_1
+	         $02fc = gravity_tile_map
+	         $02fc = __water_2
+	         $053c = palettes
+	         $053c = __gravity_tile_map
+	         $057c = A_
+	         $057c = __palettes
+	         $057d = B_
+	         $057e = C_
+	         $057f = D_
+	         $0580 = E_
+	         $0581 = F_
+	         $0582 = G_
+	         $0583 = H_
+	         $0584 = I_
+	         $0585 = J_
+	         $0586 = K_
+	         $0587 = L_
+	         $0588 = M_
+	         $0589 = N_
+	         $058a = O_
+	         $058b = P_
+	         $058c = Q_
+	         $058d = R_
+	         $058e = S_
+	         $058f = T_
+	         $0590 = U_
+	         $0591 = V_
+	         $0592 = X_
+	         $0593 = Y_
+	         $0594 = _0
+	         $0595 = _1
+	         $0596 = _2
+	         $0597 = _3
+	         $0598 = _4
+	         $0599 = _5
+	         $059a = _6
+	         $059b = _7
+	         $059c = _8
+	         $059d = _9
+	         $059e = collision_map
+	         $07de = char_bin
+	         $07de = __collision_map
+	         $0bde = player_1_idle
+	         $0bde = __char_bin
+	         $0bee = food
+	         $0bee = __player_1_idle
+	         $0bfe = player
+	         $0bfe = __food
+	         $0c0e = __player
+	         $0c0e = player_state_running_1
+	         $0c1e = player_state_running_2
+	         $0c1e = __player_state_running_1
+	         $0c2e = player1_state_running_1
+	         $0c2e = __player_state_running_2
+	         $0c3e = player1_state_running_2
+	         $0c3e = __player1_state_running_1
+	         $0c4e = __player1_state_running_2
+	         $0c4e = player_state_jmp_1_1
+	         $0c5e = player_state_jmp_1_2
+	         $0c5e = __player_state_jmp_1_1
+	         $0c6e = player1_state_jmp_1_1
+	         $0c6e = __player_state_jmp_1_2
+	         $0c7e = player1_state_jmp_1_2
+	         $0c7e = __player1_state_jmp_1_1
+	         $0c8e = joy
+	         $0c8e = __player1_state_jmp_1_2
+	         $0c9e = player1_state_swimming_1
+	         $0c9e = __joy
+	         $0cae = player1_state_swimming_2
+	         $0cae = __player1_state_swimming_1
+	         $0cbe = __player1_state_swimming_2
+	SECTION: $0cbe-$0f8a ($02cd bytes) ["Player"]
+	         $0cbe = try_jump
+	         $0cc9 = try_jump.holding
+	         $0cee = try_jump.jumping
+	         $0d10 = try_jump.up_by_one
+	         $0d1a = try_jump.up_by_three
+	         $0d21 = try_jump.__up_by
+	         $0d36 = try_jump.start_falling
+	         $0d40 = try_jump.not_jumping
+	         $0d40 = try_jump.no_up
+	         $0d44 = try_move_left
+	         $0d77 = try_move_left.no_left
+	         $0d7b = try_move_right
+	         $0db0 = try_move_right.no_right
+	         $0db4 = try_apply_gravity
+	         $0dbc = try_apply_gravity.fall_fast
+	         $0ddd = try_apply_gravity.fall_slow
+	         $0e03 = try_apply_gravity.__fall_by
+	         $0e09 = try_apply_gravity.no_down
+	         $0e18 = get_tile_by_pixel
+	         $0e39 = is_wall_tile
+	         $0e43 = is_wall_tile.not_water_tile
+	         $0e46 = reset_positions
+	         $0e53 = update_player_position
+	         $0e68 = update_player_position.less_then_d
+	         $0e74 = update_player_position.not_underwater
+	         $0e89 = update_player_position.end_update_player_position
+	         $0e8a = player_animation
+	         $0ec4 = player_animation.gotostate0
+	         $0ed8 = player_animation.gotostate1
+	         $0ef4 = player_animation.state_running_frame_2
+	         $0f05 = player_animation.gotostate2
+	         $0f24 = player_animation.state_2_frame_2
+	         $0f30 = player_animation.gotostate3
+	         $0f3f = player_animation.gotostate4
+	         $0f5b = player_animation.state_swimming_frame_2
+	         $0f6c = player_animation.gotostate5
+	         $0f7b = player_animation.gotostate6
+	         $0f8a = player_animation.endstatecheck
+	SECTION: $0f8b-$10f9 ($016f bytes) ["Game graphics"]
+	         $0f8b = wait_vblank
+	         $0f8b = wait_vblank.notvblank
+	         $0f93 = background_assign_attributes
+	         $0f9c = background_assign_attributes.bg_start_from_9800
+	         $0fa2 = background_assign_attributes.bg_start_from_9c00
+	         $0fa5 = background_assign_attributes.__bg_start_from
+	         $0fa8 = background_assign_attributes.bg_tile_loop
+	         $0fca = background_assign_attributes.grass_tile
+	         $0fd5 = background_assign_attributes.grass_mud_tile
+	         $0fe0 = background_assign_attributes.mud_tile
+	         $0feb = background_assign_attributes.water_tile
+	         $0ff6 = background_assign_attributes.cloud_tile
+	         $1001 = background_assign_attributes.sky_tile
+	         $1009 = background_assign_attributes.assigned
+	         $101f = create_score_labels
+	         $106f = water_animation
+	         $1086 = water_animation.water_tile_animation_1
+	         $10c3 = water_animation.water_tile_animation_2
+	         $10f9 = water_animation.__water_tile_animation
+	EMPTY: $10fa-$3fff ($2f06 bytes)
+	TOTAL EMPTY: $2f56 bytes
+
+WRAM0 bank #0:
+	SECTION: $c000-$c001 ($0002 bytes) ["Important twiddles"]
+	         $c000 = vblank_flag
+	         $c001 = buttons
+	SECTION: $c002-$c010 ($000f bytes) ["Counter"]
+	         $c002 = player_animation_frame_counter
+	         $c003 = player2_animation_frame_counter
+	         $c004 = food_counter
+	         $c005 = frame_counter
+	         $c006 = time_frame_based
+	         $c007 = food_xy_position_counter
+	         $c008 = player2_climbing_counter
+	         $c009 = player2_climb_max_count
+	         $c00a = water_animation_counter
+	         $c00b = water_animation_frame_counter
+	         $c00c = platform_y_old
+	         $c00d = state_swimming_count
+	         $c00e = state_swimming_count_p2
+	         $c00f = presentation_screen_flicker_counter
+	         $c010 = sound_length
+	SECTION: $c011-$c01e ($000e bytes) ["Player_state"]
+	         $c011 = player_state
+	         $c012 = player2_state
+	         $c013 = state_idle_count
+	         $c014 = state_running_count
+	         $c015 = state_running_count_player2
+	         $c016 = state_jmp_count
+	         $c017 = state_jmp_count_player2
+	         $c018 = state_3_count
+	         $c019 = state_4_count
+	         $c01a = state_5_count
+	         $c01b = state_6_count
+	         $c01c = jp_max_count
+	         $c01d = holding_jump
+	         $c01e = falling_speed
+	SECTION: $c01f-$c022 ($0004 bytes) ["Player coordinates"]
+	         $c01f = main_player_y
+	         $c020 = main_player_x
+	         $c021 = player_2_y
+	         $c022 = player_2_x
+	EMPTY: $c023-$c0ff ($00dd bytes)
+	SECTION: $c100-$c1b4 ($00b5 bytes) ["OAM Buffer"]
+	         $c100 = oam_buffer
+	         $c1a0 = sprite_count
+	         $c1a1 = sprite_ids
+	EMPTY: $c1b5-$cfff ($0e4b bytes)
+	TOTAL EMPTY: $0f28 bytes
