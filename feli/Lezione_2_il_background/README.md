@@ -1,11 +1,13 @@
 # Lezione 2 - Il Background
 
 ## Gestione Background
-Dopo aver pulito tutta la memoria ci occupiamo del background. Ci sono due momenti in cui è possibile disegnare sullo schermo:
-* *VBlank* è il momento in cui il Game Boy non sta aggiornando i pixel sullo schermo perché si prepara a disegnare il prossimo frame.
-* *Schermo spento* è possibile spegnere lo schermo (Questa operazione può essere effettuata solo durante un VBlank oppure si potrebbe danneggiare lo schermo) , aggiornare il suo contenuto per poi riaccenderlo.
+Dopo aver ripulito la memoria, ci concentriamo sulla gestione del background. è possibile disegnare sullo schermo in due momenti:
 
-Quindi definiamo la subroutine che ci permette di aspettare un periodo di VBlank
+* *VBlank* è il momento in cui il Game Boy non sta aggiornando i pixel sullo schermo e si prepara a disegnare il prossimo frame. Durante il VBlank, possiamo modificare la VRAM senza causare problemi visivi.
+
+* *Schermo spento* è possibile spegnere lo schermo inserendo il valore zero nel registro rLCDC, questa operazione può avvenire solo durante un VBlank altrimenti potrebbe danneggiarsi lo schermo. A schermo spento, si possono modificare in sicurezza i valori nella VRAM.
+
+Definiamo la subroutine che ci permette di aspettare un periodo di VBlank
 
 *file: utils/graphics.asm*
 ```
@@ -23,14 +25,12 @@ wait_vblank:
   ret
 ```
 
-Per disegnare i tile sullo schermo, dobbiamo prima caricarli all'interno della VRAM, definiamo quindi la subroutine che si occupa della copia dei dati da una parte all’altra della memoria per poter effettuare questa operazione
+Dopo aver definito la subroutine per attendere il VBlank, possiamo procedere a disegnare i tile sullo schermo. Prima di tutto, dobbiamo caricarli all'interno della VRAM. Per fare ciò, definiamo una subroutine che si occupa della copia dei dati da una parte all’altra della memoria, facilitando così questa operazione.
 
-
+---
 *file: utils/vram.asm*
-
 ```
-  ; -- !!!Disable screen - ppu before calling this method!!!
-  ; -- this subroutine is used to copy data from source to destination
+  ; -- Questa subroutine viene utilizzata per spostare i dati da una parte all'altra della memoria
   ; -- hl: destination
   ; -- de: source
   ; -- bc: map len
@@ -39,7 +39,7 @@ Per disegnare i tile sullo schermo, dobbiamo prima caricarli all'interno della V
   ld a, [de]               ; Prendiamo un byte dall’indirizzo contenuto 
                            ; nella coppia di registri de
   ld [hli], a              ; Lo inseriamo nell’indirizzo contenuto dalla 
-                          ; coppia di registri hl e incrementiamo hl
+                           ; coppia di registri hl e incrementiamo hl
   inc de                   ; incrementiamo di uno de cosi puntiamo al 
                            ; prossimo indirizzo
   dec bc                   ; Decrementiamo bc (La quantita di dati da 
@@ -49,9 +49,11 @@ Per disegnare i tile sullo schermo, dobbiamo prima caricarli all'interno della V
   jr nz, .copy_bin_loop    ; Cicliamo fin quando bc non diventa zero
   ret
 ```
+---
 
-aggiungiamo gli include necessari e copiamo le texture dalla rom alla vram
+Aggiungiamo gli include necessari e copiamo le texture dalla ROM alla VRAM
 
+---
 *file: main.asm*
 ```
 INCLUDE "utils/vram.asm"
@@ -97,9 +99,11 @@ ld bc, __grass_mud - grass_mud               ;
 ld de, grass_mud                             ; Copy grass mud tile data to vram
 call copy_data_to_destination                ;
 ```
+---
 
-Tutte le texture necessarie per generare il background citate nel codice precedente vanno incluse nella ROM
+Tutte le texture necessarie per generare il background citate nel codice precedente devono essere incluse nella ROM.
 
+---
 *file: utils/rom.asm*
 ```
 SECTION "textures", ROM0[$031c]
@@ -119,8 +123,10 @@ water_2:
 INCBIN "backgrounds/water_2.chr"
 __water_2: 
 ```
+---
 
-se compiliamo ed inseriamo la rom all'interno dell'emulatore, visualizzando la VRAM potremo vedere che tutti i tile son stati correttamente caricati
+Una volta completato il processo di copia delle texture, possiamo compilare il nostro codice ed eseguire l'emulatore. Visualizziamo la VRAM per accertarci che i tile siano stati caricati correttamente.
+
 ```
 # cd /<directory_del_progetto/feli
 # ./run_program.<estensione>
@@ -131,9 +137,10 @@ se compiliamo ed inseriamo la rom all'interno dell'emulatore, visualizzando la V
   <img src="img/stato_della_vram.png" title="Stato della VRAM" width="300" height="300">
 </div>
 
-Ogni tile della VRAM è caratterizzata da un ID e l’inserimento di quest’ultimo negli indirizzi di memoria di un tile dello schermo consente di riportarne il contenuto. 
-Per poter disegnare una intera mappa quindi, definiamo una tile map.
+Ogni tile della VRAM è caratterizzata da un ID, e l’inserimento di quest’ultimo negli indirizzi di memoria di un tile dello schermo consente di riportarne il contenuto. 
+Per disegnare una intera mappa, quindi, definiamo una tile map.
 
+---
 *file utils/rom.asm*
 ```
 gravity_tile_map:
@@ -158,9 +165,11 @@ db $04, $04, $04, $04, $04, $04, $04, $02, $02, $02, $02, $02, $04, $04, $04, $0
 __gravity_tile_map:
 
 ```
+---
 
 Copiamo sullo schermo la tilemap con la routine definita in precedenza, inserendo le righe di codice che seguono subito dopo le operazioni di pulizia della memoria
 
+---
 *file: main.asm*
 ```
 ld bc, __gravity_tile_map - gravity_tile_map
@@ -171,6 +180,7 @@ ld a, %10000011 ;bg will start from 9800  ; Riaccendiamo lo schermo
 ld [rLCDC], a                             ;
 
 ```
+---
 
 Infine, eseguiamo i seguenti comandi per avviare il gioco
 
@@ -186,9 +196,7 @@ Output ROM: feli.gbc
   <img src="img/output_lezione_2.png" title="Output lezione 2" width="300" height="300">
 </div>
 
-Lo schermo nonostante l'inserimento degli id delle tile presenti nella VRAM è ancora bianco, ed è tutto corretto.
-La ragione per cui non riusciamo a vedere il disegno risiede nell'assenza dei colori nelle palette: 
-ogni Game Boy Color ha 8 palette dedicate al background e otto dedicate agli oggetti e, mentre per gli oggetti vengono generate automaticamente, quelle per il background sono inizialmente bianche
+Lo schermo nonostante l'inserimento degli id delle tile presenti nella VRAM è ancora bianco, Questo comportamento è dovuto all'assenza dei colori nelle palette. Ogni Game Boy Color dispone di otto  palette dedicate al background e otto dedicate agli oggetti. Mentre le palette per gli oggetti vengono generate automaticamente, quelle per il background sono inizialmente impostate su colori bianchi
 
 <div align="center">
   <img src="img/stato_palette.png" title="Stato delle palette lezione 2" width="300" height="300">

@@ -1,32 +1,34 @@
 # Lezione 1 - Prerequisiti
-Per poter sviluppare un gioco per Game Boy Color avremo bisogno di alcuni strumenti
-*	RGBDS il nostro assembler
-*	Emulatore Utilzzato per testare il nostro gioco
-*	Un IDE o un editor di testo per scrivere il nostro codice
+Per sviluppare un gioco per il Game Boy Color avremo bisogno dei seguenti strumenti:
+*	*RGBDS* Il nostro assembler, viene utilizzato per convertire tutte le istruzioni del programma in linguaggio macchina.
+*	*Emulatore* Emula l'hardware reale e ci consente di testare velocemente il codice implementato.
+*	*Un IDE o un editor di testo* Necessario per scrivere e per organizzare il codice.
 
 ## 1.1 Struttura del progetto
-Prima di cominciare a programmare definiamo la struttura del nostro progetto, l’immagine che segue mostra l’alberatura scelta
+Prima di iniziare a programmare, definiamo la struttura del nostro progetto. L’immagine che segue mostra l’orgranizzazione delle directory:
 
 <div align="center">
   <img src="img/alberatura_progetto.png" title="Alberatura progetto" width="300" height="300">
 </div>
 
-Di seguito una breve descrizione delle varie directory
-*	*artifacts* Contiene le rom che produciamo per il nostro progetto
-*	*backgrounds* Contiene gli sfondi
-*	*Emulicius* Contiene il progetto dell’emulatore che andremo ad utilizzare
-*	*Sprites* Contiene tutti gli sprite del progetto
-*	*Utils* Contiene tutti i file .asm che includeremo nel main
+Di seguito descriviamo quanto mostrato nell'immagine
+*	*artifacts* Contiene le rom generate durante lo sviluppo del progetto.
+*	*backgrounds* Raccoglie tutti gli sfondi utilizzati nel gioco
+*	*Emulicius* Contiene il progetto dell'emulatore che utilizzeremo per i test
+*	*Sprites* Contiene tutti gli sprite del gioco
+*	*utils* include i file con estensione .asm che verranno importati nel file main
 
-La cartella utils è fondamentale e contiene molta della logica aggiuntiva che viene inclusa ed utilizzata dal file main.asm, il codice presente all’interno di essi sarà discusso nei prossimi capitoli.
-Copiamo quindi le directory presenti in questa lezione nella root del progetto
+La cartella utils è fondamentale poiché contiene la logica aggiuntiva che viene usata dal file main. Nei capitoli successivi, discuteremo in dettaglio il codice presente all'interno di questi file.
+
+Per completare la configurazione, copiamo le seguenti directory nella root del progetto:
 * *Emulicius*
 * *hardware.inc*
 * *backgrounds*
 * *sprites*
 
-e aggiungiamo i due script utilizzati per la compilazione.
+Aggiungiamo infine i due script necessari per la compilazione del progetto
 
+---
 *file: run_program.bat*
 ```
 rgbasm -o feli.o main.asm
@@ -48,8 +50,9 @@ fi
 rgblink -o feli.gbc main.o
 rgbfix -C -v -p 0 feli.gbc
 ```
+---
 
-Se ci troviamo su un sistema operativo Unix-like, eseguire il seguente comando per rendere lo script eseguibile
+Se ci troviamo su un sistema operativo Unix-like, eseguiamo il seguente comando per rendere lo script eseguibile
 
 ```
 # chmod +x run_program.sh
@@ -59,8 +62,11 @@ Se ci troviamo su un sistema operativo Unix-like, eseguire il seguente comando p
 
 ## 1.2 Il main loop
 Il primo passo è quello di creare il file main.asm nella stessa directory dell’immagine "Alberatura progetto".
-Il processore del Game Boy e del Game Boy color inizia ad eseguire le istruzioni a partire dall’indirizzo di memoria $100, in questa area di memoria c’è abbastanza spazio per eseguire soltanto due comandi, il primo sarà nop (No operation), il secondo un salto all’indirizzo di memoria dove risiede il nostro codice. l’istruzione jp farà in modo che la prossima riga di codice ad essere eseguita dal program counter sarà quella che corrisponde all’indirizzo di memoria dove risiede la label Start.
-Una label non è altro che un’etichetta che dice al compilatore in quale area dell’hardware salvare il codice e in quale indirizzo
+Il processore del Game Boy e del Game Boy color inizia ad eseguire le istruzioni a partire dall’indirizzo di memoria $100, in questa area di memoria, però, c’è spazio sufficiente solo per due comandi. il primo sarà nop (No operation), il secondo comando sarà un'istruzione di salto all’indirizzo di memoria dove risiede il nostro codice. l’istruzione 'jp' farà in modo che la prossima riga di codice ad essere eseguita dal program counter sarà quella che corrisponde all’indirizzo di memoria dove risiede la label Start.
+Una label è un’etichetta che associa un indirizzo specifico all'inizio di un blocco di istruzioni.
+
+---
+*file: main.asm*
 ```
 SECTION "Header", ROM0[$100]
 EntryPoint: 
@@ -71,7 +77,13 @@ REPT $150 - $104 ;
     db 0         ; riservo lo spazio tra $104 e $150 all' header
 ENDR             ;
 ```
-Definiamo una nuova sezione che parte dall’indirizzo di memoria $150 e, come per ogni gioco, definiamo il main loop
+---
+
+Definiamo una nuova sezione del codice, che partirà dall’indirizzo di memoria $150. è convenzione utilizzare questo indirizzo per il codice principale nei giochi per Game Boy, è quì che inseriremo il main loop, la struttura centrale che gestirà il flusso del gioco.
+
+Ogni istruzione presente all'interno del main loop viene ripetuta ciclicamente durante la partita. Esso si occupa di gestire gli input dell'utente, controllare gli eventi e aggiornare la grafica 
+
+---
 ```
 SECTION "Header", ROM0[$100]
 EntryPoint: 
@@ -83,11 +95,12 @@ Start:
 .main_loop:
 jp .main_loop
 ```
-
+---
 ## 1.3 Inizializzazione della memoria
 
-Ogni volta che avviamo la nostra console, le aree di memoria potrebbero essere sporche e non inizializzate a zero, per evitare qualsiasi tipo di comportamento inaspettato durante l’esecuzione del gioco, inizializzeremo tutte le aree di memoria a zero con la seguente subroutine
+Ogni volta che avviamo la console, le aree di memoria potrebbero contenere valori casuali e non essere inizializzate a zero. Per evitare comportamenti inaspettati durante l’esecuzione del gioco, è importante azzerare tutte le aree di memoria. Lo facciamo aggiungendo il codice che segue:
 
+---
 *file: utils/vram.asm*
 ```
 SECTION "vRAM code", ROM0[$0029]
@@ -110,18 +123,20 @@ jp nz, .clear_loop      ; se il valore non è zero si riesegue il codice a parti
 ret                     ; Ritorna dalla subroutine
 
 ```
+---
 
-La subroutine è molto semplice: essa non fa altro che impostare a zero tutti gli indirizzi di memoria che vanno dall’ indirizzo contenuto nella coppia di registri hl fino all’indirizzo che si trova nella coppia di registri de. Il codice lo salveremo nella cartella utils, in un file denominato vram.asm. Per includerlo nel nostro programma ci basterà inserire la direttiva INCLUDE come prima istruzione del file main.asm. Includeremo inoltre anche il file hardware.inc che contiene tutte quante le costanti associati agli indirizzi dei registri.
+La subroutine è molto semplice: imposta a zero tutti gli indirizzi di memoria dall’ indirizzo contenuto nella coppia di registri hl e quello indicato nella coppia di registri de. Il codice lo salveremo nella cartella utils, in un file denominato vram.asm. Per includerlo nel nostro programma sarà sufficiente inserire la direttiva INCLUDE come prima istruzione del file main. Includeremo inoltre anche il file hardware.inc, che contiene tutte le costanti associati agli indirizzi dei registri, semplificando la gestione degli indirizzi di memoria hardware nel codice. 
 
+---
 *file: main.asm*
-
 ```
 INCLUDE "utils/vram.asm"
 INCLUDE "hardware.inc"
 ```
+---
 
 L’operazione di pulizia della memoria la verrà effettuata una sola volta, prima di entrare nel loop del gioco, subito dopo la label start.
-
+---
 *file: main.asm*
 ```
 ld hl, $8000                   ; vRAM
@@ -143,9 +158,11 @@ ld hl, $C000                   ; WRAM
 ld de, $DFFF                   ;  dall’indirizzo $C000 to $DFFF
 call clear_mem_area            ;
 ```  
+---
 
 ## 1.4 Esecuzione del codice
-Adesso che è stato definito lo scheletro di base del nostro codice, possiamo compilarlo e caricare la nostra rom in un emulatore. Al momento non c’è nulla presente sullo schermo, ma questa è la nostra prima rom.
+Ora che abbiamo definito lo scheletro di base del nostro codice, possiamo compilarlo ed eseguire il codice nell'emulatore. Anche se al momento lo schermo è bianco, abbiamo di fatto generato la nostra prima ROM funzionante, pronta per i prossimi sviluppi.
+
 Comandi per compilare il codice:
 
 ```
