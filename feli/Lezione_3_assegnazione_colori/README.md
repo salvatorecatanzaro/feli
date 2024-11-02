@@ -1,9 +1,10 @@
 # Lezione 3 Assegnazione colori
 
 ## Palettes
-Al momento tutte quante le tile hanno come colore assegnato il bianco, è necessario quindi assegnare dei colori alle palette del background per poterle visualizzare correttamente.
+Al momento tutti i tile hanno come colore assegnato il bianco, è necessario quindi assegnare dei colori alle palette del background per poterle visualizzare correttamente.
 Inseriamo il codice che segue prima dell'operazione di accensione dello schermo
 
+---
 *file: main.asm*
 ```
 ld a, %10000000                              ;
@@ -11,12 +12,13 @@ ld hl, palettes                              ; Assegnazione palette di colori
 ld bc, __palettes - palettes                 ;
 call set_palettes_bg                         ;
 ```
+---
 
-La subroutine set_palettes_bg la definiamo in un nuovo file che chiameremo palettes.asm
+La subroutine *set_palettes_bg* la definiamo in un nuovo file che chiameremo palettes
 
 *file: utils/palettes.asm*
 ```
-SECTION "Palettes code", ROM0[$00b9]
+SECTION "Palettes code", ROM0
 
 set_palettes_bg:
 ld [$ff68], a                       ; inseriamo %10000000 in $ff68, questo 
@@ -37,8 +39,10 @@ ret
 
 ```
 
-Andiamo a definire ora nella rom i valori delle palettes. ogni due byte definiscono uno dei quattro colori della palette
+Andiamo a definire ora nella ROM i valori delle palette. 
+Nel codice che segue ogni due byte definiscono uno dei quattro colori che è possibile inserire in una palette
 
+---
 *file: utils/rom.asm*
 ```
 palettes:
@@ -52,15 +56,18 @@ palettes:
   db $ae, $6e, $ae, $6e, $00, $00, $00, $00   ; 
 __palettes:
 ```
+---
 
-e includiamo nel file main il file delle palette
+Per poter utilizzare il codice inserito nel file palettes dobbiamo includerlo nel file main.
 
+---
 *file main.asm*
 ```
 INCLUDE "utils/palettes.asm"
 ```
+---
 
-Arrivati a questo punto compilando la rom possiamo vedere che i colori son presenti, ma assegnati in maniera errata
+Arrivati a questo punto compilando la rom possiamo vedere che i colori son presenti, ma assegnati in maniera errata:
 
 ```
 # cd /<directory_del_progetto/feli/
@@ -73,22 +80,22 @@ Arrivati a questo punto compilando la rom possiamo vedere che i colori son prese
 </div>
 
 
-Il Game Boy Color ha due aree di memoria per gestire le informazioni sullo schermo (Bank 1, Bank 2), una utilizzata per salvare l'id del tile e l'altra per assegnarvi gli attributi.
-Per assegnare i colori corretti ad ognuna delle tile presenti sullo schermo bisogna inserire nella bank uno dell'indirizzo desiderato un byte contenente gli attributi.
+Per assegnare ai tile la palette di colori desiderata è necessaria una breve descrizione di questa funzionalità.
+Il Game Boy Color ha due aree di memoria per gestire le informazioni sullo schermo (Bank 1 e Bank 2), una utilizzata per salvare l'id del tile e l'altra per assegnarvi gli attributi.
+Per assegnare i colori corretti ad ognuna delle tile presenti sullo schermo bisogna inserire nella bank uno dell'indirizzo desiderato e nella bank 2 un byte contenente gli attributi.
 Se per esempio volessimo assegnare al tile in alto a sinistra (Indirizzo $9800) la palette di colori numero uno, dovremmo inserire nella parte bassa del byte degli attributi il valore uno.
 Le operazioni eseguite sarebbero quindi le seguenti
-* inseriamo il valore uno nel registro rVBK per selezionare la bank 1.
+* inseriamo il valore uno nel registro *rVBK* per selezionare la bank 1.
 * Inseriamo nell'indirizzo $9800 il seguente byte %00000001 (Gli ultimi tre bit ci permettono di selezionare una delle BG Palette da 0 a 7).
 
-Per assegnare a tutti i tile del nostro schermo gli attributi è stata definita la subroutine background_assign_attributes, che invochiamo nel file main subito dopo aver inserito i colori delle palette.
+Per assegnare a tutti i tile del nostro schermo gli attributi è stata definita la subroutine background_assign_attributes, che invochiamo nel file main subito dopo aver inserito i colori delle palette e implementiamo nel file graphics.
 
+---
 *file: main.asm*
 ```
 call background_assign_attributes                                 
 ```
-
-e definiamo all’interno del file graphics
-
+---
 
 *file: utils/graphics.asm*
 ```
@@ -185,8 +192,9 @@ background_assign_attributes:
     ld [rVBK], a         ;
     ret
 ```
+---
 
-Infine, compiliamo il codice e carichiamo la rom
+Infine, compiliamo il codice ed eseguiamo l'emulatore dando come input la nostra rom.
 
 ```
 # cd /<directory_del_progetto/feli/
@@ -197,4 +205,3 @@ Infine, compiliamo il codice e carichiamo la rom
 <div align="center">
   <img src="img/output_lezione_3.png" title="Output lezione 3" width="300" height="300">
 </div>
-

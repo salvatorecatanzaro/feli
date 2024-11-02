@@ -1,7 +1,7 @@
 # Lezione 5 - Animazione Background
 
 ## Animazione acqua
-Le operazioni effettuate finora riguardano la parte di background statica, ovvero quella che non è animata. Le operazioni di aggiornamento sullo schermo sono conseguenza di ciò che avviene nel main loop che è quella porzione di codice che si ripete di continuo durante l’esecuzione del gioco.
+Le operazioni effettuate finora riguardano la parte di background che non è animata. Gli aggiornamenti sullo schermo sono conseguenza di ciò che avviene nel main loop che è quella porzione di codice che si ripete per tutta la durata dell’esecuzione del gioco.
 La struttura che seguiremo è la seguente:
 
 ```
@@ -18,11 +18,12 @@ La struttura che seguiremo è la seguente:
 ```
 
 In questo modo riusciremo a dividere il codice in diverse porzioni leggibili e soprattutto più semplici da manutenere.
-L’istruzione halt mette la CPU in uno stato di sospensione fino a quando non si verifica una qualsiasi interrupt, ma è possibile fare in modo che questo comando ne aspetti soltanto alcune o come nel nostro caso, soltanto quella del VBlank.
-Inseriamo quindi nel file main, subito dopo la label Start il seguente codice per poi inserire nel main loop la nostra prima subroutine e includiamo il file interrupt dove definiremo tutte le possibili interruzioni
+L’istruzione halt mette la CPU in uno stato di sospensione fino a quando non si verifica una qualsiasi interruzione. 
+Modificando il valore del registro rIE è possibile modificare questo comportamento e visto che l'unica interruzione di cui necessita questo gioco è quella relativa al VBlank, inseriamo in rIE il valore IEF_VBLANK.
+Aggiungiamo quindi nel file main, subito dopo la label Start il seguente codice per poi inserire nel main loop la nostra prima subroutine e includiamo il file interrupt dove definiremo tutte le possibili interruzioni
 
+---
 *file: main.asm*
-
 ```
 INCLUDE "utils/vram.asm"
 INCLUDE "hardware.inc"
@@ -43,6 +44,7 @@ ei                    ;  riabilito le interrupt
 call wait_vblank
 
 ```
+---
 *file: utils/interrupts.asm*
 ```
 ; Interrupt handlers
@@ -72,16 +74,22 @@ SECTION "P10-P13 signal low edge interrupt", ROM0[$0060]
     ; Fires when a button is released?
     reti
 ```
+---
+Definire le interruzioni è fondamentale in quanto l'assembler potrebbe sovrascrivere queste aree di memoria con il codice da noi definito, creando problemi durante l'esecuzione del gioco.
 
-Definiamo la variabile vblank_flag nella WRAM
+Definiamo la variabile *vblank_flag* nella WRAM
+---
 *file: utils/wram.asm*
 ```
 SECTION "Important twiddles", WRAM0[$C000]
 ; Reserve a byte in working RAM to use as the vblank flag
 vblank_flag: ds 1
 ```
+---
 
+Invochiamo la subroutine *water_animation* nel main loop e definiamola nel file graphics
 
+---
 *file: main.asm*
 ```
 .main_loop:
@@ -90,9 +98,7 @@ vblank_flag: ds 1
     call water_animation
     jp .main_loop
 ```
-
-La subroutine water_animation la definiamo nel file graphics
-
+---
 *file: utils/graphics.asm*
 ```
 water_animation:
@@ -168,32 +174,38 @@ water_animation:
     
     ret
 ```
+---
 
-Ci sono due variabili che necessitano di un approfondimento:
-*	water_animation_counter questo contatore ci aiuterà a capire di volta in volta quale dei due disegni dell’acqua andremo a rappresentare, creando di fatto il movimento delle onde
-*	water_animation_frame_counter tiene il conto dei frame e ci permette di regolare la velocità con cui avviene il cambio del disegno in memoria
+Due delel variabili prima utilizzate necessitano un approfondimento:
+*	*water_animation_counter* questo contatore ci aiuterà a capire di volta in volta quale dei due disegni dell’acqua andremo a rappresentare, creando di fatto il movimento delle onde
+*	*water_animation_frame_counter* tiene il conto dei frame e ci permette di regolare la velocità con cui avviene il cambio del disegno in memoria
 
 A differenza di tutti gli altri valori definiti finora nella ROM queste due variabili vanno definite nella WRAM poiché il loro stato muta durante l’esecuzione del codice. Andiamo quindi a creare un nuovo file
 
+---
 *file: utils/wram.asm*
 ```
 SECTION "Counter", WRAM0
 water_animation_counter: ds 1         ; Definiamo lo spazio (Define Space) 
 water_animation_frame_counter: ds 1   ; Per 1 Byte
 ```
+---
 
-Prima di eseguire il main loop le inizializziamo e includiamo il file wram
+E prima di eseguire il main loop inizializziamo le variabili sopra definite e includiamo il file wram
 
 *file: main.asm*
 ```
 INCLUDE "utils/wram.asm"  ; questo include va prima dell’include di graphics.asm
+
+...
 
 xor a
 ld [water_animation_frame_counter], a
 ld a, $1
 ld [water_animation_counter], a
 ```
- Compiliamo ed eseguiamo il codice per vedere il risultato
+ 
+Compiliamo ed eseguiamo il codice per vedere il risultato
 
 ```
 # cd /<directory_del_progetto/feli/
@@ -201,4 +213,8 @@ ld [water_animation_counter], a
 # java -jar Emulicius/Emulicius.jar feli.gbc
 ```
 
-In questo momento l'acqua si muove ad una velocità altissima, ma l'inserimento di nuovi comandi nelle lezioni successive renderà questa animazione più lenta e armoniosa.
+Output ROM: feli.gbc
+<div align="center">
+  <img src="img/output_lezione_5_frame_1.png" title="Output lezione 5" width="300" height="300">
+  <img src="img/output_lezione_5_frame_2.png" title="Output lezione 5" width="300" height="300">
+</div>

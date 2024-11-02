@@ -1,7 +1,8 @@
 ## Lezione - 4 Score Labels
 Lo scopo del gioco sarà quello di competere con la CPU per ottenere quanti piu punti possibili. Per tener conto del punteggio di ogni giocatore creeremo delle label apposite. Prima di tutto, per poter scrivere sullo schermo del Game Boy dobbiamo caricare in memoria i caratteri che andremo a disegnare sullo schermo.
-Includiamo nella rom il file binario che li contiene
+Includiamo nella ROM il file binario che li contiene
 
+---
 *file utils/rom.asm*
 ```
 char_bin:
@@ -9,10 +10,11 @@ char_bin:
  	INCBIN "backgrounds/char", 0,1024          ; The tiles that will be loaded into the vram
 __char_bin:
 ```
+---
 
-Copiamo dalla ROM alla VRAM i byte del file di input inserendo questo codice nel file main, prima del main loop, per poi invocare la subroutine create_score_labels che definiremo nel file graphics
+Copiamo dalla ROM alla VRAM i byte del file di input inserendo il codice che segue nel file main, prima del main loop, per poi invocare la subroutine *create_score_labels* che definiremo nel file graphics
 
-
+---
 *file main.asm*
 ```
     ld hl, $9300                                 ;
@@ -21,7 +23,7 @@ Copiamo dalla ROM alla VRAM i byte del file di input inserendo questo codice nel
     call copy_data_to_destination                ;
     call create_score_labels
 ```
-
+---
 *file: utils/graphics.asm*
 ```
 create_score_labels:
@@ -78,9 +80,11 @@ create_score_labels:
     ld [hli], a
     ret
  ```
+---
 
-Nella precedente subroutine, ci sono delle lettere come per esempio S_ che rappresentano l’indice nella VRAM dei vari caratteri appena caricati in memoria, tutte queste costanti le definiamo nella rom
+Nella precedente subroutine ci sono delle lettere come per esempio *S_* che rappresentano l’indice nella VRAM dei vari caratteri appena caricati in memoria, tutte queste costanti le definiamo nella ROM
 
+---
 *file: utils/rom.asm
 ```
 A_: db $51
@@ -118,8 +122,9 @@ _7: db $47
 _8: db $48
 _9: db $49
 ```
+---
 
-Gli indici che salviamo nella rom sono questi perché abbiamo deciso di salvare char nella VRAM a partire dall’indirizzo di memoria $9300. Una modifica alla posizione di copia richiederebbe un cambio di tutti quanti questi indici oppure ci sarebbero inconsistenze o glitch grafici quando si prova a disegnare sullo schermo.
+Gli indici che salviamo nella ROM sono questi perché abbiamo deciso di salvare *char_bin* nella VRAM a partire dall’indirizzo di memoria $9300. Una modifica alla posizione di copia richiederebbe un cambio di tutti quanti questi indici oppure ci sarebbero inconsistenze o glitch grafici quando si prova a disegnare sullo schermo.
 
 Compiliamo ed eseguiamo il codice
 ```
