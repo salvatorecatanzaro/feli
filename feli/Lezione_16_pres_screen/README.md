@@ -2,76 +2,74 @@
 
 Il nostro gioco è ormai completamente giocabile, ma manca una parte fondamentale, la schermata con la presentazione che ci chiede di premere il tasto start per iniziare la pratita
 
-Subito dopo l'operazione di pulizia della memoria inseriamo questo codice, per poi ripulire ancora la memoria prima di cominciare ad importare i nostri asset nella VRAM
+Subito dopo l'operazione di pulizia della memoria inseriamo il seguente codice, per poi ripulire ancora la memoria prima di cominciare ad importare i nostri asset nella VRAM
 *file: main.asm*
 ```
-ld hl, $8000          ;  let's clear the vRAM
-ld de, $9fff          ;  Clear memory area from 0:$8000 to 0:$9fff
+ld hl, $8000          ;  
+ld de, $9fff          ;  
 call clear_mem_area   ;
 
-ld hl, $fe00          ;  let's clear OAM 
-ld de, $fe9f          ;  Clear memory area from 0:$fe00 to 0:$fe9f
+ld hl, $fe00          ;  
+ld de, $fe9f          ;  
 call clear_mem_area   ;
 
-; let's clear vram 1:8800
-ld a, %00000001       ;  Select vRAM bank 1
+ld a, %00000001       ;  
 ld [rVBK], a          ;
-ld hl, $8000          ;  Clear memory area from 1:$8000 1:$9fff 
+ld hl, $8000          ;  
 ld de, $9fff          ;
 call clear_mem_area   ; 
 
-xor a                 ;  Select again vRAM bank 0
+xor a                 ;  
 ld [rVBK], a          ;
 
 ld hl, $C000          ;
-ld de, $DFFF          ;  Clear the ram from $C000 to $DFFF
+ld de, $DFFF          ;  
 call clear_mem_area   ;
 
 ; PRESENTATION SCREEN
-call init_audio
-call background_presentation_screen
+call init_audio                       ; Inizializziamo l'audio
+call background_presentation_screen   ; importiamo i binari per il background
 
 ld hl, $9300                    ;
-ld bc, __char_bin - char_bin    ; Copying characters into vram 
+ld bc, __char_bin - char_bin    ; Copiamo i binari dei caratteri nella VRAM
 ld de, char_bin                 ;
 call copy_data_to_destination   ;
-call presentation_screen        ;
+call presentation_screen        ; Facciamo partire il loop del presentation screen
 ; PRESENTATION SCREEN
 
-ld hl, $8000                    ; let's clear the vRAM 
-ld de, $9fff                    ; Clear memory area from 0:$8000 to 0:$9fff
+ld hl, $8000                    ;  
+ld de, $9fff                    ; 
 call clear_mem_area             ;
 
 ld a, %00000001                 ;
-ld [rVBK], a                    ; Select vRAM bank 1
+ld [rVBK], a                    ; 
 ld hl, $8000                    ;
-ld de, $9fff                    ; Clear memory area from 1:$8000 1:$9fff 
+ld de, $9fff                    ; 
 call clear_mem_area             ;
 
-xor a                           ; Select again vRAM bank 0
+xor a                           ; 
 ld [rVBK], a                    ;
 
-ld hl, $C000                    ; Clear the ram from $C000 to $DFFF
+ld hl, $C000                    ; 
 ld de, $DFFF                    ;
 call clear_mem_area             ;
 
-ld hl, $fe00                    ; let's clear OAM 
-ld de, $fe9f                    ; Clear oam from $fe00 to $fe9f
+ld hl, $fe00                    ; 
+ld de, $fe9f                    ; 
 call clear_mem_area             ;
 
 ```
 
 *file: utils/graphics.asm*
 ```
-; Creates the score labels for the player
-; no input params needed
+
 presentation_screen:
-    xor a                                         ;  Init variable to 0
-    ld [presentation_screen_flicker_counter], a   ;
+    xor a                                         ;  a = 0
+    ld [presentation_screen_flicker_counter], a   ;  presentation_screen_flicker_counter = 0
     ; color writing background
     ld a, %10000000                  ;
-    ld hl, palettes                  ; Load background palettes into memory
-    ld bc, __palettes - palettes     ;
+    ld hl, palettes                  ; 
+    ld bc, __palettes - palettes     ;            Carico le palette per il bg del pres. screen
     call set_palettes_bg             ;
     ld hl, $99c4                     ;
     ld de, P_                        ;
@@ -81,8 +79,8 @@ presentation_screen:
     ld a, [de]                       ;
     ld [hli], a                      ;
     ld de, E_                        ;
-    ld a, [de]                       ;     ADD SCORE LABEL
-    ld [hli], a                      ;     TO THE SCREEN
+    ld a, [de]                       ;     Aggiungiamo PRESS START allo schermo
+    ld [hli], a                      ;     
     ld de, S_                        ;
     ld a, [de]                       ;
     ld [hli], a                      ;
@@ -107,41 +105,38 @@ presentation_screen:
     ld a, [de]                       ;
     ld [hli], a                      ;
     
-    ; Turn on the screen
-    ; bit 4 select from which bank of vram you want to take tiles: 0 8800 based, 1 8000 based
-    ; bit 2 object sprite size 0 = 8x8; 1 = 8x16
-    ; bit 1 sprite enabled
-    ; Turn on LCD
-    ld a, %10000011 ;bg will start from 9800
-    ld [rLCDC], a
 
-    ld a, %00000001          ; set vram bank to 1
-    ld [rVBK], a             ;
+    ld a, %10000011                  ; accendiamo lo schermo
+    ld [rLCDC], a                    ;
+
+    ld a, %00000001                  ; Selezioniamo la VRAM bank 1
+    ld [rVBK], a                     ;
     .start_loop
     halt
     nop
-    ld a, [pres_screen_sound_counter]
-    add a, $1
-    ld [pres_screen_sound_counter], a
-    cp a, $1
-    jr nz, .dont_play_note 
-    call pres_screen_audio
-    xor a
-    ld [pres_screen_sound_counter], a
+    ld a, [pres_screen_sound_counter]         ; carico il contatore del pres. screen in a 
+    add a, $1                                 ; aggiungo 1
+    ld [pres_screen_sound_counter], a         ; aggiorno il contatore
+    cp a, $1                                  ; a - 1 =?
+    jr nz, .dont_play_note                    ; se non vale zero salto a .dont_play_note
+    call pres_screen_audio                    ; altrimenti faccio partire il suono
+    xor a                                     ; carico zero in a
+    ld [pres_screen_sound_counter], a         ; inserisco zero all'indiriz. puntato dal contatore
     .dont_play_note                                 
-    ;Change bg palette every 5 loop                    ;
-    ld a, [presentation_screen_flicker_counter]        ;     Every 20 iterations, change the screen
-    add a, $1                                          ;     label PRESS START with a new color
-    ld [presentation_screen_flicker_counter], a        ;
-    cp a, $20                                          ;
-    jr nc, .black_press_start                          ;
+    
+
+    ld a, [presentation_screen_flicker_counter]        ;     Ogni 20 iterazioni cambiamo le palette
+    add a, $1                                          ;     della label PRESS START
+    ld [presentation_screen_flicker_counter], a        ;     
+    cp a, $20                                          ;     a - 20 = ?
+    jr nc, .black_press_start                          ;     20 <= a -> salta a .black_press_start
     .white_press_start
-    ld hl, $99c4                                       ;
-    ld a, %00000011                                    ;
+    ld hl, $99c4                                       ;     carico in hl $99c4 (Indirizzo di P)
+    ld a, %00000011                                    ;     assegno la palette 2
+    ld [hli], a                                        ;     
     ld [hli], a                                        ;
-    ld [hli], a                                        ;
-    ld [hli], a                                        ;     PRESS START White color
-    ld [hli], a                                        ;
+    ld [hli], a                                        ;     PRESS START per ogni lettera assegno
+    ld [hli], a                                        ;     il colore bianco
     ld [hli], a                                        ;
     inc hl                                             ;
     inc hl                                             ;
@@ -153,10 +148,10 @@ presentation_screen:
     jp .end_presentation_screen_palette_assignation
     .black_press_start
     ld hl, $99c4                                       ;
-    ld a, %00000000                                    ;
+    ld a, %00000000                                    ;      $99c4 indirizzo di P
     ld [hli], a                                        ;
-    ld [hli], a                                        ;      PRESS START Black color
-    ld [hli], a                                        ;
+    ld [hli], a                                        ;      PRESS START per ogni lettera assegno il 
+    ld [hli], a                                        ;      colore nero
     ld [hli], a                                        ;
     ld [hli], a                                        ;
     inc hl                                             ;
@@ -168,17 +163,16 @@ presentation_screen:
     ld [hli], a                                        ;
     .end_presentation_screen_palette_assignation
     ld a, [presentation_screen_flicker_counter]        ;
-    cp a, $30                                          ;   When the presentation_screen_flicker_counter is $30
-    jr nz, .dont_reset_counter                         ;   reset it to 0.
+    cp a, $30                                          ;   Quando pres_screen_flicker_counter è 30, 
+    jr nz, .dont_reset_counter                         ;   resettiamolo a  0.
     xor a                                              ;
     ld [presentation_screen_flicker_counter], a        ;
     .dont_reset_counter
-    ;Change bg palette every 5 loop
 
     call get_buttons_state                             ;
-    ld a, [buttons]                                    ;
-    bit 7, a                                           ;
-    jr nz, .start_loop                                 ;
+    ld a, [buttons]                                    ; 
+    bit 7, a                                           ; il tasto start è stato premuto?
+    jr nz, .start_loop                                 ; no = ripeti il ciclo
     ld a, %00000000          ; set vram bank to 0      ; 
     ld [rVBK], a             ;                         ;
 
@@ -192,13 +186,12 @@ presentation_screen:
 
     ; turn off the screen again and wait some seconds
     xor a
-    ld [rLCDC], a
+    ld [rLCDC], a                                      ; Rispegnamo lo schermo
     ret
 
 
+; Routine implementata per importare i tile del presentation screen
 background_presentation_screen:
-; The last tile ids of feli_pres_screen are in the adventures_pres_screen file to make 
-; the distance between the two sprites smaller
     ld hl, $8800
     ld bc, __adventures_pres_screen - adventures_pres_screen
     ld de, adventures_pres_screen
@@ -222,7 +215,7 @@ background_presentation_screen:
     ret
 ```
 
-nel file sound inseriamo la logica per il presentation screen
+Nel file sound inseriamo la logica per l'audio del presentation screen
 
 *file: utils/sound.asm*
 ```
