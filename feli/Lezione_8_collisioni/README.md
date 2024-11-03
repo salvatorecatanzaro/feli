@@ -2,6 +2,7 @@
 
 Ogni qual volta il nostro personaggio si sposta sullo schermo è necessario controllare se questa operazione è possibile. Il controllo delle collisioni del personaggio con la mappa può essere effettuato in diversi modi, nel caso di questo gioco è stata creata insieme alla mappa dei tile una mappa delle collisioni che definiamo nella ROM
 
+---
 *file: utils/rom.asm*
 ```
 ; All'interno della sezione textures
@@ -27,16 +28,18 @@ collision_map:
 __collision_map:
 
 ```
+---
 
 Descriviamo brevemente la mappa delle collisioni
-•   $00 Il personaggio può passare
-•   $01 Il personaggio non può passare è un muro
-•   $02 Il personaggio può passare ma ci sono condizioni particolari da gestire perché si trova in acqua
+* $00 Il personaggio può passare
+* $01 Il personaggio non può passare (muro)
+* $02 Il personaggio può passare ma ci sono condizioni particolari da gestire perché si trova in acqua
 
-Per ognuno dei movimenti descritti nei capitoli precedenti aggiungeremo della logica, in particolare ci sono due subroutine che controlleranno in quale tile si trova il personaggio dopo aver modificato la propria posizione e se quel tile è attraversabile
+A seconda del tile incontrato dal personaggio spostandosi nel prossimo tile, quindi, avremo un comportamento differente. In particolare ci sono due subroutine che controlleranno in quale tile si trova il personaggio dopo aver modificato la propria posizione e se quel tile è attraversabile
 
-Nel file player modifichiamo le subroutine try_move_left, try_move_right e try_apply_gravity 
+Nel file player modifichiamo le subroutine *try_move_left*, *try_move_right* e *try_apply_gravity* 
 
+---
 *file: utils/player.asm*
 ```
 try_move_left:
@@ -116,9 +119,11 @@ try_apply_gravity:
     ret
 
 ```
+---
 
-Andiamo quindi ad aggiungere le subroutine get_tile_by_pixel e is_wall_tile utilizzate per la gestione delle collisioni.
+Andiamo quindi ad aggiungere le subroutine *get_tile_by_pixel* e *is_wall_tile* utilizzate per la gestione delle collisioni.
 
+---
 *file utils/player.asm*
 ```
 ; Converte le coordinate in pixel in un indirizzo della tilemap
@@ -166,4 +171,19 @@ is_wall_tile:
     or a, $00              ;
     ret
 ```
-Compiliamo il codice e ora il personaggio dovrebbe collidere
+---
+
+Compiliamo il codice ed eseguiamolo: Il personaggio ora dovrebbe interagire con la mappa circostante
+
+```
+# cd /<directory_del_progetto/feli/
+# ./run_program.<estensione>
+# java -jar Emulicius/Emulicius.jar feli.gbc
+```
+
+Output Lezione 8:
+
+<div align="center">
+  <img src="img/output_lezione_8.png" title="Output lezione 8" width="300" height="300">
+</div>
+

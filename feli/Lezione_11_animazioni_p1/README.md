@@ -1,13 +1,12 @@
 # Lezione 11 - Animazioni player 1
 
-In questo capitolo completeremo tutti quanti le animazioni del player 1.
-Al momento quando andiamo verso sinistra, lo sprite continua ad essere rivolto verso destra. Per rivolgere lo sprite a sinistra non è necessario disegnarlo nell'altra posizione, tra i bit dei suoi attributi ne esiste uno che si chiama xflip, che permette di girare il personaggio sull'asse delle x.
+In questo capitolo completeremo tutte quante le animazioni del player uno.
+Al momento quando andiamo verso sinistra, lo sprite continua ad essere rivolto verso destra. Per correggere questo comportamento non è necessario disegnarlo nell'altra posizione poiché tra i bit degli attributi di ogni sprite ne esiste uno che si chiama *xflip* che permette di disegnare a specchio il personaggio sull'asse delle x.
 Inoltre, quando il giocatore si muove, dobbiamo aggiungergli lo stato running in modo da disegnare lo sprite che corre.
 
-Modifichiamo quindi la subroutine try_move_left
+Modifichiamo quindi la subroutine *try_move_left*
 
-
-
+---
 *file: utils/player.asm*
 ```
 try_move_left:
@@ -41,9 +40,17 @@ try_move_left:
     call reset_positions
     ret
 ```
+---
 
-Analogamente in try_move_right resettiamo il bit per xflip quando andiamo a destra e inseriamo anche l'animazione running
+Adesso se premiamo l'input del dpad a sinistra il player uno si rivolgerà nella giusta direzione e inizierà a correre.
 
+<div align="center">
+  <img src="img/lezione_11_xflip_sinistra.png" title="p1 sinistra" width="300" height="300">
+</div>
+
+Analogamente in *try_move_right* resettiamo il bit dell'attributo *xflip* quando andiamo a destra e modificato anche *player_state* in running
+
+---
 *file: utils/player.asm*
 ```
 ; vedi commenti try_move_left
@@ -80,19 +87,21 @@ try_move_right:
     call reset_positions
     ret
 ```
+---
 
-Compiliamo ed eseguiamo il codice per verificare che i movimenti siano corretti
+Compiliamo ed eseguiamo il codice per verificare che i movimenti siano corretti anche quando corriamo verso destra.
+
 ```
 # cd /<directory_del_progetto/feli/
 # ./run_program.<estensione>
 # java -jar Emulicius/Emulicius.jar feli.gbc
 ```
 
-Gestiamo adesso le animazioni per quando il personaggio entra in contatto con l'acqua.
-Per farlo, setteremo il bit del player_state in underwater quando nel metodo is_wall_tile ci accorgiamo che il valore del tile dove si trova il player è $2. Ricordiamo che nella mappa di collisioni per le tile dell'acqua abbiamo settato il bit a $2.
-Lo stato underwater lo gestiremo in update_player_position
+Gestiamo adesso le animazioni del personaggio in contatto con l'acqua.
+Per farlo, setteremo il bit del *player_state* in underwater quando nel metodo *is_wall_tile* ci accorgiamo che il valore del tile dove si trova il player è $2. Ricordiamo che nella mappa di collisioni per le tile dell'acqua abbiamo impostato il bit a $2.
+Lo stato underwater lo gestiremo in *update_player_position*
 
-
+---
 *file: utils/player.asm*
 ```
 is_wall_tile:
@@ -146,10 +155,17 @@ update_player_position:
     ret
 ```
 
+---
+
 Adesso il nostro giocatore interagisce con l'acqua correttamente
+
 ```
 # cd /<directory_del_progetto/feli/
 # ./run_program.<estensione>
 # java -jar Emulicius/Emulicius.jar feli.gbc
 ```
 
+Output lezione 11:
+<div align="center">
+  <img src="img/output_lezione_11.png" title="Output lezione 11" width="300" height="300">
+</div>

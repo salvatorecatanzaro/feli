@@ -1,7 +1,8 @@
 # Lezione 10 - Salto
 
-La prossima meccanica che andiamo ad implementare è quella del salto e lo facciamo inserendo la direttiva try_jump prima di eseguire try_move_left nel file player
+La prossima meccanica che andiamo ad implementare è quella del salto e lo facciamo inserendo la chiamata alla subroutine *try_jump* prima di eseguire *try_move_left* nel file player
 
+---
 *file: utils/player.asm*
 ```
 update_player_position:
@@ -24,10 +25,7 @@ update_player_position:
     .end_update_player_position         ;
     ret
 
-```
 
-*file: utils/player.asm*
-```
 try_jump:
     ld a, [buttons]              ; Se il tasto A è stato appena premuto 
     bit 4, a                     ; significa che non è in holding
@@ -107,10 +105,26 @@ try_jump:
     ret     
 
 ```
+---
 
-La subroutine precedente permette al player di saltare e, grazie all'utilizzo della variabile player_state inoltre ci consentirà di far saltare il player alla pressione del tasto A.
-Aggiornando la routine try_apply_gravity invece aggiorniamo lo stato del player da falling a idle ogni volta che questo tocca terra e aggiorniamo la velocità con cui il giocatore scende verso il terreno al passare del tempo
+La subroutine appena definita permette al player di saltare alla pressione del tasto A.
+Se provassimo a compilare ed eseguire il codice in questo momento, noteremmo che, dopo aver effettuato un salto, il player resta bloccato nell'animazione *falling*.
 
+```
+# cd /<directory_del_progetto/feli/
+# ./run_program.<estensione>
+# java -jar Emulicius/Emulicius.jar feli.gbc
+```
+
+<div align="center">
+  <img src="img/lezione_10_stato_falling_bloccato.png" title="Stato falling bloccato" width="300" height="300">
+</div>
+
+
+Aggiorniamo quindi la routine *try_apply_gravity* modificando lo stato del player da falling a idle ogni volta che questo tocca terra e aggiorniamo la velocità con cui il giocatore scende verso il terreno al passare dei frame.
+
+---
+*file: utils/player.asm*
 ```
 try_apply_gravity:
     ld a, [falling_speed]               ; Carico falling_speed in a
@@ -169,8 +183,9 @@ try_apply_gravity:
     ld [player_state], a                  ; e lo ricarico in player state mascherando il bit falling
     ret
 ```
+---
 
-Andiamo a compilare ed eseguire il nostro codice per poter testare il salto del personaggio e le sue nuove animaizoni
+Andiamo a compilare ed eseguire il nostro codice per poter testare il salto del personaggio e le sue nuove animaizoni. é possibile notare che dopo aver effettuato un salto adesso il giocatore resetta correttamente l'animazione sy idle.
 
 ```
 # cd /<directory_del_progetto/feli/
@@ -178,4 +193,7 @@ Andiamo a compilare ed eseguire il nostro codice per poter testare il salto del 
 # java -jar Emulicius/Emulicius.jar feli.gbc
 ```
 
-Nel prossimo capitolo completeremo le animazioni del player uno.
+Output lezione 10:
+<div align="center">
+  <img src="img/output_lezione_10.png" title="Output lezione 10" width="300" height="300">
+</div>

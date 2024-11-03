@@ -1,21 +1,24 @@
 # Lezione 7 - movimento sprites
 
 In questo capitolo cattureremo gli input che il giocatore da al Game Boy tramite la pressione dei tasti. In particolare abiliteremo i movimenti a destra e a sinistra del personaggio principale.  
-Per farlo ci spostiamo nel main loop e in ogni ciclo, prima di eseguire le operazioni di halt e nop, andremo a leggere gli input dell’utente.
+Per farlo ci spostiamo nel main loop e per ogni ciclo, prima di eseguire le operazioni di halt e nop, andremo a leggere gli input dell’utente.
 
+---
 *file: main.asm*
 ```
 .main_loop:
-    call get_buttons_state
+    call get_buttons_state  ; otteniamo lo stato dei tasti
     halt
     nop
     call water_animation
     call $ff80
     jp .main_loop
 ```
+---
 
-Definiamo la subroutine get_buttons_state nel file controls
+Definiamo la subroutine *get_buttons_state* nel file controls
 
+---
 *file: utils/controls.asm*
 ```
 SECTION "CONTROLS", ROM0
@@ -54,24 +57,28 @@ get_buttons_state:
                      ; variabile buttons
     ret
 ```
+---
 
-La routine precedente inserisce nella variabile buttons lo stato dei tasti che quindi sarà disponibile ad ogni iterazione.
+La subroutine precedente inserisce nella variabile *buttons* lo stato dei tasti rendendolo   disponibile ad ogni iterazione.
 Una volta ottenuto lo stato dei pulsanti, andiamo ad aggiornare la posizione del giocatore 
 
+---
+*file: main.asm*
 ```
 .main_loop:
     call get_buttons_state
     halt
     nop
     call water_animation
-    call update_player_position
+    call update_player_position ; aggiorniamo la posizione del giocatore
     call $ff80
     jp .main_loop
 ```
+---
 
-La subroutine update_player_position la implementiamo nel file denominato player
+La subroutine *update_player_position* la implementiamo nel file denominato player
 
-
+---
 *file: utils/player.asm*
 ```
 SECTION "Player", ROM0
@@ -120,8 +127,11 @@ reset_positions:
     ret
 
 ```
+---
 
 Definiamo tutte le variabili utilizzate nei file controls e player
+
+---
 *file: utils/wram.asm*
 ```
 SECTION "Important twiddles", WRAM0[$C000]
@@ -135,7 +145,7 @@ main_player_x: ds 1
 player_2_y: ds 1
 player_2_x: ds 1
 ```
-
+---
 
 Includiamo infine i file appena creati
 
@@ -163,8 +173,11 @@ Andiamo a compilare ed eseguire il nostro codice per poter testare le nuove funz
 # java -jar Emulicius/Emulicius.jar feli.gbc
 ```
 
+
+
 Applichiamo ora la forza di gravità sul personaggio principale aggiungendo nel nella subroutine update_player_position
 
+---
 *file: utils/player.asm*
 ```
 try_apply_gravity:
@@ -182,5 +195,13 @@ update_player_position:
     .end_update_player_position
     ret    
 ```
+---
+
+Output Lezione 7:
+
+<div align="center">
+  <img src="img/output_lezione_7.png" title="Output lezione 7" width="300" height="300">
+</div>
+
 
 Da notare che se il personaggio attraversa l'acqua lo fa passando da dietro. Questo succede perchè nella lezione dove sono stati assegnati gli attributi ai tile per quello dell'acqua è stata data la priorità uno.

@@ -1,8 +1,9 @@
 # Lezione 9 - Macchina a stati
 
-Per gestire operazioni come quelle del salto o delle animazioni, è necessario sapere in ogni momento il nostro personaggio in che stato si trova, per esempio se sta saltando non potrà eseguire un nuovo salto fino a quando non tocca terra o ancora se si sta muovendo verso sinistra dobbiamo cambiare l’attributo che gira lo sprite verso sinistra. Per gestire tutti gli scenari possibili creiamo una variabile player_state. Introduciamo quindi nella WRAM tutte le variabili che andremo ad utilizzare.
+Per gestire eventi come il salto o le animazioni, è necessario conoscere in ogni istante lo stato del personaggio. Ad esempio, se il personaggio è in aria, non potrà eseguire un nuovo salto fino a quando non tocca terra oppure se sta eseguendo un movimento verso sinistra dobbiamo cambiare l’attributo che gira lo sprite verso sinistra. Per monitorare lo stato corrente del giocatore utilizziamo la variabile *player_state*. Introduciamo quindi nella WRAM tutte le variabili che andremo ad utilizzare.
 
-file: utils/wram.asm
+---
+*file: utils/wram.asm*
 ```
 SECTION "Player_state", WRAM0
 ; Questa sezione viene utilizzata per definire le variabili che riguardano
@@ -11,7 +12,7 @@ SECTION "Player_state", WRAM0
 player_state: ds 1
 player2_state: ds 1
 ; le variabili state_<nome_stato>_count vengono utilizzate per definire quale 
-; frame è necessario utilizzare
+; frame dell'animazione è necessario utilizzare
 ; eg. L’ultimo frame nello stato running era 0, il prossimo frame sarà 1
 state_idle_count: ds 1
 state_running_count: ds 1
@@ -31,9 +32,9 @@ player_animation_frame_counter: ds 1 ; Utilizzato per rallentare l’animazione 
                                      ; velocissima)
 player2_animation_frame_counter: ds 1 
 food_counter: ds 1
-frame_counter: ds 1            ; Contatore dei frame
-time_frame_based: ds 1         ; Ogni N frame_counter questo valore è incrementato  
-                               ; di uno
+frame_counter: ds 1                 ; Contatore dei frame
+time_frame_based: ds 1              ; Ogni N frame_counter questo valore è incrementato  
+                                    ; di uno
 food_xy_position_counter: ds 1      ; Questo valore viene utilizzato per ottenere 
                                     ; ogni volta una nuova posizione sullo schermo 
                                     ; per il cibo
@@ -48,9 +49,12 @@ state_swimming_count_p2: ds 1
 presentation_screen_flicker_counter: ds 1
 sound_length: ds 1
 ```
+---
 
 Le variabili che abbiamo definito devono essere inizializzate, lo facciamo subito prima di eseguire il main loop
 
+---
+*file: main.asm*
 ```
 file: main.asm
 
@@ -87,15 +91,19 @@ file: main.asm
     xor a
     ld [holding_jump], a
 ```
+---
 
-nel main loop, invece, andiamo a richiamare subito dopo update_player_position la routine player_animation che definiamo nel file player.
+All'interno del main loop, invece, andiamo a richiamare subito dopo la *update_player_position* la routine *player_animation* che implementiamo nel file player.
 
+---
 *file: main.asm*
 ```
 call update_player_position
 call player_animation
 ```
+---
 
+---
 *file: utils/player.asm*
 ```
 player_animation:
@@ -235,9 +243,13 @@ player_animation:
     .endstatecheck
     ret
 ```
-Nella subroutine appena creata è possibile vedere come in base allo stato del player sarà disegnata a schermo una animazione diversa.
+---
 
-Includiamo nella ROM tutte le textures delle animazioni che utilizziamo nella subroutine player_state
+Nella subroutine appena definita è possibile vedere come in base allo stato del player sarà disegnata a schermo una animazione diversa.
+
+Includiamo nella ROM tutte le textures delle animazioni che utilizziamo nella subroutine *player_state*
+
+---
 ```
 
 player_state_running_1:
@@ -276,5 +288,6 @@ joy:
   INCBIN "sprites/joy.chr"                                            
 __joy:
 ```
+---
 
-In questo capitolo abbiamo soltanto aggiunto del nuovo codice per predisporci alle prossime implementazioni, compilando non noteremo infatti alcuna differenza rispetto a ciò che è stato fatto in precedenza.
+In questo capitolo abbiamo soltanto aggiunto del nuovo codice per predisporci ai prossimi sviluppi, compilando non noteremo infatti alcuna differenza rispetto a ciò che è stato fatto in precedenza.

@@ -1,8 +1,9 @@
 # Inserimento Sprite
-In questo capitolo descriviamo il processo di visualizzazione degli sprite dei personaggi su schermo. I protagonisti sono due gatti che, durante il gioco, si contendono dei pezzi di cibo. Ogni volta che un gatto raccoglie il cibo, quest’ultimo appare in una nuova posizione e il punteggio aumenta di un punto.
+In questo capitolo descriviamo il processo di visualizzazione degli sprite dei personaggi sullo schermo. I protagonisti sono due gatti che, durante il gioco, si contendono dei pezzi di cibo. Ogni volta che un gatto raccoglie il cibo, quest’ultimo appare in una nuova posizione e il punteggio aumenta di un punto.
 
 Includiamo nella ROM gli sprite che andremo ad utilizzare.
 
+---
 *file: utils/rom.asm*
 ```
 player_1_idle:
@@ -17,9 +18,11 @@ player:
 	INCBIN "sprites/cat.chr"                                             
 __player:
 ```
+---
 
-Copiamo i byte inclusi nella ROM all'interno della VRAM con il codice che segue, il codice va inserito prima di eseguire l’operazione dell’accensione dello schermo
+Copiamo i byte inclusi dalla ROM alla VRAM con il codice che segue. Il codice va inserito prima di eseguire l’operazione dell’accensione dello schermo
 
+---
 *file: main.asm*
 ```
     ld hl, $8800                                 ;
@@ -37,9 +40,10 @@ Copiamo i byte inclusi nella ROM all'interno della VRAM con il codice che segue,
     ld bc, __player - player                     ; Length -> it's a subtraciton
     call copy_data_to_destination                ; Copy the bin data to video ram
 ```
+---
+Ogni volta che vogliamo copiare gli sprites dalla VRAM allo schermo o aggiornarne lo stato, dobbiamo effettuare un’operazione detta direct memory access (DMA). La CPU del Game Boy durante un DMA può accedere solo alla HRAM, un'area di memoria compresa tra $FF80 a $FFFE. Per questo motivo dobbiamo copiare una piccola subroutine nella HRAM ed eseguirla mentre si trova in questa area di memoria. Il trasferimento richiede di 160 cicli macchina, attesa che andremo a implementare nella subroutine dma_copy.
 
-Ogni volta che vogliamo copiare gli sprites dalla VRAM allo schermo o ggiornarne lo stato, dobbiamo effettuare un’operazione detta direct memory access (DMA). La CPU del Game Boy durante un DMA può accedere solo alla HRAM, un'area di memoria compresa tra $FF80 a $FFFE. Per questo motivo dobbiamo copiare una piccola subroutine nella HRAM ed eseguirla mentre si trova in questa area di memoria. Il trasferimento richiede di 160 cicli macchina, attesa che andremo a implementare nella subroutine dma_copy.
-
+---
 *file: utils/oam_dma.asm*
 ```
 SECTION "OAM-DMA code", ROM0[$0061]
@@ -78,9 +82,11 @@ dma_copy:
 dma_copy_end:
     nop
 ```
+---
 
-nel file main, dopo le operazioni di copia degli sprite nella VRAM, andiamo a copiare la routine dma_copy nella HRAM invocando il metodo copy_in_high_ram
+Nel file main, dopo le operazioni di copia degli sprite nella VRAM, andiamo a copiare la routine dma_copy nella HRAM invocando il metodo *copy_in_high_ram*
 
+---
 *file: main.asm*
 ```
     ld bc, dma_copy                        ;
@@ -102,9 +108,11 @@ nel file main, dopo le operazioni di copia degli sprite nella VRAM, andiamo a co
 
     call copy_oam_sprites
 ```
+---
 
-La subroutine copy_oam_sprites, che inseriamo nel file oam_dma, serve ad assegnare gli attributi a tutti gli sprite
+La subroutine *copy_oam_sprites*, che inseriamo nel file *oam_dma*, serve ad assegnare gli attributi a tutti gli sprite
 
+---
 *file: utils/oam_dma.asm*
 ```
 ;sprite_count Il numero di sprites
@@ -199,10 +207,12 @@ def oam_buffer_player2_attrs equ oam_buffer + 11
 sprite_count: ds 1     ; the number of sprites
 sprite_ids: ds 20      ; each byte contains 2 sprite id
 ```
-
+---
 
 Aggiorniamo il main loop con la chiamata alla subroutine all’indirizzo $ff80 che è l’indirizzo di memoria dove abbiamo salvato la routine dma_copy
 
+---
+*file: main.asm*
 ```
 .main_loop:
     halt
@@ -211,9 +221,11 @@ Aggiorniamo il main loop con la chiamata alla subroutine all’indirizzo $ff80 c
     call $ff80
     jp .main_loop
 ```
+---
 
-includiamo nel file main il file oam_dma
+Includiamo nel file main il file *oam_dma*
 
+---
 *file: main.asm*
 ```
 INCLUDE "utils/vram.asm"
@@ -225,6 +237,8 @@ INCLUDE "utils/wram.asm"
 INCLUDE "utils/graphics.asm"
 INCLUDE "utils/oam_dma.asm"
 ```
+---
+
 Ora gli sprite dovrebbero essere visibili sullo schermo! Compiliamo ed eseguiamo il codice per verificarlo
 
 ```
@@ -232,3 +246,6 @@ Ora gli sprite dovrebbero essere visibili sullo schermo! Compiliamo ed eseguiamo
 # ./run_program.<estensione>
 # java -jar Emulicius/Emulicius.jar feli.gbc
 ```
+<div align="center">
+  <img src="img/output_lezione_6.png" title="Output lezione 6" width="300" height="300">
+</div>
