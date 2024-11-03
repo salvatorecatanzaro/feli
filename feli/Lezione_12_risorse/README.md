@@ -1,7 +1,8 @@
 # Lezione 11 - Risorse
 
-In questo gioco l'obiettivo è quello di collezionare risorse. Inseriamo pertanto la possibilità di collezionarle aggiungendo nel main loop le subroutine player_got_food e food_position_handler
+In questo gioco l'obiettivo è quello di collezionare risorse. Inseriamo pertanto la possibilità di collezionarle aggiungendo nel main loop le subroutine *player_got_food* e *food_position_handler*
 
+---
 *file: main.asm*
 ```
 .main_loop:
@@ -19,9 +20,11 @@ In questo gioco l'obiettivo è quello di collezionare risorse. Inseriamo pertant
     call $ff80
     jp .main_loop
 ```
+---
 
-Implementiamo le due subroutine appena invocate
+Implementiamo le due subroutine invocate nel main loop
 
+---
 *file: utils/player.asm*
 ```
 player_got_food:
@@ -120,10 +123,11 @@ joy_animation:
     jr nz, .keep_joying                 ;
     ret
 ```
+---
 
-Implementiamo ora food_position_handler nel file graphics, questa routine sposta il cibo dopo n frame
-se questo non viene collezionato da nessun player.
+Implementiamo ora *food_position_handler* nel file graphics. Questa routine sposta il cibo dopo n frame se questo non viene collezionato da nessun giocatore.
 
+---
 *file: utils/graphics.asm*
 ```
 ; ogni 60 frame incremento time_frame_based di 1
@@ -198,9 +202,11 @@ get_new_xy_coords:
     .__end_new_xy_coords
     ret
 ```
+---
 
-Nelle subroutine precedenti utilizziamo food_x_coords, food_y_cords e food_array_len che inseriamo nella ROM sotto la sezione textures
+Nelle subroutine precedenti utilizziamo *food_x_coords*, *food_y_cords* e *food_array_len* che inseriamo nella ROM sotto la sezione textures
 
+---
 *file: utils/rom.asm*
 ```
 food_x_coords: db $9B, $70, $3D, $97, $5A, $17, $50, $2E   ; array di posizioni x
@@ -208,6 +214,7 @@ food_y_coords: db $73, $8B, $5B, $43, $2B, $43, $5B, $8B   ; array di posizioni 
 food_array_len: db $8                                      ; lunghezza dei due array (DEVONO ESSERE 
                                                            ; UGUALI!!!!)
 ```
+---
 
 Infine, manca la variabile win_points che determina quale è il punteggio che ci consente di vincere la partita. La inseriamo nella sezione Player_state
 
