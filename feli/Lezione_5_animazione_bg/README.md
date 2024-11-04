@@ -78,6 +78,7 @@ SECTION "P10-P13 signal low edge interrupt", ROM0[$0060]
 Definire le interruzioni è fondamentale in quanto l'assembler potrebbe sovrascrivere queste aree di memoria con il codice da noi definito, creando problemi durante l'esecuzione del gioco.
 
 Definiamo la variabile *vblank_flag* nella WRAM
+
 ---
 *file: utils/wram.asm*
 ```
