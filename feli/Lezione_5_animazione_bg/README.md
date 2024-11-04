@@ -1,7 +1,7 @@
 # Lezione 5 - Animazione Background
 
 ## Animazione acqua
-Le operazioni effettuate finora riguardano la parte di background che non è animata. Gli aggiornamenti sullo schermo sono conseguenza di ciò che avviene nel main loop che è quella porzione di codice che si ripete per tutta la durata dell’esecuzione del gioco.
+Le implementazioni fatte finora riguardano la parte di background che non è animata. Gli aggiornamenti sullo schermo sono conseguenza di ciò che avviene nel main loop che è quella porzione di codice che si ripete per tutta la durata dell’esecuzione del gioco.
 La struttura che seguiremo è la seguente:
 
 ```
