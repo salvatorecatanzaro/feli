@@ -325,7 +325,7 @@ Compiliamo ed eseguiamo il codice per poter visualizzare il presentation screen
 ```
 
 <div align="center">
-  <img src="img/otuput_lezione_16.png" title="Output lezione 16" width="300" height="300">
+  <img src="img/output_lezione_16.png" title="Output lezione 16" width="300" height="300">
 </div>
 
 ---
