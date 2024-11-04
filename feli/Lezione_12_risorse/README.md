@@ -216,14 +216,14 @@ food_array_len: db $8                                      ; lunghezza dei due a
 ```
 ---
 
-Infine, manca la variabile win_points che determina quale è il punteggio che ci consente di vincere la partita. La inseriamo nella sezione Player_state
+Infine è necessario dichiarare e inizializzare la variabile *win_points* che determina quale è il punteggio che ci consente di vincere la partita. La inseriamo nella sezione *Player_state*
 
+---
 *file: utils/wram.asm*
 ```
 win_points: ds 1
 ```
-la inizializziamo prima del main loop
-
+---
 *file: main.asm*
 ```
     ld a, $41             ; Il player vince quando ottiene 10 punti, se il valore fosse $42 
@@ -231,8 +231,9 @@ la inizializziamo prima del main loop
     ld [win_points], a    ; 
     xor a                 ;
 ```
+---
 
-Compiliamo ed eseguiamo il codice e proviamo a raccogliere il cibo per vedere se lo score aumenta e se, raggiunta la cifra 10, il gioco si resetta
+Compiliamo ed eseguiamo il codice e proviamo a raccogliere il cibo per vedere se lo score aumenta e se, raggiunti i dieci punti, il gioco si resetta
 
 ```
 # cd /<directory_del_progetto/feli/
