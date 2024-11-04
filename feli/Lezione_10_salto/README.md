@@ -185,7 +185,7 @@ try_apply_gravity:
 ```
 ---
 
-Andiamo a compilare ed eseguire il nostro codice per poter testare il salto del personaggio e le sue nuove animaizoni. é possibile notare che dopo aver effettuato un salto adesso il giocatore resetta correttamente l'animazione sy idle.
+Andiamo a compilare ed eseguire il nostro codice per poter testare il salto del personaggio e le sue nuove animaizoni. é possibile notare che dopo aver effettuato un salto adesso il giocatore resetta correttamente l'animazione su idle.
 
 ```
 # cd /<directory_del_progetto/feli/

@@ -125,7 +125,7 @@ joy_animation:
 ```
 ---
 
-Implementiamo ora *food_position_handler* nel file graphics. Questa routine sposta il cibo dopo n frame se questo non viene collezionato da nessun giocatore.
+Definiamo ora *food_position_handler* nel file graphics. Questa routine sposta il cibo dopo n frame se questo non viene collezionato da nessun giocatore.
 
 ---
 *file: utils/graphics.asm*

@@ -177,7 +177,7 @@ water_animation:
 ```
 ---
 
-Due delel variabili prima utilizzate necessitano un approfondimento:
+Due delle variabili prima utilizzate necessitano un approfondimento:
 *	*water_animation_counter* questo contatore ci aiuterà a capire di volta in volta quale dei due disegni dell’acqua andremo a rappresentare, creando di fatto il movimento delle onde
 *	*water_animation_frame_counter* tiene il conto dei frame e ci permette di regolare la velocità con cui avviene il cambio del disegno in memoria
 

@@ -175,7 +175,7 @@ Andiamo a compilare ed eseguire il nostro codice per poter testare le nuove funz
 
 
 
-Applichiamo ora la forza di gravità sul personaggio principale aggiungendo nel nella subroutine update_player_position
+Applichiamo ora la forza di gravità sul personaggio principale aggiungendo nel nella subroutine *update_player_position*
 
 ---
 *file: utils/player.asm*

@@ -250,6 +250,8 @@ Nella subroutine appena definita è possibile vedere come in base allo stato del
 Includiamo nella ROM tutte le textures delle animazioni che utilizziamo nella subroutine *player_state*
 
 ---
+
+*file utils/rom.asm*
 ```
 
 player_state_running_1:
