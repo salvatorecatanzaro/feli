@@ -1,10 +1,11 @@
 # Lezione 11 - AI
 
-Al momento il player 2 è immobile perchè non abbiamo aggiunto alcuna logica per permettergli di muoversi. Il suo obiettivo sarà quello di raccogliere le risorse prima del player 1. Per implementare la sua semplice AI utilizzeremo il file player2.
+Al momento il secondo giocatore è immobile perchè non abbiamo aggiunto alcuna logica per permettergli di muoversi. Il suo obiettivo sarà quello di competere con il giocatore uno nel collezionare le risorse. Per implementare la sua semplice AI utilizzeremo il file player2.
 
 Includiamo nel main il file player2.asm ed effettuiamo le chiamate alle subroutine che lo animeranno.
-Nel codice che segue non saranno commentati i comportamenti che sono analoghi a quelli del player 1.
+Nel codice che segue non sarà commentato il codice che si comporta in maniera analoga a quello presente nel file player.asm.
 
+---
 *file: main.asm*
 ```
 INCLUDE "utils/player2.asm"
@@ -541,6 +542,7 @@ is_wall_tile_player2:
     or a, $00              
     ret
 ```
+---
 
 Includiamo infine nella ROM, sotto la sezione textures, il codice per includere i binari delle animazioni di climbing
 
@@ -557,7 +559,8 @@ __climbing_2:
 ```
 
 
-Compiliamo ed eseguiamo il codice per guardare il player 2 che finalmente compete con noi nella raccolta delle risorse.
+Compiliamo ed eseguiamo il codice per guardare il giocatore due che finalmente compete con noi nella raccolta delle risorse.
+
 ```
 # cd /<directory_del_progetto/feli/
 # ./run_program.<estensione>
