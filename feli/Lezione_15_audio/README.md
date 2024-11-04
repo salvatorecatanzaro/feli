@@ -1,5 +1,5 @@
 # Lezione 15 - Audio
-Il gioco arrivati a questo punto risulta essere abbastanza completo, ma manca una componente fondamentale, ovvero quella dell'audio.
+Il gioco arrivati a questo punto risulta essere quasi completo, ma manca una componente fondamentale, ovvero quella dell'audio.
 Nel Game Boy l'audio è composto dalla seguente architettura 
 
 <immagine architettura presa da pandocs>
@@ -7,18 +7,18 @@ Nel Game Boy l'audio è composto dalla seguente architettura
 Ci sono quattro unità adibite alla generazione del suono, chiamati canale 1, 2, 3 e 4.
 Ogni canale è specializato in una diversa tipologia di segnale elettrico:
 * Canale 1 e 2 Producono un impulso, con quattro lunghezze possibili
-* Canale 3 detto produce onde che possono essere personalizzate dal programmatore
+* Canale 3 produce onde che possono essere personalizzate dal programmatore
 * Canale 4 detto canale del rumore, produce onde pseudo-randomiche
 
 I registri dell'audio seguono la seguente convenzione: NRxy 
 dove la x è il numero del canale e y è l'id del registro all'interno di quel canale.
 
-Per ognuno de quattro canali abbiamo:
-* NRx0 Solitamente una caratteristica specifica del canale
-* NRx1 Controlla la lunghezza del timer
-* NRx2 Controlla il volume
-* NRx3 Controlla il periodo
-* NRx4 è il trigger del canale
+Per ognuno dei quattro canali abbiamo:
+* *NRx0* Solitamente una caratteristica specifica del canale
+* *NRx1* Controlla la lunghezza del timer
+* *NRx2* Controlla il volume
+* *NRx3* Controlla il periodo
+* *NRx4* è il trigger del canale
 
 ## Registri globali
 
@@ -34,6 +34,7 @@ Dei registri globali descriveremo solo quelli utilizzati, non tutto l'hardware a
 
 Partiamo aggiungendo del codice al file main, ovvero l'init dell'audio, e l'update nel main loop. Includiamo inoltre il file sound che conterrà l'implementazione delle routine sopra citate.
 
+---
 *file: main.asm*
 ```
 INCLUDE "utils/sound.asm"
@@ -204,8 +205,11 @@ eat_food_sound:
     ret
 
 ```
+---
 
-ora inseriamo le varibili utilizzate nella WRAM all'interno della sezione Player_state
+Inseriamo le varibili utilizzate nel codice precedente nella WRAM all'interno della sezione *Player_state*
+
+---
 *file: utils/wram.asm*
 ```
 note_tick: ds 1
@@ -289,8 +293,10 @@ def FREQ4 EQU 1627
 def FREQ5 EQU 1627
 def NO_SOUND EQU $0fff
 ```
+---
+Inseriamo nella ROM le costanti
 
-e inseriamo nella ROM le costanti
+---
 *file: utils/rom.asm*
 ```
 sound_melody_n_of_notes: db 51 * 4    ; il n delle note x 4. Ogni campo contiene 4 byte (2 word)
@@ -370,8 +376,10 @@ dw F2, $10
 dw NO_SOUND,$20 
 
 ```
+---
 
-Compiliamo ed eseguiamo il codice.
+Se tutti i passaggi sono stati riportati correttamente dovremmo poter ascoltare l'audio prodotto dal codice di questo capitolo
+
 ```
 # cd /<directory_del_progetto/feli/
 # ./run_program.<estensione>
