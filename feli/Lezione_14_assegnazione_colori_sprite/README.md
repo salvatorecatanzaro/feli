@@ -1,8 +1,10 @@
 # Lezione 11 - Assegnazione colori sprite
 
-Fino ad ora, abbiamo assegnato tutti quanti gli attributi agli sprite, ma non abbiamo ancora generato la nostra selezione di palette dedicata ad essi.
+Finora abbiamo assegnato gli attributi agli sprite, ma non abbiamo ancora generato la nostra selezione di palette dedicata ad essi.
 
-Per farlo, nel file main, aggiungiamo subito dopo la chiamata alla subroutine il codice set_palettes_obj, che definiamo poi nel file palettes
+Per farlo, nel file main, aggiungiamo subito dopo la chiamata alla subroutine il codice *set_palettes_obj*, che definiamo poi nel file palettes
+
+---
 *file: main.asm*
 ```
     ld a, %10000000                              ;
@@ -10,7 +12,6 @@ Per farlo, nel file main, aggiungiamo subito dopo la chiamata alla subroutine il
     ld bc, __obj_palettes - obj_palettes         ;
     call set_palettes_obj                        ;
 ```
-
 *file: utils/palettes.asm*
 ```
 ; -- Questa subroutine stabilisce le palettes per OBJ
@@ -29,9 +30,11 @@ set_palettes_obj:
         jr nz, .palette_loop_o ; se non da zero, non ho finito
     ret
 ```
+---
 
-L'ultimo pezzo che ci manca per l'assegnazione dei colori è l'aggiunta nella ROM di obj_palettes, che inseriremo subito dopo la definizione delle palette per il background.
+Il pezzo mancante per l'assegnazione dei colori è l'aggiunta nella ROM di *obj_palettes*, che inseriremo subito dopo la definizione delle palette per il background.
 
+---
 *file: utils/rom.asm*
 ```
 obj_palettes:
@@ -40,7 +43,7 @@ obj_palettes:
     db $8f, $89, $00, $00, $19, $80, $8f, $89        ;
 __obj_palettes:
 ```
-
+---
 
 Compiliamo ed eseguiamo il codice.
 ```
@@ -49,5 +52,4 @@ Compiliamo ed eseguiamo il codice.
 # java -jar Emulicius/Emulicius.jar feli.gbc
 ```
 
-Noteremo che ad ogni partita, il player 2 cambia colore. Questo succede perche mentre per palettes background abbiamo definito tutte le palettes, per gli oggetti ne abbiamo definite soltanto due
-e nella subroutine copy_oam_sprites assegnamo la palette 0 al player 1 e la palette 1 al cibo, mentre per il player 2 riserviamo la palette 7 che non essendo assegnata cambia ad ogni partita. Un possibile esperimento che potrebbe fare il lettore potrebbe essere quello di provare ad aggiungere le palette per il player 2.
+Noteremo che ad ogni partita il giocatore due cambia colore. Questo succede perche mentre per il background abbiamo definito tutte le palette, per gli oggetti ne abbiamo definite soltanto due e nella subroutine *copy_oam_sprites* assegnamo la palette 0 al giocatore uno e la palette 1 al cibo, mentre per il giocatore due riserviamo la palette 7 che non essendo assegnata cambia ad ogni partita. Un possibile esercizio per il lettore potrebbe essere quello di provare ad aggiungere una palette fissa per il giocatore due.
