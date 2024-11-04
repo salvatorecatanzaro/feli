@@ -52,4 +52,4 @@ Compiliamo ed eseguiamo il codice.
 # java -jar Emulicius/Emulicius.jar feli.gbc
 ```
 
-Noteremo che ad ogni partita il giocatore due cambia colore. Questo succede perche mentre per il background abbiamo definito tutte le palette, per gli oggetti ne abbiamo definite soltanto due e nella subroutine *copy_oam_sprites* assegnamo la palette 0 al giocatore uno e la palette 1 al cibo, mentre per il giocatore due riserviamo la palette 7 che non essendo assegnata cambia ad ogni partita. Un possibile esercizio per il lettore potrebbe essere quello di provare ad aggiungere una palette fissa per il giocatore due.
+Noteremo che ad ogni partita il giocatore due cambia colore. Questo succede perche mentre per il background abbiamo definito tutte le palette, per gli oggetti ne abbiamo definite soltanto tre e nella subroutine *copy_oam_sprites* assegnamo la palette 0 al giocatore uno e la palette 1 al cibo, mentre per il giocatore due riserviamo la palette 7 che non essendo stata definita cambia ad ogni partita. Un possibile esercizio per il lettore potrebbe essere quello di provare ad aggiungere una palette fissa per il giocatore due.
