@@ -546,6 +546,7 @@ is_wall_tile_player2:
 
 Includiamo infine nella ROM, sotto la sezione textures, il codice per includere i binari delle animazioni di climbing
 
+---
 *file: utils/rom.asm*
 ```
 climbing_1:
@@ -557,7 +558,7 @@ climbing_2:
 __climbing_2:
 
 ```
-
+---
 
 Compiliamo ed eseguiamo il codice per guardare il giocatore due che finalmente compete con noi nella raccolta delle risorse.
 
