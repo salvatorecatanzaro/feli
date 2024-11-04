@@ -330,7 +330,7 @@ Compiliamo ed eseguiamo il codice per poter visualizzare il presentation screen
 
 ---
 
-Aggiungiamo il suono quando il giocatore uno o il giocatore due ottengono la risorsa
+Aggiungiamo il suono per ogni volta in cui il giocatore uno o il giocatore due ottengono la risorsa
 
 ---
 *file: utils/player.asm*
@@ -341,11 +341,7 @@ call eat_food_sound
 ...subito dopo jumping...
 call jump_sound
 ```
----
 
-analogamente per il giocatore due
-
----
 *file: utils/player2.asm*
 ```
 ...subito dopo call call spawn_food...
