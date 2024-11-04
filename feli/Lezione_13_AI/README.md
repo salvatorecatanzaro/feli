@@ -31,10 +31,11 @@ INCLUDE "utils/player2.asm"
     call $ff80
     jp .main_loop
 ```
+---
 
 Ed ora implementiamo tutte quante le routine aggiunte nel file player2
 
-
+---
 *file: utils/player2.asm*
 ```
 ; vedi player1_got_food
