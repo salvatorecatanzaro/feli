@@ -1,4 +1,4 @@
-# Lezione 11 - Risorse
+# Lezione 12 - Risorse
 
 In questo gioco l'obiettivo è quello di collezionare risorse. Inseriamo pertanto la possibilità di collezionarle aggiungendo nel main loop le subroutine *player_got_food* e *food_position_handler*
 
@@ -233,10 +233,20 @@ win_points: ds 1
 ```
 ---
 
-Compiliamo ed eseguiamo il codice e proviamo a raccogliere il cibo per vedere se lo score aumenta e se, raggiunti i dieci punti, il gioco si resetta
+Compiliamo ed eseguiamo il codice e testiamo i seguenti scenari:
+
+* Aspettiamo molti secondi e il cibo si sposterà da solo in una nuova zona
+* Raccogliendo il cibo aumenta lo score di uno
+* Raggiunti i dieci punti, il gioco si resetta
 
 ```
 # cd /<directory_del_progetto/feli/
 # ./run_program.<estensione>
 # java -jar Emulicius/Emulicius.jar feli.gbc
 ```
+
+Output Lezione 12:
+
+<div align="center">
+  <img src="img/output_lezione_12.png" title="Output lezione 12" width="300" height="300">
+</div>

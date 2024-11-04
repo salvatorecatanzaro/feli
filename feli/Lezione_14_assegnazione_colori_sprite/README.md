@@ -1,8 +1,8 @@
-# Lezione 11 - Assegnazione colori sprite
+# Lezione 14 - Assegnazione colori sprite
 
 Finora abbiamo assegnato gli attributi agli sprite, ma non abbiamo ancora generato la nostra selezione di palette dedicata ad essi.
 
-Per farlo, nel file main, aggiungiamo subito dopo la chiamata alla subroutine il codice *set_palettes_obj*, che definiamo poi nel file palettes
+Per farlo, nel file main, aggiungiamo subito dopo la chiamata alla subroutine *set_palettes_bg* la chiamata a *set_palettes_obj*, che definiamo poi nel file palettes
 
 ---
 *file: main.asm*
@@ -51,5 +51,14 @@ Compiliamo ed eseguiamo il codice.
 # ./run_program.<estensione>
 # java -jar Emulicius/Emulicius.jar feli.gbc
 ```
+
+Output Lezione 14:
+
+<div align="center">
+  <img src="img/output_lezione_14_1.png" title="Output lezione 14 1" width="300" height="300">
+  <img src="img/output_lezione_14_2.png" title="Output lezione 14 2" width="300" height="300">
+  <img src="img/output_lezione_14_3.png" title="Output lezione 14 3" width="300" height="300">
+</div>
+
 
 Noteremo che ad ogni partita il giocatore due cambia colore. Questo succede perche mentre per il background abbiamo definito tutte le palette, per gli oggetti ne abbiamo definite soltanto tre e nella subroutine *copy_oam_sprites* assegnamo la palette 0 al giocatore uno e la palette 1 al cibo, mentre per il giocatore due riserviamo la palette 7 che non essendo stata definita cambia ad ogni partita. Un possibile esercizio per il lettore potrebbe essere quello di provare ad aggiungere una palette fissa per il giocatore due.

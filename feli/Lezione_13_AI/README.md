@@ -1,4 +1,4 @@
-# Lezione 11 - AI
+# Lezione 13 - AI
 
 Al momento il secondo giocatore è immobile perchè non abbiamo aggiunto alcuna logica per permettergli di muoversi. Il suo obiettivo sarà quello di competere con il giocatore uno nel collezionare le risorse. Per implementare la sua semplice AI utilizzeremo il file player2.
 
@@ -18,15 +18,15 @@ INCLUDE "utils/player2.asm"
     nop
     call water_animation
     call update_player_position
-    call update_player2_position
+    call update_player2_position ; +++
     call player_animation
-    call player_2_animation
+    call player_2_animation      ; +++
     call player_got_food
     cp a, $ff    ; Se viene ritornato $FF il player 1 ha vinto
     jp z, Start  ; Resettiamo il gioco
-    call player2_got_food
-    cp a, $ff    ; Se viene ritornato $FF il player 2 ha vinto
-    jp z, Start  ; Resettiamo il gioco
+    call player2_got_food        ; +++
+    cp a, $ff    ; Se viene ritornato $FF il player 2 ha vinto ; +++
+    jp z, Start  ; Resettiamo il gioco ; +++
     call food_position_handler
     call $ff80
     jp .main_loop
@@ -568,3 +568,9 @@ Compiliamo ed eseguiamo il codice per guardare il giocatore due che finalmente c
 # ./run_program.<estensione>
 # java -jar Emulicius/Emulicius.jar feli.gbc
 ```
+
+Output Lezione 13:
+
+<div align="center">
+  <img src="img/output_lezione_13.png" title="Output lezione 13" width="300" height="300">
+</div>

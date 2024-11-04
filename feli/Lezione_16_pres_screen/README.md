@@ -1,8 +1,10 @@
 # Lezione 16 - Pres screen
 
-Il nostro gioco è ormai completamente giocabile, ma manca una parte fondamentale, la schermata con la presentazione che ci chiede di premere il tasto start per iniziare la pratita
+Il nostro gioco è ormai completamente giocabile, ma manca una componente fondamentale, la schermata con la presentazione che ci chiede di premere il tasto start per iniziare la pratita.
 
 Subito dopo l'operazione di pulizia della memoria inseriamo il seguente codice, per poi ripulire ancora la memoria prima di cominciare ad importare i nostri asset nella VRAM
+
+---
 *file: main.asm*
 ```
 ld hl, $8000          ;  
@@ -214,9 +216,11 @@ background_presentation_screen:
 
     ret
 ```
+---
 
 Nel file sound inseriamo la logica per l'audio del presentation screen
 
+---
 *file: utils/sound.asm*
 ```
 ; This method will add to the base address of sound_melody_pres_screen the current value
@@ -279,9 +283,11 @@ get_current_note_pres_screen:
     .end_update_audiops
     ret
 ```
+---
 
 Aggiungiamo nella ROM le costanti e i binari necessari
 
+---
 *file: utils/rom.asm*
 ```
 SECTION "textures_2", ROMX[$4000]
@@ -298,25 +304,35 @@ feli_pres_screen_tile_map:
     INCBIN "backgrounds/feli_pres_screen_tilemap"
 __feli_pres_screen_tile_map:
 ```
-
+---
 
 Aggiungiamo nella WRAM le variabili utilizzate nel codice precedente
 
+---
 *file: utils/wram.asm*
 ```
 pres_screen_sound_counter: ds 1
 ```
+---
 
-Compiliamo ed eseguiamo il codice per ammirare il nostro nuovo presentation screen
+Compiliamo ed eseguiamo il codice per poter visualizzare il presentation screen
+
+---
 ```
 # cd /<directory_del_progetto/feli/
 # ./run_program.<estensione>
 # java -jar Emulicius/Emulicius.jar feli.gbc
 ```
 
+<div align="center">
+  <img src="img/otuput_lezione_16.png" title="Output lezione 16" width="300" height="300">
+</div>
 
-Aggiungiamo il suono quando il player1 o player2 ottengono la risorsa
+---
 
+Aggiungiamo il suono quando il giocatore uno o il giocatore due ottengono la risorsa
+
+---
 *file: utils/player.asm*
 ```
 ...subito dopo call joy_animation...
@@ -325,9 +341,11 @@ call eat_food_sound
 ...subito dopo jumping...
 call jump_sound
 ```
+---
 
-analogamente per il player2
+analogamente per il giocatore due
 
+---
 *file: utils/player2.asm*
 ```
 ...subito dopo call call spawn_food...
@@ -336,6 +354,3 @@ call eat_food_sound
 ...subito dopo .jump...
 call jump_sound
 ```
-
-Se non si trovano i punti corretti dove inserire il codice fare riferimento ai file in questa lezione.
-Adesso il nostro gioco è completo ed è totalmente giocabile!

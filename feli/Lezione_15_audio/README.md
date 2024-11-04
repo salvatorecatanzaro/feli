@@ -2,7 +2,11 @@
 Il gioco arrivati a questo punto risulta essere quasi completo, ma manca una componente fondamentale, ovvero quella dell'audio.
 Nel Game Boy l'audio è composto dalla seguente architettura 
 
-<immagine architettura presa da pandocs>
+Output Lezione 14:
+
+<div align="center">
+  <img src="img/lezione_15_audio.png" title="Audio schema" width="300" height="300">
+</div>
 
 Ci sono quattro unità adibite alla generazione del suono, chiamati canale 1, 2, 3 e 4.
 Ogni canale è specializato in una diversa tipologia di segnale elettrico:
@@ -26,10 +30,12 @@ Dei registri globali descriveremo solo quelli utilizzati, non tutto l'hardware a
 
 ## NR52 - Registro Audio master
 
-<immagine presa da pandocs per NR52>
+<div align="center">
+  <img src="img/lezione_15_nr52.png" title="Audio schema" width="300" height="300">
+</div>
 
-* bit 7 Audio on/off Permette di tenere attivo o meno l'audio
-* Bit 0, 1, 2, 3 Permettono di attivare i canali 1, 2, 3 e 4
+* *Bit 7* Audio on/off Permette di tenere attivo o meno l'audio
+* *Bit 0, 1, 2, 3* Permettono di attivare i canali 1, 2, 3 e 4
 
 
 Partiamo aggiungendo del codice al file main, ovvero l'init dell'audio, e l'update nel main loop. Includiamo inoltre il file sound che conterrà l'implementazione delle routine sopra citate.
