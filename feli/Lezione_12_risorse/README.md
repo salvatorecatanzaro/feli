@@ -223,7 +223,7 @@ Infine è necessario dichiarare e inizializzare la variabile *win_points* che de
 ```
 win_points: ds 1
 ```
----
+
 *file: main.asm*
 ```
     ld a, $41             ; Il player vince quando ottiene 10 punti, se il valore fosse $42 
