@@ -350,3 +350,5 @@ call eat_food_sound
 ...subito dopo .jump...
 call jump_sound
 ```
+
+Con questo ultima parte di codice implementata abbiamo completato l'implementazione del gioco.

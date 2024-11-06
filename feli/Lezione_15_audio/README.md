@@ -2,14 +2,12 @@
 Il gioco arrivati a questo punto risulta essere quasi completo, ma manca una componente fondamentale, ovvero quella dell'audio.
 Nel Game Boy l'audio è composto dalla seguente architettura 
 
-Output Lezione 14:
-
 <div align="center">
   <img src="img/lezione_15_audio.png" title="Audio schema" width="300" height="300">
 </div>
 
 Ci sono quattro unità adibite alla generazione del suono, chiamati canale 1, 2, 3 e 4.
-Ogni canale è specializato in una diversa tipologia di segnale elettrico:
+Ogni canale è specializzato in una diversa tipologia di segnale elettrico:
 * Canale 1 e 2 Producono un impulso, con quattro lunghezze possibili
 * Canale 3 produce onde che possono essere personalizzate dal programmatore
 * Canale 4 detto canale del rumore, produce onde pseudo-randomiche
@@ -38,7 +36,7 @@ Dei registri globali descriveremo solo quelli utilizzati, non tutto l'hardware a
 * *Bit 0, 1, 2, 3* Permettono di attivare i canali 1, 2, 3 e 4
 
 
-Partiamo aggiungendo del codice al file main, ovvero l'init dell'audio, e l'update nel main loop. Includiamo inoltre il file sound che conterrà l'implementazione delle routine sopra citate.
+Partiamo aggiungendo nel main  l'inizializzazione dell'audio e l’aggiornamento delle note nel main loop. Includiamo inoltre il file sound che conterrà l'implementazione delle routine sopra citate.
 
 ---
 *file: main.asm*
