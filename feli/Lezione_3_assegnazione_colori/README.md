@@ -80,9 +80,21 @@ Arrivati a questo punto compilando la rom possiamo vedere che i colori son prese
 </div>
 
 
-Per assegnare ai tile la palette di colori desiderata è necessaria una breve descrizione di questa funzionalità.
-Il Game Boy Color ha due aree di memoria per gestire le informazioni sullo schermo (Bank 1 e Bank 2), una utilizzata per salvare l'id del tile e l'altra per assegnarvi gli attributi.
-Per assegnare i colori corretti ad ognuna delle tile presenti sullo schermo bisogna inserire nella bank uno dell'indirizzo desiderato e nella bank 2 un byte contenente gli attributi.
+Per assegnare ai tile la palette di colori desiderata è necessario un breve approfondimento sulla memoria VRAM a disposizione.
+
+<div align="center">
+  <img src="img/figura_15_vram_memoria.png" title="Memoria VRAM" width="300" height="300">
+</div>
+
+La VRAM viene interpretata dalla PPU (Picture processing Unit), responsabile per ciò che si vede a schermo. La bank 1 mostrata nell' immagine esiste soltanto per il Game Boy Color ed è possibile passare da bank 0 a bank 1 usando il registro VBK. Ogni bank contiene 384 tile, ognuno di 16 byte. 
+L'ID di ogni tile può essere ottenuto con la seguente equazione:
+
+```
+*ID = Address / 16 mod 256*
+```
+
+Oltre allo spazio di memoria dedicato ai tile, la VRAM contiene due mappe da 32x32 byte. Le due bank sono differenti in questo caso: bank 0 contiene la tile map, bank 1 contiene la corrispondente attribute map.
+
 Se per esempio volessimo assegnare al tile in alto a sinistra (Indirizzo $9800) la palette di colori numero uno, dovremmo inserire nella parte bassa del byte degli attributi il valore uno.
 Le operazioni eseguite sarebbero quindi le seguenti
 * inseriamo il valore uno nel registro *rVBK* per selezionare la bank 1.
