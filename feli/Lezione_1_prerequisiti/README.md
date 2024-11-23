@@ -107,7 +107,7 @@ Ogni volta che avviamo la console, le aree di memoria potrebbero contenere valor
 ---
 *file: utils/vram.asm*
 ```
-SECTION "vRAM code", ROM0[$0029]
+SECTION "vRAM code", ROM0
 ; -- Prima di richiamare questo metodo disabilita lo schermo
 ; -- Questa subroutine pulisce la memoria che parte dall'indirizzo contenuto in hl fino a quello contenuto in de
 ; -- hl: start
