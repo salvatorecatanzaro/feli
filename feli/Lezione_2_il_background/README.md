@@ -71,7 +71,7 @@ SECTION "Game code", ROM0[$150]
 Start:
 
 <operazioni pulizia memoria … >
-
+ld hl, $9040
                                              ; carichiamo il tile della zolla 
                                              ; di terreno nell’indirizzo 
                                              ; $9040 della vram
