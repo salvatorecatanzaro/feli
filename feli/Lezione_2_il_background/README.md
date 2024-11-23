@@ -11,7 +11,7 @@ Definiamo la subroutine che ci permette di aspettare un periodo di VBlank
 
 *file: utils/graphics.asm*
 ```
-SECTION "Game graphics", ROM0[$13c4]
+SECTION "Game graphics", ROM0
 
   
 wait_vblank:         
