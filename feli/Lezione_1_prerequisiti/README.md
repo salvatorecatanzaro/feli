@@ -90,6 +90,10 @@ EntryPoint:
 nop 
 jp Start ; Leave this tiny space
 
+REPT $150 - $104 ;
+    db 0         ; riservo lo spazio tra $104 e $150 all' header
+ENDR             ;
+
 SECTION "Game code", ROM0[$150]
 Start:
 .main_loop:
