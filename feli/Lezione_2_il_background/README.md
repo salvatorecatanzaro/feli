@@ -69,7 +69,9 @@ jp Start ; Leave this tiny space
 
 SECTION "Game code", ROM0[$150]
 Start:
-
+call wait_vblank
+xor a                 ;
+ld [rLCDC], a         ;  Turn off the LCD by putting zero in the rLCDC register
 <operazioni pulizia memoria … >
 ld hl, $9040
                                              ; carichiamo il tile della zolla 
