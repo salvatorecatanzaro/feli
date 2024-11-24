@@ -1,6 +1,6 @@
 # Lezione 10 - Salto
 
-La prossima meccanica che andiamo ad implementare è quella del salto e lo facciamo inserendo la chiamata alla subroutine *try_jump* prima di eseguire *try_move_left* nel file player
+La prossima meccanica che andiamo ad implementare è quella del salto e lo facciamo inserendo la chiamata alla subroutine *try_jump* prima di eseguire *try_apply_gravity* nel file player
 
 ---
 *file: utils/player.asm*
